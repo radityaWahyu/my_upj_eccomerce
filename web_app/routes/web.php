@@ -1,7 +1,8 @@
 <?php
 
-use App\Http\Controllers\FrontendController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FrontendController;
+use App\Http\Controllers\BackOffice\CategoryController;
 
 
 /*
@@ -25,6 +26,12 @@ Route::controller(FrontendController::class)->group(
         Route::get('/product-details', 'productDetails')->name('frontend.product.details');
     }
 );
+
+Route::prefix('backoffice')->group(function () {
+    Route::prefix('category')->controller(CategoryController::class)->group(function () {
+        Route::get('/', 'index')->name('category.index');
+    });
+});
 
 
 // Route::get('/', function () {

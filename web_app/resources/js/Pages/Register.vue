@@ -1,18 +1,38 @@
 <template>
-    <div class="relative bg-nasplesyellow/10 h-full lg:flex lg:items-center">
-        <div class="lg:w-3/5 lg:block hidden">
+    <div class="relative bg-nasplesyellow/10 max-h-full lg:flex lg:items-start">
+        <div class="lg:w-3/5 hidden h-screen lg:block lg:p-2">
+            <a
+                href="http://"
+                class="text-tomato hover:bg-tomato/60 hover:rounded hover:text-white text-sm font-medium inline-flex items-center px-3 py-1 lg:gap-2 group"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="32"
+                    height="32"
+                    viewBox="0 0 24 24"
+                    class="fill-current w-6 h-6 text-tomato group-hover:text-white"
+                >
+                    <path
+                        fill="currentColor"
+                        d="m10 18l-6-6l6-6l1.4 1.45L7.85 11H20v2H7.85l3.55 3.55z"
+                    />
+                </svg>
+                <span> Kembali ke Halaman Utama</span>
+            </a>
             <img
-                src="@/Assets/images/login.png"
+                src="@/Assets/images/signup.svg"
                 alt=""
                 srcset=""
-                class="h-full object-cover"
+                class="h-[500px] w-[500px] mx-auto"
             />
         </div>
-        <div class="lg:w-2/5">
+        <div
+            class="px-6 lg:w-2/5 lg:bg-gray-50 lg:h-full flex flex-col justify-center gap-4 shadow-inner shadow-gray-200"
+        >
             <div class="px-4 mt-10">
                 <div id="logo" class="flex items-center gap-1">
                     <svg
-                        class="text-tomato fill-current"
+                        class="text-tomato fill-current lg:w-20 lg:h-20"
                         xmlns="http://www.w3.org/2000/svg"
                         width="38"
                         height="38"
@@ -24,11 +44,13 @@
                         />
                     </svg>
                     <div>
-                        <h4 class="font-semibold text-xl text-tomato line">
+                        <h4
+                            class="font-semibold text-xl lg:text-3xl text-tomato line"
+                        >
                             MYUPJ
                         </h4>
                         <p
-                            class="text-[10px] font-normal text-tomato mt-[-5px]"
+                            class="text-[10px] lg:text-sm font-normal text-tomato mt-[-5px]"
                         >
                             SMK Mandiri dan Berprestasi
                         </p>

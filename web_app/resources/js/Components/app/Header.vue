@@ -50,7 +50,7 @@
                                 href="http://"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                class="hover:bg-yellow-500 hover:text-white px-3 py-1 rounded"
+                                class="hover:bg-yellow-500 hover:text-white px-3 py-1 rounded transition-colors duration-500 ease-in-out"
                             >
                                 Home
                             </a>
@@ -60,7 +60,7 @@
                                 href="http://"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                class="hover:bg-yellow-500 hover:text-white px-3 py-1 rounded"
+                                class="hover:bg-yellow-500 hover:text-white px-3 py-1 rounded transition-colors duration-500 ease-in-out"
                                 >Produk</a
                             >
                         </li>
@@ -69,7 +69,7 @@
                                 href="http://"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                class="hover:bg-yellow-500 hover:text-white px-3 py-1 rounded"
+                                class="hover:bg-yellow-500 hover:text-white px-3 py-1 rounded transition-colors duration-500 ease-in-out"
                                 >Unit Pelayanan</a
                             >
                         </li>
@@ -78,7 +78,7 @@
                                 href="http://"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                class="hover:bg-yellow-500 hover:text-white px-3 py-1 rounded"
+                                class="hover:bg-yellow-500 hover:text-white px-3 py-1 rounded transition-colors duration-500 ease-in-out"
                                 >Kontak Kami</a
                             >
                         </li>

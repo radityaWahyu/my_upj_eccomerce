@@ -1,12 +1,14 @@
 <template>
     <div
-        class="static w-full flex-shrink-0 bg-lemonchiffon/85 rounded-md drop-shadow-sm"
+        class="static w-full flex-shrink-0 bg-lemonchiffon/85 rounded-md drop-shadow-sm group"
     >
-        <img
-            :src="prop.product?.file"
-            alt="product-one"
-            class="rounded-t-md h-[200px] w-full object-fill"
-        />
+        <div class="overflow-hidden">
+            <img
+                :src="prop.product?.file"
+                alt="product-one"
+                class="rounded-t-md h-[200px] w-full object-cover group-hover:scale-125 transition-all duration-300 ease-in-out transform bg-center"
+            />
+        </div>
         <div class="flex flex-col text-left p-2">
             <p class="text-[12px] font-normal">{{ prop.product?.title }}</p>
             <p class="text-sm font-semibold">Rp. {{ prop.product?.price }}</p>
