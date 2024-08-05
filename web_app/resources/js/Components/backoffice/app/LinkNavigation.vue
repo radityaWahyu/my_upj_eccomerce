@@ -15,7 +15,7 @@ const props = withDefaults(defineProps<TLink>(), {
     <a
         :href="to"
         :class="{ 'text-primary': isActive, 'bg-muted': isActive }"
-        class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary hover:bg-muted"
+        class="flex text-gray-300 items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary hover:bg-muted"
     >
         <slot />
     </a>

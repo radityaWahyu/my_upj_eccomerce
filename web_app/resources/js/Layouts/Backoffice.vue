@@ -6,10 +6,10 @@ import RightHeaderApp from "@/Components/backoffice/app/RightHeaderApp.vue";
 
 <template>
     <div
-        class="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[220px_1fr] font-poppins subpixel-antialiased"
+        class="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[220px_1fr] font-poppins antialiased"
     >
         <!-- start left component -->
-        <div class="hidden border-r bg-muted/40 md:block">
+        <div class="hidden border-r-2 border-slate-400 bg-slate-800 md:block">
             <div class="flex h-full max-h-screen flex-col gap-2">
                 <!-- start logo component -->
                 <logo-app />
@@ -26,7 +26,9 @@ import RightHeaderApp from "@/Components/backoffice/app/RightHeaderApp.vue";
             <right-header-app />
             <!-- end header right component -->
             <!-- start main content component -->
-            <main class="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
+            <main
+                class="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 bg-gray-50"
+            >
                 <slot />
             </main>
             <!-- end main content component -->

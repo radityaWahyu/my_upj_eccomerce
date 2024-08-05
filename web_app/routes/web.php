@@ -29,7 +29,7 @@ Route::controller(FrontendController::class)->group(
 
 Route::prefix('backoffice')->group(function () {
     Route::prefix('category')->controller(CategoryController::class)->group(function () {
-        Route::get('/', 'index')->name('category.index');
+        Route::get('/', 'index')->name('backoffice.category.index');
     });
 });
 

@@ -14,7 +14,7 @@ import { Button } from "@/shadcn/ui/button";
 </script>
 <template>
     <header
-        class="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6"
+        class="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6 shadow-sm shadow-gray-300"
     >
         <!-- start mobile navigation component -->
         <Sheet>
@@ -50,11 +50,6 @@ import { Button } from "@/shadcn/ui/button";
                     >
                         <ShoppingCart class="h-5 w-5" />
                         Orders
-                        <Badge
-                            class="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full"
-                        >
-                            6
-                        </Badge>
                     </a>
                     <a
                         href="#"
@@ -85,7 +80,14 @@ import { Button } from "@/shadcn/ui/button";
         <div class="w-full flex-1"></div>
         <!-- end top empty component -->
         <!-- start avatar button -->
-        <top-avatar-button />
+        <div class="flex items-center gap-4">
+            <div>
+                <h4 class="font-medium text-sm">Raditya Wahyu Sasono</h4>
+                <p class="text-xs text-tomato">Administrator</p>
+            </div>
+            <top-avatar-button />
+        </div>
+
         <!-- end avatar button -->
     </header>
 </template>
