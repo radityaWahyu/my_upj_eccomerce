@@ -88,21 +88,17 @@ const onSubmit = form.handleSubmit((formData) => {
             onFinish: () => (isLoading.value = false),
         });
     } else {
-        router.put(
-            route("backoffice.category.update", props.shop.id),
-            formData,
-            {
-                preserveState: true,
-                onStart: () => (isLoading.value = true),
-                onError: (errors) => {
-                    serverValidation.value = errors;
-                },
-                onSuccess: () => {
-                    emits("saved", true);
-                },
-                onFinish: () => (isLoading.value = false),
-            }
-        );
+        router.put(route("backoffice.shop.update", props.shop.id), formData, {
+            preserveState: true,
+            onStart: () => (isLoading.value = true),
+            onError: (errors) => {
+                serverValidation.value = errors;
+            },
+            onSuccess: () => {
+                emits("saved", true);
+            },
+            onFinish: () => (isLoading.value = false),
+        });
     }
 });
 </script>

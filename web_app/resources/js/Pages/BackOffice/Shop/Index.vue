@@ -310,7 +310,7 @@ watchDebounced(
                 </div>
             </div>
             <DataTable
-                ref="categoryTable"
+                ref="shopTable"
                 :columns="columns"
                 :data="Shops"
                 :current-page="ShopMeta.current_page"

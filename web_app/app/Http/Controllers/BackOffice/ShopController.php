@@ -47,6 +47,7 @@ class ShopController extends Controller
      */
     public function store(ShopRequest $request)
     {
+
         try {
             Shop::create($request->validated());
 

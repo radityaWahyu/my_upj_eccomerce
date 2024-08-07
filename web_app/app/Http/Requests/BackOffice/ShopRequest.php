@@ -23,7 +23,7 @@ class ShopRequest extends FormRequest
     {
         if (request()->isMethod('post')) {
             return [
-                'name' => ['required', 'unique:categories,name']
+                'name' => ['required', 'unique:shops,name']
             ];
         } elseif (request()->isMethod('put')) {
             return [

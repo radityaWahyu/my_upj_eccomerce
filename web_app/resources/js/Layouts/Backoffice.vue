@@ -16,11 +16,16 @@ watch(
     (alert) => {
         console.log(!!alert.success);
         if (!!alert.success) {
-            showSuccessAlert.value = true;
+            showSuccessAlert.value = !!alert.success;
             setTimeout(() => (showSuccessAlert.value = false), 3000);
+        } else {
+            showSuccessAlert.value = false;
         }
+
         if (!!alert.error) {
-            showErrorAlert.value = true;
+            showErrorAlert.value = !!alert.error;
+        } else {
+            showErrorAlert.value = false;
         }
     }
 );
@@ -28,7 +33,7 @@ watch(
 
 <template>
     <div
-        class="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[220px_1fr] font-poppins antialiased"
+        class="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[220px_1fr] font-poppins antialiased bg-gray-50"
     >
         <!-- start left component -->
         <div class="hidden border-r-2 border-slate-400 bg-slate-800 md:block">
@@ -43,7 +48,9 @@ watch(
         </div>
         <!-- end left component -->
         <!-- start right component -->
-        <div class="flex flex-col overflow-y-scroll h-screen bg-gray-50">
+        <div
+            class="relative flex flex-col overflow-y-scroll h-screen bg-gray-50"
+        >
             <!-- start header right component -->
             <right-header-app />
             <!-- end header right component -->
@@ -51,7 +58,7 @@ watch(
             <!-- start alert component -->
             <Transition>
                 <div
-                    class="w-full inline-flex items-center justify-around py-3 px-4 bg-blue-100 border-b-2 border-blue-200"
+                    class="absolute z-10 top-14 w-full inline-flex items-center justify-around py-3 px-4 bg-blue-100 border-b-2 border-blue-200"
                     v-if="showSuccessAlert"
                 >
                     <div class="flex items-center gap-4">
@@ -74,7 +81,7 @@ watch(
             </Transition>
             <Transition>
                 <div
-                    class="w-full inline-flex items-center justify-around py-3 px-4 bg-red-100 border-b-2 border-red-200"
+                    class="absolute z-10 top-14 w-full inline-flex items-center justify-around py-3 px-4 bg-red-100 border-b-2 border-red-200"
                     v-if="showErrorAlert"
                 >
                     <div class="flex items-center gap-4">
@@ -96,7 +103,10 @@ watch(
                 </div>
             </Transition>
             <!-- end alert component -->
-            <main class="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
+            <main
+                :class="{ 'mt-20': showErrorAlert || showSuccessAlert }"
+                class="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6"
+            >
                 <slot />
             </main>
             <!-- end main content component -->
@@ -107,7 +117,7 @@ watch(
 <style lang="scss" scoped>
 .v-enter-active,
 .v-leave-active {
-    transition: opacity 0.5s ease;
+    transition: opacity 0.3s ease;
 }
 
 .v-enter-from,
