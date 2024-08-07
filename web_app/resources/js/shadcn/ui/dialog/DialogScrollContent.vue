@@ -9,7 +9,8 @@ import {
   DialogPortal,
   useForwardPropsEmits,
 } from 'radix-vue'
-import { cn } from '@/shadcn'
+import { Cross2Icon } from '@radix-icons/vue'
+import { cn } from '@/shadcn/utils'
 
 const props = defineProps<DialogContentProps & { class?: HTMLAttributes['class'] }>()
 const emits = defineEmits<DialogContentEmits>()

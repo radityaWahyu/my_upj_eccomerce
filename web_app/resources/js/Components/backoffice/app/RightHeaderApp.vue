@@ -14,7 +14,7 @@ import { Button } from "@/shadcn/ui/button";
 </script>
 <template>
     <header
-        class="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6 shadow-sm shadow-gray-300"
+        class="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6 shadow-sm shadow-gray-300 lg:py-6"
     >
         <!-- start mobile navigation component -->
         <Sheet>

@@ -1,7 +1,7 @@
-<script setup lang="ts" generic="TData, TValue">
+<script setup lang="ts">
 import type { ColumnDef } from "@tanstack/vue-table";
 import { Skeleton } from "@/shadcn/ui/skeleton";
-import { defineEmits, useSlots } from "vue";
+import { defineEmits, useSlots, defineExpose } from "vue";
 import { OctagonAlert } from "lucide-vue-next";
 import { Alert, AlertDescription, AlertTitle } from "@/shadcn/ui/alert";
 import {
@@ -22,8 +22,8 @@ import {
 import { Button } from "@/shadcn/ui/button";
 
 const props = defineProps<{
-    columns: ColumnDef<TData, TValue>[];
-    data: TData[];
+    columns: ColumnDef<any>[];
+    data: any[];
     currentPage: number;
     lastPage: number;
     total: number;
@@ -50,6 +50,14 @@ const table = useVueTable({
     getPaginationRowModel: getPaginationRowModel(),
     manualPagination: true,
 });
+
+const resetTable = () => {
+    table.resetRowSelection();
+};
+
+defineExpose({
+    resetTable,
+});
 </script>
 
 <template>
@@ -74,15 +82,28 @@ const table = useVueTable({
                     </TableRow>
                 </TableHeader>
                 <TableBody v-if="loading">
-                    <TableRow v-for="index in perPage" :key="index">
-                        <TableCell
-                            v-for="index in columns.length"
-                            class="h-10"
-                            :key="index"
-                        >
-                            <Skeleton class="h-2 w-1/2" />
-                        </TableCell>
-                    </TableRow>
+                    <template v-if="table.getRowModel().rows?.length">
+                        <TableRow v-for="index in perPage" :key="index">
+                            <TableCell
+                                v-for="index in columns.length"
+                                class="h-10"
+                                :key="index"
+                            >
+                                <Skeleton class="h-2 w-1/2" />
+                            </TableCell>
+                        </TableRow>
+                    </template>
+                    <template v-else>
+                        <TableRow>
+                            <TableCell
+                                v-for="index in columns.length"
+                                class="h-10"
+                                :key="index"
+                            >
+                                <Skeleton class="h-2 w-1/2" />
+                            </TableCell>
+                        </TableRow>
+                    </template>
                 </TableBody>
                 <TableBody v-else>
                     <template v-if="table.getRowModel().rows?.length">

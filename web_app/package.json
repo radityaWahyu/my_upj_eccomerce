@@ -12,6 +12,7 @@
         "autoprefixer": "^10.4.19",
         "axios": "^1.6.4",
         "laravel-vite-plugin": "^1.0.0",
+        "lodash": "^4.17.21",
         "postcss": "^8.4.31",
         "sass": "^1.77.8",
         "swiper": "^11.1.5",
@@ -22,14 +23,19 @@
         "vue-tsc": "^1.8.27"
     },
     "dependencies": {
+        "@inertia-vue-form/zod": "^0.1.1",
         "@radix-icons/vue": "^1.0.0",
         "@tanstack/vue-table": "^8.19.3",
+        "@vee-validate/zod": "^4.13.2",
         "@vueuse/core": "^10.11.0",
         "class-variance-authority": "^0.7.0",
         "clsx": "^2.1.1",
+        "lodash.debounce": "^4.0.8",
         "lucide-vue-next": "^0.417.0",
         "radix-vue": "^1.9.2",
         "tailwind-merge": "^2.4.0",
-        "tailwindcss-animate": "^1.0.7"
+        "tailwindcss-animate": "^1.0.7",
+        "vee-validate": "^4.13.2",
+        "zod": "^3.23.8"
     }
 }

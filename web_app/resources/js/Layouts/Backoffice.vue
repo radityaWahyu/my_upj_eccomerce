@@ -1,7 +1,29 @@
 <script setup lang="ts">
+import { BadgeInfo, TriangleAlert } from "lucide-vue-next";
+import { ref, watch } from "vue";
+
 import LogoApp from "@/Components/backoffice/app/LogoApp.vue";
 import LeftNavigationApp from "@/Components/backoffice/app/LeftNavigationApp.vue";
 import RightHeaderApp from "@/Components/backoffice/app/RightHeaderApp.vue";
+import Button from "@/shadcn/ui/button/Button.vue";
+
+const props = defineProps<{ flash: any }>();
+const showSuccessAlert = ref<boolean>(false);
+const showErrorAlert = ref<boolean>(false);
+
+watch(
+    () => props.flash,
+    (alert) => {
+        console.log(!!alert.success);
+        if (!!alert.success) {
+            showSuccessAlert.value = true;
+            setTimeout(() => (showSuccessAlert.value = false), 3000);
+        }
+        if (!!alert.error) {
+            showErrorAlert.value = true;
+        }
+    }
+);
 </script>
 
 <template>
@@ -21,14 +43,60 @@ import RightHeaderApp from "@/Components/backoffice/app/RightHeaderApp.vue";
         </div>
         <!-- end left component -->
         <!-- start right component -->
-        <div class="flex flex-col">
+        <div class="flex flex-col overflow-y-scroll h-screen bg-gray-50">
             <!-- start header right component -->
             <right-header-app />
             <!-- end header right component -->
             <!-- start main content component -->
-            <main
-                class="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 bg-gray-50"
-            >
+            <!-- start alert component -->
+            <Transition>
+                <div
+                    class="w-full inline-flex items-center justify-around py-3 px-4 bg-blue-100 border-b-2 border-blue-200"
+                    v-if="showSuccessAlert"
+                >
+                    <div class="flex items-center gap-4">
+                        <BadgeInfo class="w-6 h-6" />
+                        <div class="text-sm w-[500px]">
+                            <h1 class="font-normal">Informasi</h1>
+                            <p class="font-medium">
+                                {{ flash.success }}
+                            </p>
+                        </div>
+                    </div>
+                    <Button
+                        variant="secondary"
+                        size="sm"
+                        @click="showSuccessAlert = false"
+                    >
+                        Tutup
+                    </Button>
+                </div>
+            </Transition>
+            <Transition>
+                <div
+                    class="w-full inline-flex items-center justify-around py-3 px-4 bg-red-100 border-b-2 border-red-200"
+                    v-if="showErrorAlert"
+                >
+                    <div class="flex items-center gap-4">
+                        <TriangleAlert class="w-6 h-6" />
+                        <div class="text-sm w-[500px]">
+                            <h1 class="font-normal">Peringatan</h1>
+                            <p class="font-medium">
+                                {{ flash.error }}
+                            </p>
+                        </div>
+                    </div>
+                    <Button
+                        variant="secondary"
+                        size="sm"
+                        @click="showErrorAlert = false"
+                    >
+                        Tutup
+                    </Button>
+                </div>
+            </Transition>
+            <!-- end alert component -->
+            <main class="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
                 <slot />
             </main>
             <!-- end main content component -->
@@ -36,3 +104,14 @@ import RightHeaderApp from "@/Components/backoffice/app/RightHeaderApp.vue";
         <!-- end right component -->
     </div>
 </template>
+<style lang="scss" scoped>
+.v-enter-active,
+.v-leave-active {
+    transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+    opacity: 0;
+}
+</style>

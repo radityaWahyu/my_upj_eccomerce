@@ -30,6 +30,11 @@ Route::controller(FrontendController::class)->group(
 Route::prefix('backoffice')->group(function () {
     Route::prefix('category')->controller(CategoryController::class)->group(function () {
         Route::get('/', 'index')->name('backoffice.category.index');
+        Route::get('/{category}', 'edit')->name('backoffice.category.edit');
+        Route::post('/', 'store')->name('backoffice.category.store');
+        Route::post('/delete_all', 'deleteAll')->name('backoffice.category.delete-all');
+        Route::delete('/{category}', 'destroy')->name('backoffice.category.delete');
+        Route::put('/{category}', 'update')->name('backoffice.category.update');
     });
 });
 

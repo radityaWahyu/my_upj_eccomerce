@@ -1,24 +1,28 @@
 <script lang="ts">
 import Backoffice from "@/Layouts/Backoffice.vue";
-import { Combobox } from "radix-vue/namespaced";
+import Table from "@/shadcn/ui/table/Table.vue";
 
 export default {
     layout: Backoffice,
 };
 </script>
 <script setup lang="ts">
-import { h, computed, ref, reactive } from "vue";
+import { h, computed, ref } from "vue";
+import { watchDebounced } from "@vueuse/core";
+
 import { Checkbox } from "@/shadcn/ui/checkbox";
 import { Button } from "@/shadcn/ui/button";
 import { Input } from "@/shadcn/ui/input";
 
 import { Alert, AlertDescription } from "@/shadcn/ui/alert";
-import { SquarePlus, ArrowDownUp, ArrowUpDown } from "lucide-vue-next";
+import { Plus, ArrowDownUp, ArrowUpDown, Trash } from "lucide-vue-next";
 import type { ColumnDef } from "@tanstack/vue-table";
-import { router } from "@inertiajs/vue3";
+import { router, Head } from "@inertiajs/vue3";
 import DataTable from "@/Components/backoffice/app/DataTable.vue";
 import ButtonAction from "@/Components/backoffice/category/ButtonAction.vue";
 import ComboBox from "@/Components/backoffice/app/ComboBox.vue";
+import CategoryForm from "./CategoryForm.vue";
+import ConfirmDialog from "@/Components/backoffice/app/ConfirmDialog.vue";
 
 type TCategory = {
     id: string;
@@ -39,22 +43,34 @@ type TCategoryMeta = {
 };
 
 const PerPage = ref([
-    { value: 2, label: "2" },
-    { value: 10, label: "10" },
+    { value: 10, label: 10 },
     { value: 25, label: 25 },
     { value: 50, label: 50 },
     { value: 100, label: 100 },
 ]);
 const isLoading = ref(false);
-
-const props = defineProps({ categories: Object, params: Object });
-const pageOptions = {
+const props = defineProps({
+    categories: Object,
+    params: Object,
+    showForm: Boolean,
+    category: { required: false, type: Object },
+});
+const search = ref(props.params?.search);
+const pageOptions = ref({
     sortName: props.params?.sortName,
     sortType: props.params?.sortType,
-    search: props.params?.search,
     perPage: props.params?.perPage,
-};
-
+});
+const formState = ref<{ open: boolean; title: string }>({
+    open: false,
+    title: "Tambah Kategori",
+});
+const deleteConfirmDialog = ref({
+    open: false,
+    cancelText: "Batalkan",
+    okText: "Hapus Data",
+});
+const categoryTable = ref<InstanceType<typeof DataTable> | null>(null);
 const columns: ColumnDef<TCategory>[] = [
     {
         id: "select",
@@ -63,14 +79,36 @@ const columns: ColumnDef<TCategory>[] = [
                 checked:
                     table.getIsAllPageRowsSelected() ||
                     (table.getIsSomePageRowsSelected() && "indeterminate"),
-                "onUpdate:checked": (value: any) =>
-                    table.toggleAllPageRowsSelected(!!value),
+                "onUpdate:checked": (value: any) => {
+                    console.log(value);
+                    if (!value) {
+                        selectedId.value = [];
+                        table.resetRowSelection();
+                    } else {
+                        const row = table.getRowModel();
+                        row.rows.forEach(({ id }) => {
+                            selectedId.value.push(id);
+                        });
+                    }
+                    table.toggleAllPageRowsSelected(!!value);
+                },
                 ariaLabel: "Select all",
             }),
         cell: ({ row }) =>
             h(Checkbox, {
+                id: "check",
                 checked: row.getIsSelected(),
-                "onUpdate:checked": (value: any) => row.toggleSelected(!!value),
+                "onUpdate:checked": (value: any) => {
+                    if (value) {
+                        selectedId.value.push(row.original.id);
+                    } else {
+                        selectedId.value = selectedId.value.filter(
+                            (id) => id !== row.original.id
+                        );
+                    }
+
+                    row.toggleSelected(!!value);
+                },
                 ariaLabel: "Select row",
             }),
         enableSorting: false,
@@ -84,11 +122,11 @@ const columns: ColumnDef<TCategory>[] = [
                 {
                     variant: "ghost",
                     onClick: () => {
-                        pageOptions.sortName = "name";
-                        if (pageOptions.sortType == "asc") {
-                            pageOptions.sortType = "desc";
+                        pageOptions.value.sortName = "name";
+                        if (pageOptions.value.sortType == "asc") {
+                            pageOptions.value.sortType = "desc";
                         } else {
-                            pageOptions.sortType = "asc";
+                            pageOptions.value.sortType = "asc";
                         }
 
                         getCategories(CategoryMeta.value.current_page);
@@ -118,27 +156,40 @@ const columns: ColumnDef<TCategory>[] = [
             return h(
                 "div",
                 { class: "relative text-center" },
-                h(ButtonAction, { id: id })
+                h(ButtonAction, {
+                    id: id,
+                    onDeleted: (id: string) => deleteCategory(id),
+                    onUpdated: (id: string) => {
+                        editCategory(id);
+                    },
+                })
             );
         },
     },
 ];
 
+const selectedId = ref<string[]>([]);
 const Categories = computed(() => props.categories?.data);
 const CategoryMeta = computed(() => props.categories?.meta as TCategoryMeta);
-const getCategories = (page: number) => {
-    const url = ref({ page, perPage: pageOptions.perPage });
+const getUrl = (page: number) => {
+    const url = ref({ page, perPage: pageOptions.value.perPage });
 
-    if (pageOptions.sortName !== null && pageOptions.sortType !== null) {
+    if (
+        pageOptions.value.sortName !== null &&
+        pageOptions.value.sortType !== null
+    ) {
         Object.assign(url.value, {
-            sortName: pageOptions.sortName,
-            sortType: pageOptions.sortType,
+            sortName: pageOptions.value.sortName,
+            sortType: pageOptions.value.sortType,
         });
     }
 
-    if (pageOptions.search !== null)
-        Object.assign(url.value, { search: pageOptions.search });
+    if (search !== null) Object.assign(url.value, { search });
 
+    return url;
+};
+const getCategories = (page: number) => {
+    const url = getUrl(page);
     router.get(route("backoffice.category.index"), url.value, {
         only: ["categories", "params"],
         preserveState: true,
@@ -147,32 +198,106 @@ const getCategories = (page: number) => {
         onFinish: () => (isLoading.value = false),
     });
 };
+const deleteCategory = (id: string) => {
+    router.delete(route("backoffice.category.delete", id), {
+        onStart: () => (isLoading.value = true),
+        onFinish: () => (isLoading.value = false),
+    });
+};
+const editCategory = (id: string) => {
+    router.get(
+        route("backoffice.category.edit", id),
+        {},
+        {
+            onStart: () => (isLoading.value = true),
+            onFinish: () => (isLoading.value = false),
+        }
+    );
+};
 const changePage = (page: number) => getCategories(page);
-const limitChange = () => getCategories(CategoryMeta.value.current_page);
+const limitChange = () => getCategories(1);
+const openForm = () => (formState.value.open = true);
+const closeForm = (state: boolean) => (formState.value.open = !state);
+const savedForm = (state: boolean) => {
+    formState.value.open = !state;
+};
+const deleteAll = () => {
+    router.post(
+        route("backoffice.category.delete-all"),
+        {
+            ids: selectedId.value,
+        },
+        {
+            onFinish: () => {
+                selectedId.value = [];
+                categoryTable.value?.resetTable();
+                deleteConfirmDialog.value.open = false;
+            },
+        }
+    );
+};
+const cancelDeleteAll = () => {
+    selectedId.value = [];
+    categoryTable.value?.resetTable();
+};
+watchDebounced(
+    search,
+    () => {
+        getCategories(CategoryMeta.value.current_page);
+    },
+    { debounce: 500, maxWait: 1000 }
+);
 </script>
 <template>
+    <Head title="Data Kategori" />
     <div class="space-y-2 mx-auto max-w-2xl">
         <div class="space-y-2">
             <div class="flex items-center justify-between">
                 <h1 class="text-lg font-semibold md:text-xl">Data Kategori</h1>
-                <Button variant="secondary" size="icon">
-                    <SquarePlus class="w3 h3 text-blue-500" />
-                </Button>
+                <div class="flex gap-2">
+                    <div class="flex gap-2" v-if="selectedId.length > 0">
+                        <Button
+                            variant="secondary"
+                            class="flex items-center gap-2"
+                            @click="cancelDeleteAll"
+                        >
+                            Batalkan
+                        </Button>
+                        <Button
+                            variant="destructive"
+                            class="flex items-center gap-2 font-semibold"
+                            size="icon"
+                            @click="deleteConfirmDialog.open = true"
+                        >
+                            <Trash class="w-4 h-4" stroke-width="3px" />
+                        </Button>
+                    </div>
+                    <Button
+                        v-else
+                        variant="default"
+                        @click="openForm"
+                        class="flex items-center gap-2 font-semibold"
+                    >
+                        <Plus class="w-4 h-4" stroke-width="3px" /> Tambah
+                    </Button>
+                </div>
             </div>
             <Alert class="bg-secondary shadow-inner shadow-gray-100">
                 <AlertDescription class="text-xs">
                     Halaman untuk memanjemen data kategori yang di pakai pada
                     produk atau jasa di sistem. Untuk menambah data baru
-                    silahkan mengklik tombol <strong>+</strong>
+                    silahkan mengklik tombol <strong>+ tambah</strong>
                 </AlertDescription>
             </Alert>
         </div>
         <div class="w-full">
             <div class="flex items-center justify-between py-4">
                 <Input
-                    class="max-w-sm bg-white"
-                    placeholder="Cari Kategori..."
+                    placeholder="Cari kategori..."
+                    v-model="search"
+                    class="w-1/2 bg-white"
                 />
+
                 <div class="inline-flex items-center gap-3">
                     <p class="text-xs font-medium">Data Perpage :</p>
                     <ComboBox
@@ -184,6 +309,7 @@ const limitChange = () => getCategories(CategoryMeta.value.current_page);
                 </div>
             </div>
             <DataTable
+                ref="categoryTable"
                 :columns="columns"
                 :data="Categories"
                 :current-page="CategoryMeta.current_page"
@@ -196,5 +322,27 @@ const limitChange = () => getCategories(CategoryMeta.value.current_page);
                 @change-page="changePage"
             />
         </div>
+        <CategoryForm
+            :open="formState.open || !!category?.data"
+            :title="formState.title"
+            @closed="closeForm"
+            @saved="savedForm"
+            :category="category?.data"
+        />
+        <ConfirmDialog
+            :open="deleteConfirmDialog.open"
+            :cancel-text="deleteConfirmDialog.cancelText"
+            :ok-text="deleteConfirmDialog.okText"
+            @cancel="deleteConfirmDialog.open = false"
+            @ok="deleteAll"
+        >
+            <template #title>
+                Apakah anda ingin menghapus {{ selectedId.length }} Data?
+            </template>
+            <template #description>
+                Data akan dihapus secara permanen dari sistem dan tidak bisa di
+                kembalikan, mohon untuk mengecek kembali data yang akan dihapus.
+            </template>
+        </ConfirmDialog>
     </div>
 </template>
