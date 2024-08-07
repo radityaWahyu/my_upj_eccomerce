@@ -19,11 +19,9 @@ import { Button } from "@/shadcn/ui/button";
             </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuLabel>Akunku</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Settings</DropdownMenuItem>
-            <DropdownMenuItem>Support</DropdownMenuItem>
-            <DropdownMenuSeparator />
+            <DropdownMenuItem>Edit Profil</DropdownMenuItem>
             <DropdownMenuItem>Logout</DropdownMenuItem>
         </DropdownMenuContent>
     </DropdownMenu>

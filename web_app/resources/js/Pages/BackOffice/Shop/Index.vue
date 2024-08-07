@@ -20,10 +20,10 @@ import { router, Head } from "@inertiajs/vue3";
 import DataTable from "@/Components/backoffice/app/DataTable.vue";
 import ButtonAction from "@/Components/backoffice/category/ButtonAction.vue";
 import ComboBox from "@/Components/backoffice/app/ComboBox.vue";
-import CategoryForm from "./CategoryForm.vue";
 import ConfirmDialog from "@/Components/backoffice/app/ConfirmDialog.vue";
+import ShopForm from "./ShopForm.vue";
 
-type TCategory = {
+type TShop = {
     id: string;
     name: string;
     slug: string;
@@ -31,7 +31,7 @@ type TCategory = {
     updated_at: Date;
 };
 
-type TCategoryMeta = {
+type TShopMeta = {
     current_page: number;
     from: number;
     to: number;
@@ -49,10 +49,10 @@ const PerPage = ref([
 ]);
 const isLoading = ref(false);
 const props = defineProps({
-    categories: Object,
+    shops: Object,
     params: Object,
     showForm: Boolean,
-    category: { required: false, type: Object },
+    shop: { required: false, type: Object },
 });
 const search = ref(props.params?.search);
 const pageOptions = ref({
@@ -62,15 +62,15 @@ const pageOptions = ref({
 });
 const formState = ref<{ open: boolean; title: string }>({
     open: false,
-    title: "Tambah Kategori",
+    title: "Tambah Unit Layanan",
 });
 const deleteConfirmDialog = ref({
     open: false,
     cancelText: "Batalkan",
     okText: "Hapus Data",
 });
-const categoryTable = ref<InstanceType<typeof DataTable> | null>(null);
-const columns: ColumnDef<TCategory>[] = [
+const shopTable = ref<InstanceType<typeof DataTable> | null>(null);
+const columns: ColumnDef<TShop>[] = [
     {
         id: "select",
         header: ({ table }) =>
@@ -128,7 +128,7 @@ const columns: ColumnDef<TCategory>[] = [
                             pageOptions.value.sortType = "asc";
                         }
 
-                        getCategories(CategoryMeta.value.current_page);
+                        getShops(ShopMeta.value.current_page);
                     },
                     class: "w-full flex justify-between text-left px-0",
                 },
@@ -138,7 +138,7 @@ const columns: ColumnDef<TCategory>[] = [
                         props.params?.sortName == "name"
                             ? h(ArrowUpDown, { class: "h-4 w-4" })
                             : h(ArrowDownUp, { class: "h-4 w-4" }),
-                        "Kategori",
+                        "Unit Layanan",
                     ]),
                 ]
             );
@@ -157,9 +157,9 @@ const columns: ColumnDef<TCategory>[] = [
                 { class: "relative text-center" },
                 h(ButtonAction, {
                     id: id,
-                    onDeleted: (id: string) => deleteCategory(id),
+                    onDeleted: (id: string) => deleteShop(id),
                     onUpdated: (id: string) => {
-                        editCategory(id);
+                        editShop(id);
                     },
                 })
             );
@@ -168,8 +168,8 @@ const columns: ColumnDef<TCategory>[] = [
 ];
 
 const selectedId = ref<string[]>([]);
-const Categories = computed(() => props.categories?.data);
-const CategoryMeta = computed(() => props.categories?.meta as TCategoryMeta);
+const Shops = computed(() => props.shops?.data);
+const ShopMeta = computed(() => props.shops?.meta as TShopMeta);
 const getUrl = (page: number) => {
     const url = ref({ page, perPage: pageOptions.value.perPage });
 
@@ -187,25 +187,25 @@ const getUrl = (page: number) => {
 
     return url;
 };
-const getCategories = (page: number) => {
+const getShops = (page: number) => {
     const url = getUrl(page);
-    router.get(route("backoffice.category.index"), url.value, {
-        only: ["categories", "params"],
+    router.get(route("backoffice.shop.index"), url.value, {
+        only: ["shops", "params"],
         preserveState: true,
         preserveScroll: true,
         onStart: () => (isLoading.value = true),
         onFinish: () => (isLoading.value = false),
     });
 };
-const deleteCategory = (id: string) => {
-    router.delete(route("backoffice.category.delete", id), {
+const deleteShop = (id: string) => {
+    router.delete(route("backoffice.shop.delete", id), {
         onStart: () => (isLoading.value = true),
         onFinish: () => (isLoading.value = false),
     });
 };
-const editCategory = (id: string) => {
+const editShop = (id: string) => {
     router.get(
-        route("backoffice.category.edit", id),
+        route("backoffice.shop.edit", id),
         {},
         {
             onStart: () => (isLoading.value = true),
@@ -213,8 +213,8 @@ const editCategory = (id: string) => {
         }
     );
 };
-const changePage = (page: number) => getCategories(page);
-const limitChange = () => getCategories(1);
+const changePage = (page: number) => getShops(page);
+const limitChange = () => getShops(1);
 const openForm = () => (formState.value.open = true);
 const closeForm = (state: boolean) => (formState.value.open = !state);
 const savedForm = (state: boolean) => {
@@ -222,14 +222,14 @@ const savedForm = (state: boolean) => {
 };
 const deleteAll = () => {
     router.post(
-        route("backoffice.category.delete-all"),
+        route("backoffice.shop.delete-all"),
         {
             ids: selectedId.value,
         },
         {
             onFinish: () => {
                 selectedId.value = [];
-                categoryTable.value?.resetTable();
+                shopTable.value?.resetTable();
                 deleteConfirmDialog.value.open = false;
             },
         }
@@ -237,22 +237,24 @@ const deleteAll = () => {
 };
 const cancelDeleteAll = () => {
     selectedId.value = [];
-    categoryTable.value?.resetTable();
+    shopTable.value?.resetTable();
 };
 watchDebounced(
     search,
     () => {
-        getCategories(CategoryMeta.value.current_page);
+        getShops(ShopMeta.value.current_page);
     },
     { debounce: 500, maxWait: 1000 }
 );
 </script>
 <template>
-    <Head title="Data Kategori" />
+    <Head title="Unit Layanan" />
     <div class="space-y-2 mx-auto max-w-2xl">
         <div class="space-y-2">
             <div class="flex items-center justify-between">
-                <h1 class="text-lg font-semibold md:text-xl">Data Kategori</h1>
+                <h1 class="text-lg font-semibold md:text-xl">
+                    Unit Pelayanan Jasa
+                </h1>
                 <div class="flex gap-2">
                     <div class="flex gap-2" v-if="selectedId.length > 0">
                         <Button
@@ -283,9 +285,9 @@ watchDebounced(
             </div>
             <Alert class="bg-secondary shadow-inner shadow-gray-100">
                 <AlertDescription class="text-xs">
-                    Halaman untuk memanjemen data kategori yang di pakai pada
-                    produk atau jasa di sistem. Untuk menambah data baru
-                    silahkan mengklik tombol <strong>+ tambah</strong>
+                    Halaman untuk memanajemen Unit Pelayanan Jasa yang terdapat
+                    pada SMKN 1 Purwosari. Untuk menambah data baru silahkan
+                    mengklik tombol <strong>+ tambah</strong>
                 </AlertDescription>
             </Alert>
         </div>
@@ -310,24 +312,25 @@ watchDebounced(
             <DataTable
                 ref="categoryTable"
                 :columns="columns"
-                :data="Categories"
-                :current-page="CategoryMeta.current_page"
-                :last-page="CategoryMeta.last_page"
-                :prev-page="CategoryMeta.current_page"
-                :next-page="CategoryMeta.to"
-                :total="CategoryMeta.total"
+                :data="Shops"
+                :current-page="ShopMeta.current_page"
+                :last-page="ShopMeta.last_page"
+                :prev-page="ShopMeta.current_page"
+                :next-page="ShopMeta.to"
+                :total="ShopMeta.total"
                 :loading="isLoading"
-                :per-page="CategoryMeta.per_page"
+                :per-page="ShopMeta.per_page"
                 @change-page="changePage"
             />
         </div>
-        <CategoryForm
-            :open="formState.open || !!category?.data"
+        <ShopForm
+            :open="formState.open || !!shop?.data"
             :title="formState.title"
             @closed="closeForm"
             @saved="savedForm"
-            :category="category?.data"
+            :category="shop?.data"
         />
+
         <ConfirmDialog
             :open="deleteConfirmDialog.open"
             :cancel-text="deleteConfirmDialog.cancelText"

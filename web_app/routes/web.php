@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FrontendController;
+use App\Http\Controllers\BackOffice\ShopController;
 use App\Http\Controllers\BackOffice\CategoryController;
 
 
@@ -35,6 +36,15 @@ Route::prefix('backoffice')->group(function () {
         Route::post('/delete_all', 'deleteAll')->name('backoffice.category.delete-all');
         Route::delete('/{category}', 'destroy')->name('backoffice.category.delete');
         Route::put('/{category}', 'update')->name('backoffice.category.update');
+    });
+
+    Route::prefix('unit_layanan')->controller(ShopController::class)->group(function () {
+        Route::get('/', 'index')->name('backoffice.shop.index');
+        Route::get('/{category}', 'edit')->name('backoffice.shop.edit');
+        Route::post('/', 'store')->name('backoffice.shop.store');
+        Route::post('/delete_all', 'deleteAll')->name('backoffice.shop.delete-all');
+        Route::delete('/{category}', 'destroy')->name('backoffice.shop.delete');
+        Route::put('/{category}', 'update')->name('backoffice.shop.update');
     });
 });
 

@@ -18,12 +18,10 @@ class ShopFactory extends Factory
     public function definition(): array
     {
         $name = $this->faker->sentence(4);
-        $slug = Str::slug($name);
         $image  = $this->faker->imageUrl(640, 480, 'schools', true, 'vocational');
 
         return [
             'name' => $name,
-            'slug' => $slug,
             'image' => $image
         ];
     }

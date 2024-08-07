@@ -36,9 +36,9 @@ import HeaderLinkNavigation from "./HeaderLinkNavigation.vue";
                     Kategori
                 </link-navigation>
                 <link-navigation
-                    to="coba"
+                    to="/backoffice/unit_layanan"
                     :is-active="
-                        $page.url.startsWith('backoffice/unit_layanan', 2)
+                        $page.url.startsWith('backoffice/unit_layanan', 1)
                     "
                 >
                     <Store class="h-4 w-4" />
