@@ -4,14 +4,18 @@ namespace App\Http\Controllers\BackOffice;
 
 use App\Models\Shop;
 use Inertia\Inertia;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ShopResource;
 use App\Http\Requests\BackOffice\ShopRequest;
+use App\Traits\Image;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ShopController extends Controller
 {
+
+    use Image;
     /**
      * Display a listing of the resource.
      */
@@ -25,7 +29,7 @@ class ShopController extends Controller
         return Inertia::render(
             'BackOffice/Shop/Index',
             [
-                'shops' => fn () => ShopResource::collection($shops),
+                'shops' => fn() => ShopResource::collection($shops),
                 'params' => (object)$params,
             ],
         );
@@ -48,8 +52,29 @@ class ShopController extends Controller
     public function store(ShopRequest $request)
     {
 
+
+
         try {
-            Shop::create($request->validated());
+
+            $shopImage = $request->file('image');
+            $filename = Str::random(10) . '.' . $shopImage->getClientOriginalExtension();
+            $fullImagePath = 'images/shops/' . $filename;
+
+            $request->image->storeAs('images/shops/', $filename);
+
+            // $manager = new ImageManager(new Driver());
+            // $image = $manager->read($shopImage, [
+            //     DataUriImageDecoder::class,
+            //     Base64ImageDecoder::class
+            // ]);
+            // $image->save(public_path('images/shops/' . $filename));
+
+
+            Shop::create([
+                'name' => $request->name,
+                'image' => $fullImagePath,
+                'address' => $request->address,
+            ]);
 
             return redirect()->back()->with('success', 'Unit Layanan berhasil disimpan');
         } catch (\Illuminate\Database\QueryException $exception) {
@@ -60,9 +85,7 @@ class ShopController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Shop $shop)
-    {
-    }
+    public function show(Shop $shop) {}
 
     /**
      * Show the form for editing the specified resource.
@@ -71,12 +94,14 @@ class ShopController extends Controller
     {
         $response = $this->getShops($request);
 
+        // dd(new ShopResource($shop));
+
         try {
             return Inertia::render(
                 'BackOffice/Shop/Index',
                 [
-                    'shops' => fn () => ShopResource::collection($response['shops']),
-                    'shop' => fn () => new ShopResource($shop),
+                    'shops' => fn() => ShopResource::collection($response['shops']),
+                    'shop' => fn() => new ShopResource($shop),
                 ],
             );
         } catch (ModelNotFoundException $Exception) {
@@ -90,11 +115,20 @@ class ShopController extends Controller
     public function update(ShopRequest $request, Shop $shop)
     {
         try {
-            $shop->update($request->validated());
+            $shopData = ['name' => $request->name, 'address' => $request->address];
+
+            if ($request->hasFile('image')) {
+
+                $shopData += ['image' => $this->uploadImage($shop->image, $request->file('image'))];
+            }
+
+            $shop->update($shopData);
 
             return redirect()->route('backoffice.shop.index')->with('success', 'Unit Layanan berhasil disimpan');
         } catch (\Illuminate\Database\QueryException $exception) {
             return redirect()->back()->with('error', $exception->errorInfo);
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
         }
     }
 
@@ -104,7 +138,10 @@ class ShopController extends Controller
     public function destroy(Shop $shop)
     {
         try {
-            $shop->delete();
+
+            $deletedImage = $this->deleteImage($shop->image);
+            if ($deletedImage) $shop->delete();
+
             return redirect()->back()->with('success', 'Unit Layanan berhasil dihapus.');
         } catch (\Illuminate\Database\QueryException $exception) {
             return redirect()->back()->with('error', $exception->errorInfo);
@@ -113,9 +150,17 @@ class ShopController extends Controller
 
     public function deleteAll(Request $request)
     {
+        if (count($request->ids) > 0) {
+            foreach ($request->ids as $row) {
+                $shopImage = Shop::find($row);
+                $this->deleteImage($shopImage->image);
+            }
+            Shop::destroy($request->ids);
 
-        Shop::destroy($request->ids);
-        return redirect()->route('backoffice.category.index')->with('success', 'Unit Layanan berhasil dihapus.');
+            return redirect()->route('backoffice.shop.index')->with('success', 'Unit Layanan berhasil dihapus.');
+        } else {
+            return redirect()->route('backoffice.shop.index')->with('error', 'Data yang dikirimkan salah format.');
+        }
     }
 
     public function getShops(Request $request)

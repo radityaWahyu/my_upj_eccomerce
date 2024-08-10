@@ -18,7 +18,7 @@ import { Plus, ArrowDownUp, ArrowUpDown, Trash } from "lucide-vue-next";
 import type { ColumnDef } from "@tanstack/vue-table";
 import { router, Head } from "@inertiajs/vue3";
 import DataTable from "@/Components/backoffice/app/DataTable.vue";
-import ButtonAction from "@/Components/backoffice/category/ButtonAction.vue";
+import ButtonAction from "@/Components/backoffice/shop/ButtonAction.vue";
 import ComboBox from "@/Components/backoffice/app/ComboBox.vue";
 import ConfirmDialog from "@/Components/backoffice/app/ConfirmDialog.vue";
 import ShopForm from "./ShopForm.vue";
@@ -27,6 +27,8 @@ type TShop = {
     id: string;
     name: string;
     slug: string;
+    image: string;
+    address: string;
     created_at: Date;
     updated_at: Date;
 };
@@ -85,8 +87,9 @@ const columns: ColumnDef<TShop>[] = [
                         table.resetRowSelection();
                     } else {
                         const row = table.getRowModel();
-                        row.rows.forEach(({ id }) => {
-                            selectedId.value.push(id);
+                        row.rows.forEach((rowData) => {
+                            //console.log(rowData.original.id);
+                            selectedId.value.push(rowData.original.id);
                         });
                     }
                     table.toggleAllPageRowsSelected(!!value);
@@ -133,7 +136,7 @@ const columns: ColumnDef<TShop>[] = [
                     class: "w-full flex justify-between text-left px-0",
                 },
                 () => [
-                    h("div", { class: "gap-2 flex items-center" }, [
+                    h("div", { class: "gap-2 flex items-center " }, [
                         props.params?.sortType == "desc" &&
                         props.params?.sortName == "name"
                             ? h(ArrowUpDown, { class: "h-4 w-4" })
@@ -143,9 +146,21 @@ const columns: ColumnDef<TShop>[] = [
                 ]
             );
         },
-
         cell: ({ row }) =>
-            h("div", { class: "capitalize" }, row.getValue("name")),
+            h("div", { class: "flex items-center gap-2" }, [
+                h("img", {
+                    src: row.original.image,
+                    class: "h-10 w-10 object-cover  rounded border border-gray-300",
+                }),
+                h("div", { class: "capitalize max-w-[300px]" }, [
+                    h("h4", { class: "font-medium" }, row.original.name),
+                    h(
+                        "p",
+                        { class: "text-xs text-gray-600" },
+                        `alamat kantor : ${row.original.address}`
+                    ),
+                ]),
+            ]),
     },
     {
         id: "actions",
@@ -221,6 +236,8 @@ const savedForm = (state: boolean) => {
     formState.value.open = !state;
 };
 const deleteAll = () => {
+    // console.log(selectedId.value);
+
     router.post(
         route("backoffice.shop.delete-all"),
         {
@@ -287,7 +304,8 @@ watchDebounced(
                 <AlertDescription class="text-xs">
                     Halaman untuk memanajemen Unit Pelayanan Jasa yang terdapat
                     pada SMKN 1 Purwosari. Untuk menambah data baru silahkan
-                    mengklik tombol <strong>+ tambah</strong>
+                    mengklik tombol
+                    <strong>+ tambah</strong>
                 </AlertDescription>
             </Alert>
         </div>
@@ -328,7 +346,8 @@ watchDebounced(
             :title="formState.title"
             @closed="closeForm"
             @saved="savedForm"
-            :category="shop?.data"
+            :shop="shop?.data"
+            :edit="!!shop?.data"
         />
 
         <ConfirmDialog

@@ -23,11 +23,14 @@ class ShopRequest extends FormRequest
     {
         if (request()->isMethod('post')) {
             return [
-                'name' => ['required', 'unique:shops,name']
+                'name' => ['required', 'unique:shops,name'],
+                'address' => ['required'],
+                'image' => ['required'],
             ];
         } elseif (request()->isMethod('put')) {
             return [
-                'name' => ['required']
+                'name' => ['required'],
+                'address' => ['required'],
             ];
         }
     }
@@ -35,8 +38,17 @@ class ShopRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'required' => 'Data Unit Layanan harus diisi.',
-            'unique' => 'Data Unit Layanan sudah terdapat di sistem.'
+            'required' => ':attribute harus diisi.',
+            'unique' => ':attribute sudah terdapat di sistem.'
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'name' => 'Unit Layanan',
+            'address' => 'Alamat Kantor',
+            'image' => 'Gambar'
         ];
     }
 }

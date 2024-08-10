@@ -40,11 +40,11 @@ Route::prefix('backoffice')->group(function () {
 
     Route::prefix('unit_layanan')->controller(ShopController::class)->group(function () {
         Route::get('/', 'index')->name('backoffice.shop.index');
-        Route::get('/{category}', 'edit')->name('backoffice.shop.edit');
+        Route::get('/{shop}', 'edit')->name('backoffice.shop.edit');
         Route::post('/', 'store')->name('backoffice.shop.store');
         Route::post('/delete_all', 'deleteAll')->name('backoffice.shop.delete-all');
-        Route::delete('/{category}', 'destroy')->name('backoffice.shop.delete');
-        Route::put('/{category}', 'update')->name('backoffice.shop.update');
+        Route::delete('/{shop}', 'destroy')->name('backoffice.shop.delete');
+        Route::put('/{shop}', 'update')->name('backoffice.shop.update');
     });
 });
 

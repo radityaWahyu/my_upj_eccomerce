@@ -22,7 +22,7 @@ import {
     AlertDialogTitle,
 } from "@/shadcn/ui/alert-dialog";
 
-import { Ellipsis, PenLine, Trash } from "lucide-vue-next";
+import { Delete, Ellipsis, PenLine, Trash } from "lucide-vue-next";
 
 defineProps({
     id: { type: String, required: true },

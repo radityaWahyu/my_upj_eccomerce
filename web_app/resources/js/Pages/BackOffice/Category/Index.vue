@@ -85,8 +85,8 @@ const columns: ColumnDef<TCategory>[] = [
                         table.resetRowSelection();
                     } else {
                         const row = table.getRowModel();
-                        row.rows.forEach(({ id }) => {
-                            selectedId.value.push(id);
+                        row.rows.forEach((rowData) => {
+                            selectedId.value.push(rowData.original.id);
                         });
                     }
                     table.toggleAllPageRowsSelected(!!value);
