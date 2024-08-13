@@ -22,6 +22,7 @@ import ButtonAction from "@/Components/backoffice/shop/ButtonAction.vue";
 import ComboBox from "@/Components/backoffice/app/ComboBox.vue";
 import ConfirmDialog from "@/Components/backoffice/app/ConfirmDialog.vue";
 import ShopForm from "./ShopForm.vue";
+import ShopDetail from "@/Components/backoffice/shop/ShopDetail.vue";
 
 type TShop = {
     id: string;
@@ -98,6 +99,7 @@ const columns: ColumnDef<TShop>[] = [
             }),
         cell: ({ row }) =>
             h(Checkbox, {
+                class: "mr-5",
                 id: "check",
                 checked: row.getIsSelected(),
                 "onUpdate:checked": (value: any) => {
@@ -147,20 +149,15 @@ const columns: ColumnDef<TShop>[] = [
             );
         },
         cell: ({ row }) =>
-            h("div", { class: "flex items-center gap-2" }, [
-                h("img", {
-                    src: row.original.image,
-                    class: "h-10 w-10 object-cover  rounded border border-gray-300",
-                }),
-                h("div", { class: "capitalize max-w-[300px]" }, [
-                    h("h4", { class: "font-medium" }, row.original.name),
-                    h(
-                        "p",
-                        { class: "text-xs text-gray-600" },
-                        `alamat kantor : ${row.original.address}`
-                    ),
-                ]),
-            ]),
+            h(ShopDetail, {
+                class: "w-[450px]",
+                shop: {
+                    id: row.original.id,
+                    name: row.original.name,
+                    image: row.original.image,
+                    address: row.original.address,
+                },
+            }),
     },
     {
         id: "actions",

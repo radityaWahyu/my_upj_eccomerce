@@ -16,8 +16,8 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('name');
             $table->enum('gender', ['l', 'p']);
-            $table->string('phone_numbers', 20);
-            $table->string('wa_numbers', 20);
+            $table->string('phone', 20);
+            $table->string('whatsapp', 20);
             $table->string('address');
             $table->timestamps();
         });

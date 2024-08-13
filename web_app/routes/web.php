@@ -4,7 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\BackOffice\ShopController;
 use App\Http\Controllers\BackOffice\CategoryController;
-
+use App\Http\Controllers\BackOffice\EmployeeController;
+use App\Models\Employee;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +46,16 @@ Route::prefix('backoffice')->group(function () {
         Route::post('/delete_all', 'deleteAll')->name('backoffice.shop.delete-all');
         Route::delete('/{shop}', 'destroy')->name('backoffice.shop.delete');
         Route::put('/{shop}', 'update')->name('backoffice.shop.update');
+    });
+
+    Route::prefix('pegawai')->controller(EmployeeController::class)->group(function () {
+        Route::get('/', 'index')->name('backoffice.employee.index');
+        Route::get('/create', 'create')->name('backoffice.employee.create');
+        Route::get('/{employee}', 'edit')->name('backoffice.employee.edit');
+        Route::post('/', 'store')->name('backoffice.employee.store');
+        Route::post('/delete_all', 'deleteAll')->name('backoffice.employee.delete-all');
+        Route::delete('/{employee}', 'destroy')->name('backoffice.employee.delete');
+        Route::put('/{employee}', 'update')->name('backoffice.employee.update');
     });
 });
 

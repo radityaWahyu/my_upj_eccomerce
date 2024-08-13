@@ -14,12 +14,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('employees', function (Blueprint $table) {
-            $table->uuid()->primary();
+            $table->uuid('id')->primary();
             $table->string('name', 100);
             $table->enum('gender', ['l', 'p']);
             $table->string('address')->nullable();
-            $table->string('phone_numbers', 20)->nullable();
-            $table->string('wa_numbers', 20);
+            $table->string('phone', 20)->nullable();
+            $table->string('whatsapp', 20);
             $table->foreignIdFor(Shop::class)->constrained()->restrictOnDelete();
             $table->timestamps();
         });

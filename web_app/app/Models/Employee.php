@@ -11,6 +11,8 @@ class Employee extends Model
     use Uuid;
     use HasFactory;
 
+    protected $guarded = [];
+
     public function user()
     {
         return $this->morphOne(User::class, 'userable');
@@ -18,6 +20,6 @@ class Employee extends Model
 
     public function shop()
     {
-        return $this->hasOne(Shop::class);
+        return $this->belongsTo(Shop::class);
     }
 }

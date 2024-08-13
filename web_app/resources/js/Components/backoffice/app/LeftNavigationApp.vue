@@ -46,14 +46,14 @@ import HeaderLinkNavigation from "./HeaderLinkNavigation.vue";
                 </link-navigation>
                 <link-navigation
                     to="coba"
-                    :is-active="$page.url.startsWith('backoffice/pelanggan', 2)"
+                    :is-active="$page.url.startsWith('backoffice/pelanggan', 1)"
                 >
                     <User class="h-4 w-4" />
                     Pelanggan
                 </link-navigation>
                 <link-navigation
-                    to="coba"
-                    :is-active="$page.url.startsWith('backoffice/pegawai', 2)"
+                    to="/backoffice/pegawai"
+                    :is-active="$page.url.startsWith('backoffice/pegawai', 1)"
                 >
                     <Contact class="h-4 w-4" />
                     Pegawai

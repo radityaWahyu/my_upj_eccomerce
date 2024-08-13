@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\BackOffice;
 
 use App\Models\Customer;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BackOffice\StoreCustomerRequest;
 use App\Http\Requests\BackOffice\UpdateCustomerRequest;
@@ -28,7 +29,7 @@ class CustomerController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCustomerRequest $request)
+    public function store(Request $request)
     {
         //
     }
@@ -52,7 +53,7 @@ class CustomerController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCustomerRequest $request, Customer $customer)
+    public function update(Request $request, Customer $customer)
     {
         //
     }
