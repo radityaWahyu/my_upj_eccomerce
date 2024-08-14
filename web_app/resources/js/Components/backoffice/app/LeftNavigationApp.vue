@@ -88,8 +88,8 @@ import HeaderLinkNavigation from "./HeaderLinkNavigation.vue";
             <div class="space-y-1">
                 <header-link-navigation>Pengaturan</header-link-navigation>
                 <link-navigation
-                    to="coba"
-                    :is-active="$page.url.startsWith('backoffice/users', 2)"
+                    to="/backoffice/users"
+                    :is-active="$page.url.startsWith('backoffice/users', 1)"
                 >
                     <Users class="h-4 w-4" />
                     Users

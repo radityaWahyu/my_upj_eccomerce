@@ -13,6 +13,12 @@ class Employee extends Model
 
     protected $guarded = [];
 
+
+    public function scopeEmployees($query)
+    {
+        return $query->whereNot('name', 'Administrator');
+    }
+
     public function user()
     {
         return $this->morphOne(User::class, 'userable');

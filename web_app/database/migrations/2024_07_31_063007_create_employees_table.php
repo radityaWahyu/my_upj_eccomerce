@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->string('phone', 20)->nullable();
             $table->string('whatsapp', 20);
-            $table->foreignIdFor(Shop::class)->constrained()->restrictOnDelete();
+            $table->foreignIdFor(Shop::class)->nullable()->constrained()->nullOnDelete();
             $table->timestamps();
         });
     }

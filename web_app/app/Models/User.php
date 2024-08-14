@@ -5,15 +5,19 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Traits\Uuid;
+use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Notifications\Notifiable;
+
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
     use Uuid;
     use HasApiTokens, HasFactory, Notifiable;
+    use HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -21,9 +25,11 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'username',
         'email',
         'password',
+        'is_verified',
+        'is_enabled',
     ];
 
     /**
@@ -50,5 +56,15 @@ class User extends Authenticatable
     public function userable()
     {
         return $this->morphTo();
+    }
+
+    public function isAdmin()
+    {
+        return $this->where('userable_type', 'App\Models\Employee')->exists();
+    }
+
+    public function isCustomer()
+    {
+        return $this->where('userable_type', 'App\Models\Customer')->exists();
     }
 }

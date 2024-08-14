@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed, ComputedRef } from "vue";
 import TopAvatarButton from "./TopAvatarButton.vue";
 import {
     Home,
@@ -11,6 +12,22 @@ import {
 } from "lucide-vue-next";
 import { Sheet, SheetContent, SheetTrigger } from "@/shadcn/ui/sheet";
 import { Button } from "@/shadcn/ui/button";
+import { usePage } from "@inertiajs/vue3";
+
+type TUserProfile = {
+    user: {};
+    admin?: {
+        id: string;
+        level: string;
+        name: string;
+        username: string;
+    };
+};
+
+const page = usePage();
+const userProfile: ComputedRef<TUserProfile> = computed(
+    (): TUserProfile => page.props.auth
+);
 </script>
 <template>
     <header
@@ -82,8 +99,12 @@ import { Button } from "@/shadcn/ui/button";
         <!-- start avatar button -->
         <div class="flex items-center gap-4">
             <div>
-                <h4 class="font-medium text-sm">Raditya Wahyu Sasono</h4>
-                <p class="text-xs text-tomato">Administrator</p>
+                <h4 class="font-medium text-sm">
+                    {{ userProfile.admin?.name }}
+                </h4>
+                <p class="text-xs text-tomato">
+                    {{ userProfile.admin?.level }}
+                </p>
             </div>
             <top-avatar-button />
         </div>

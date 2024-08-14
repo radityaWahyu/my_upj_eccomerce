@@ -171,7 +171,7 @@ class EmployeeController extends Controller
                 ->orWhere('whatsapp', 'like', '%' . $request->search . '%');
         });
 
-        $employees = $employees->latest()->paginate($perPage);
+        $employees = $employees->employees()->latest()->paginate($perPage);
 
         return ['employees' => $employees, 'params' => $params];
     }
