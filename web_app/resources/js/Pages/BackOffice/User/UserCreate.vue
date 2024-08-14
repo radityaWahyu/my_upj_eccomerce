@@ -6,7 +6,6 @@ export default {
 };
 </script>
 <script setup lang="ts">
-import { watch, ref } from "vue";
 import {
   Select,
   SelectContent,
@@ -44,13 +43,10 @@ type TUser = {
 };
 
 const props = defineProps<{
-  user?: TUser;
   employees: TEmployee[];
 }>();
 
 const page = usePage();
-const isEdit = ref<boolean>(false);
-const id = ref<string>("");
 
 const userSchema = () => {
   return toTypedSchema(
@@ -99,17 +95,7 @@ const closeForm = () => {
 };
 
 const onSubmit = form.handleSubmit((formData) => {
-  console.log(formData);
-  if (isEdit.value) {
-    // alert("update");
-    userForm.put(route("backoffice.user.update", id.value), {
-      onSuccess: () => {
-        resetForm();
-      },
-    });
-  } else {
-    userForm.post(route("backoffice.user.store"));
-  }
+  userForm.post(route("backoffice.user.store"));
 });
 </script>
 

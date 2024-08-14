@@ -22,11 +22,19 @@ class UserRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'username' => ['required', 'unique:users,username'],
-            'password' => ['required', 'min:5'],
-            'confirm_password' => ['required',  'same:password'],
-        ];
+        if (request()->isMethod('post')) {
+            return [
+                'username' => ['required', 'unique:users,username'],
+                'password' => ['required', 'min:5'],
+                'confirm_password' => ['required',  'same:password'],
+            ];
+        } else {
+            return [
+                'username' => ['required', 'unique:users,username'],
+                'password' => ['sometimes', 'nullable', 'min:5'],
+                'confirm_password' => ['sometimes', 'nullable', 'same:password'],
+            ];
+        }
     }
 
     public function messages(): array

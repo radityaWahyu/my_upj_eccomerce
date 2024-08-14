@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Http\Requests\BackOffice\UserRequest;
+use App\Http\Resources\UserEditResource;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class UserController extends Controller
 {
@@ -39,7 +41,7 @@ class UserController extends Controller
             ->whereDoesntHave('user')
             ->get();
 
-        return inertia('BackOffice/User/UserForm', [
+        return inertia('BackOffice/User/UserCreate', [
             'employees' => fn() => $employees->map(fn($employee) => [
                 'id' => $employee->id,
                 'name' => $employee->name,
@@ -81,15 +83,36 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        //
+        try {
+            return inertia(
+                'BackOffice/User/UserEdit',
+                [
+                    'user' => fn() => new UserEditResource($user),
+                ],
+            );
+        } catch (ModelNotFoundException $Exception) {
+            return redirect()->back()->with('error', 'Data yang anda cari tidak ditemukan di sistem.');
+        }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(UserRequest $request, User $user)
     {
-        //
+        try {
+
+            $form_data = ['username' => $request->username];
+            if ($request->filled('password')) {
+                $form_data += ['password' => $request->password];
+            }
+
+            $user->update($form_data);
+
+            return to_route('backoffice.user.index')->with('success', 'Data User berhasil disimpan');
+        } catch (\Illuminate\Database\QueryException $exception) {
+            return redirect()->back()->with('error', $exception->errorInfo);
+        }
     }
 
     /**
@@ -97,7 +120,12 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //
+        try {
+            $user->delete();
+            return redirect()->back()->with('success', 'Data User berhasil dihapus.');
+        } catch (\Illuminate\Database\QueryException $exception) {
+            return redirect()->back()->with('error', $exception->errorInfo);
+        }
     }
     public function getUsers(Request $request)
     {
