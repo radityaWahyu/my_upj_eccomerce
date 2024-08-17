@@ -5,8 +5,11 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserResource extends JsonResource
+class ProductEditResource extends JsonResource
 {
+
+    public static $wrap = null;
+
     /**
      * Transform the resource into an array.
      *
@@ -15,11 +18,12 @@ class UserResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->user->id,
+            'id' => $this->id,
             'name' => $this->name,
-            'username' => $this->user->username,
-            'shop' => !empty($this->shop->name) ? $this->shop->name : 'Unit Layanan Tidak Ditemukan',
-            'level' => $this->user->getRoleNames()[0],
+            'category_id' => $this->category_id,
+            'shop_id' => $this->shop_id,
+            'price' => $this->price,
+            'type' => $this->type,
         ];
     }
 }

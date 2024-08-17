@@ -18,6 +18,7 @@ const props = defineProps<TLink>();
             'bg-muted': isActive,
         }"
         class="flex text-gray-300 items-center gap-3 rounded px-3 py-1.5 transition-all hover:text-primary hover:bg-muted"
+        replace
     >
         <slot />
     </Link>

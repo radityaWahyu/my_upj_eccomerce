@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests\BackOffice;
 
-use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class EmployeeRequest extends FormRequest
+class ProductRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,13 +21,20 @@ class EmployeeRequest extends FormRequest
      */
     public function rules(): array
     {
-
+        if ($this->user()->hasRole('administrator')) {
+            return [
+                'name' => ['required'],
+                'type' => ['required'],
+                'shop' => ['required'],
+                'category' => ['required'],
+                'price' => ['required']
+            ];
+        }
         return [
             'name' => ['required'],
-            'gender' => ['required', Rule::in(['l', 'p'])],
-            'whatsapp' => ['required',  'max:11'],
-            'phone' => ['max:11'],
-            'shop' => ['required']
+            'type' => ['required'],
+            'category' => ['required'],
+            'price' => ['required', 'integer']
         ];
     }
 
@@ -38,7 +44,7 @@ class EmployeeRequest extends FormRequest
             'required' => ':attribute harus diisi.',
             'unique' => ':attribute sudah terdapat di sistem.',
             'max' => ':attribute harus diisi maksimal :max digit',
-            'number' => ':attribute harus diisi dengan angka',
+            'integer' => ':attribute harus diisi dengan angka',
             'exists' => ':attribute tidak terdapat dalam sistem.'
         ];
     }
@@ -46,12 +52,11 @@ class EmployeeRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'name' => 'Nama',
-            'address' => 'Alamat',
-            'gender' => 'Jenis Kelamain',
+            'name' => 'Nama Produk',
+            'type' => 'Jenis Produk',
+            'category' => 'Kategori',
             'shop' => 'Unit Layanan',
-            'phone' => 'No Telepon',
-            'whatsapp' => 'No Whatsapp'
+            'price' => 'Harga',
         ];
     }
 }

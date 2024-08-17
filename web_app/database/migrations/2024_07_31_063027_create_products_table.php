@@ -20,6 +20,7 @@ return new class extends Migration
             $table->enum('type', ['produk', 'jasa']);
             $table->integer('stock')->nullable();
             $table->integer('price')->default(0);
+            $table->text('description')->nullable();
             $table->string('slug');
             $table->boolean('affect_stock')->default(false);
             $table->foreignIdFor(Category::class)->constrained()->noActionOnDelete();

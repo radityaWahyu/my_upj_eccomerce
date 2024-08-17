@@ -6,6 +6,7 @@ use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\BackOffice\AuthController;
 use App\Http\Controllers\BackOffice\ShopController;
 use App\Http\Controllers\BackOffice\UserController;
+use App\Http\Controllers\BackOffice\ProductController;
 use App\Http\Controllers\BackOffice\CategoryController;
 use App\Http\Controllers\BackOffice\EmployeeController;
 
@@ -64,6 +65,18 @@ Route::prefix('backoffice')->group(function () {
             Route::post('/delete_all', 'deleteAll')->name('backoffice.employee.delete-all');
             Route::delete('/{employee}', 'destroy')->name('backoffice.employee.delete');
             Route::put('/{employee}', 'update')->name('backoffice.employee.update');
+        });
+
+        Route::prefix('produk')->controller(ProductController::class)->group(function () {
+            Route::get('/', 'index')->name('backoffice.product.index');
+            Route::get('/create', 'create')->name('backoffice.product.create');
+            Route::get('/{product}', 'edit')->name('backoffice.product.edit');
+            Route::post('/', 'store')->name('backoffice.product.store');
+            Route::post('/delete_all', 'deleteAll')->name('backoffice.product.delete-all');
+            Route::delete('/{product}', 'destroy')->name('backoffice.product.delete');
+            Route::put('/{product}', 'update')->name('backoffice.product.update');
+            Route::get('/{product}/images', 'images')->name('backoffice.product.images');
+            Route::post('/{product}/images', 'imagesStore')->name('backoffice.product.images.store');
         });
 
         Route::prefix('users')->controller(UserController::class)->group(function () {

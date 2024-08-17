@@ -14,7 +14,6 @@ import { cn } from "@/shadcn/utils";
 import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 import * as zod from "zod";
-import validator from "validator";
 import { BadgeInfo, TriangleAlert } from "lucide-vue-next";
 
 const props = defineProps<{

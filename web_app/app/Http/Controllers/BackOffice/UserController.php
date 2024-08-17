@@ -153,12 +153,12 @@ class UserController extends Controller
 
 
 
-        $user = User::query()->whereNot('username', 'administrator');
+        $user = Employee::query()->whereHas('user');
         $user = $user->when($request->has('search'), function ($query) use ($request) {
-            return $query->userable->where('name', 'like', '%' . $request->search . '%');
+            return $query->where('name', 'like', '%' . $request->search . '%');
         });
 
-        $user = $user->latest()->paginate($perPage);
+        $user = $user->employees()->latest()->paginate($perPage);
 
         return ['users' => $user, 'params' => $params];
     }

@@ -27,7 +27,8 @@ watch(
         } else {
             showErrorAlert.value = false;
         }
-    }
+    },
+    { immediate: true }
 );
 </script>
 

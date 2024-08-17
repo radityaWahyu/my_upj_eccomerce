@@ -59,10 +59,8 @@ import HeaderLinkNavigation from "./HeaderLinkNavigation.vue";
                     Pegawai
                 </link-navigation>
                 <link-navigation
-                    to="coba"
-                    :is-active="
-                        $page.url.startsWith('backoffice/produk_jasa', 2)
-                    "
+                    to="/backoffice/produk"
+                    :is-active="$page.url.startsWith('backoffice/produk', 1)"
                 >
                     <Package class="h-4 w-4" />
                     Produk dan Jasa

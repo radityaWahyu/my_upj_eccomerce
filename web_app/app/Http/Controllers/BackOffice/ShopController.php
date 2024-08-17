@@ -62,13 +62,6 @@ class ShopController extends Controller
 
             $request->image->storeAs('images/shops/', $filename);
 
-            // $manager = new ImageManager(new Driver());
-            // $image = $manager->read($shopImage, [
-            //     DataUriImageDecoder::class,
-            //     Base64ImageDecoder::class
-            // ]);
-            // $image->save(public_path('images/shops/' . $filename));
-
 
             Shop::create([
                 'name' => $request->name,

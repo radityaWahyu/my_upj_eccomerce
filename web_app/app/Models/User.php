@@ -4,18 +4,16 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-use App\Traits\Uuid;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
-
-use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use Uuid;
+    use HasUuids;
     use HasApiTokens, HasFactory, Notifiable;
     use HasRoles;
 
@@ -58,6 +56,11 @@ class User extends Authenticatable
         return $this->morphTo();
     }
 
+    public function product()
+    {
+        return $this->hasMany(Product::class);
+    }
+
     public function isAdmin()
     {
         return $this->where('userable_type', 'App\Models\Employee')->exists();
@@ -66,5 +69,11 @@ class User extends Authenticatable
     public function isCustomer()
     {
         return $this->where('userable_type', 'App\Models\Customer')->exists();
+    }
+
+
+    public function scopeIsAdministrator()
+    {
+        return $this->where('username', 'administrator')->exists();
     }
 }

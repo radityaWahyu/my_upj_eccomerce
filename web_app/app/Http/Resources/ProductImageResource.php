@@ -3,10 +3,13 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserResource extends JsonResource
+class ProductImageResource extends JsonResource
 {
+
+    public static $wrap = null;
     /**
      * Transform the resource into an array.
      *
@@ -15,11 +18,9 @@ class UserResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->user->id,
-            'name' => $this->name,
-            'username' => $this->user->username,
-            'shop' => !empty($this->shop->name) ? $this->shop->name : 'Unit Layanan Tidak Ditemukan',
-            'level' => $this->user->getRoleNames()[0],
+            'id' => $this->id,
+            'title' => $this->name,
+            'image' => "data:image/jpeg;base64," . base64_encode(Storage::get($this->image_url)),
         ];
     }
 }
