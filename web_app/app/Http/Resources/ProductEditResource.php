@@ -24,6 +24,7 @@ class ProductEditResource extends JsonResource
             'shop_id' => $this->shop_id,
             'price' => $this->price,
             'type' => $this->type,
+            'description' => $this->description,
         ];
     }
 }

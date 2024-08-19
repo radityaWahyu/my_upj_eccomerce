@@ -27,14 +27,16 @@ class ProductRequest extends FormRequest
                 'type' => ['required'],
                 'shop' => ['required'],
                 'category' => ['required'],
-                'price' => ['required']
+                'price' => ['required'],
+                'description' => ['nullable']
             ];
         }
         return [
             'name' => ['required'],
             'type' => ['required'],
             'category' => ['required'],
-            'price' => ['required', 'integer']
+            'price' => ['required', 'integer'],
+            'description' => ['nullable']
         ];
     }
 
@@ -57,6 +59,7 @@ class ProductRequest extends FormRequest
             'category' => 'Kategori',
             'shop' => 'Unit Layanan',
             'price' => 'Harga',
+            'description' => 'Deskripsi'
         ];
     }
 }

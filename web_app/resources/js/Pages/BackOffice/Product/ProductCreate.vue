@@ -35,8 +35,8 @@ import {
 } from "@inertiajs/vue3";
 import { Button } from "@/shadcn/ui/button";
 import { Input } from "@/shadcn/ui/input";
-
 import { Alert, AlertDescription, AlertTitle } from "@/shadcn/ui/alert";
+import InputTipTap from "@/Components/backoffice/app/InputTipTap.vue";
 
 type TShops = {
     id: string;
@@ -99,6 +99,7 @@ const productForm = useInertiaForm({
     category: "",
     price: 0,
     shop: "",
+    description: "",
 });
 
 const resetForm = () => {
@@ -355,6 +356,30 @@ const onSubmit = form.handleSubmit((formData) => {
                         v-if="productForm.errors.price"
                     >
                         {{ productForm.errors.price }}
+                    </div>
+                    <FormMessage />
+                </FormItem>
+            </FormField>
+            <FormField v-slot="{ componentField }" name="description">
+                <FormItem>
+                    <FormLabel
+                        :class="{
+                            'text-red-500': productForm.errors.description,
+                        }"
+                    >
+                        Deskripsi
+                    </FormLabel>
+                    <FormControl>
+                        <InputTipTap
+                            placeholder="Tuliskan deskripsi produk..."
+                            v-model="productForm.description"
+                        />
+                    </FormControl>
+                    <div
+                        class="text-xs text-red-500 font-medium"
+                        v-if="productForm.errors.description"
+                    >
+                        {{ productForm.errors.description }}
                     </div>
                     <FormMessage />
                 </FormItem>

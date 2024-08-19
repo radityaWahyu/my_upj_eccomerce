@@ -62,12 +62,16 @@ class ProductController extends Controller
      */
     public function store(ProductRequest $request)
     {
+
+        // dd($request->validated());
+
         try {
             $form_data = [
                 'name' => $request->name,
                 'type' => $request->type,
                 'category_id' => $request->category,
                 'price' => $request->price,
+                'description' => $request->description,
             ];
             if ($request->user()->hasRole('administrator')) {
                 $form_data += ['shop_id' => $request->shop];
@@ -120,7 +124,8 @@ class ProductController extends Controller
                 'type' => $request->type,
                 'category_id' => $request->category,
                 'price' => $request->price,
-                'user_id' => $request->user()->id
+                'user_id' => $request->user()->id,
+                'description' => $request->description,
             ];
             if ($request->user()->hasRole('administrator')) {
                 $form_data += ['shop_id' => $request->shop];

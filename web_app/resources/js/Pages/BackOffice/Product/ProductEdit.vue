@@ -30,7 +30,7 @@ import * as zod from "zod";
 import { usePage, useForm as useInertiaForm, router, Head } from "@inertiajs/vue3";
 import { Button } from "@/shadcn/ui/button";
 import { Input } from "@/shadcn/ui/input";
-
+import InputTipTap from "@/Components/backoffice/app/InputTipTap.vue";
 import { Alert, AlertDescription, AlertTitle } from "@/shadcn/ui/alert";
 
 type TProduct = {
@@ -40,6 +40,7 @@ type TProduct = {
   category_id: string;
   shop_id: string;
   price: number;
+  description: string;
 };
 
 type TShops = {
@@ -71,6 +72,7 @@ const productSchema = () => {
           message: "Kategori Produk harus dipilih",
         }),
         price: zod.number({ message: "Harga Produk harus diisi" }),
+        description: zod.string(),
       })
     );
   }
@@ -83,6 +85,7 @@ const productSchema = () => {
       category: zod.string({ message: "Kategori Produk harus dipilih" }),
       price: zod.number({ message: "Harga Produk harus diisi" }),
       shop: zod.string({ message: "Unit Layanan harus dipilih" }),
+      description: zod.string(),
     })
   );
 };
@@ -104,6 +107,7 @@ const productForm = useInertiaForm({
   category: "",
   price: 0,
   shop: "",
+  description: "",
 });
 
 const resetForm = () => {
@@ -126,11 +130,14 @@ watch(
     form.setFieldValue("type", product.type);
     form.setFieldValue("price", product.price);
     form.setFieldValue("category", product.category_id);
+    form.setFieldValue("description", product.description);
     productForm.name = product.name;
     productForm.type = product.type;
     productForm.category = product.category_id;
     productForm.price = product.price;
     productForm.shop = product.shop_id;
+    productForm.description = product.description;
+    console.log(product.description);
   },
   { immediate: true }
 );
@@ -342,6 +349,30 @@ watch(
           </FormControl>
           <div class="text-xs text-red-500 font-medium" v-if="productForm.errors.price">
             {{ productForm.errors.price }}
+          </div>
+          <FormMessage />
+        </FormItem>
+      </FormField>
+      <FormField v-slot="{ componentField }" name="description">
+        <FormItem>
+          <FormLabel
+            :class="{
+              'text-red-500': productForm.errors.description,
+            }"
+          >
+            Deskripsi
+          </FormLabel>
+          <FormControl>
+            <InputTipTap
+              placeholder="Tuliskan deskripsi produk..."
+              v-model="productForm.description"
+            />
+          </FormControl>
+          <div
+            class="text-xs text-red-500 font-medium"
+            v-if="productForm.errors.description"
+          >
+            {{ productForm.errors.description }}
           </div>
           <FormMessage />
         </FormItem>
