@@ -73,6 +73,7 @@ Route::prefix('backoffice')->group(function () {
             Route::get('/{product}', 'edit')->name('backoffice.product.edit');
             Route::post('/', 'store')->name('backoffice.product.store');
             Route::post('/delete_all', 'deleteAll')->name('backoffice.product.delete-all');
+            Route::delete('/delete-image/{image}', 'deleteImage')->name('backoffice.product.images.delete');
             Route::delete('/{product}', 'destroy')->name('backoffice.product.delete');
             Route::put('/{product}', 'update')->name('backoffice.product.update');
             Route::get('/{product}/images', 'images')->name('backoffice.product.images');

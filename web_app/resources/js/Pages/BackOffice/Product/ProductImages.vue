@@ -7,10 +7,11 @@ export default {
 </script>
 <script setup lang="ts">
 import { ref } from "vue";
-import { Head, router } from "@inertiajs/vue3";
+import { Head, useForm, Link } from "@inertiajs/vue3";
 import { Button } from "@/shadcn/ui/button";
 import { Badge } from "@/shadcn/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "@/shadcn/ui/alert";
+import { Skeleton } from "@/shadcn/ui/skeleton";
 import { MoveLeft, Plus, BadgeInfo } from "lucide-vue-next";
 import ImageBox from "@/Components/backoffice/product/ImageBox.vue";
 import ProductImageForm from "./ProductImageForm.vue";
@@ -35,17 +36,18 @@ const props = defineProps<{
 }>();
 
 const formOpen = ref<boolean>(false);
+const form = useForm({});
 const onSaved = () => {
     formOpen.value = false;
     getImages();
 };
 const getImages = () => {
-    router.get(
-        route("backoffice.product.images", props.product.data.id),
-        {},
-        { only: ["images"] }
-    );
+    form.get(route("backoffice.product.images", props.product.data.id), {
+        only: ["images"],
+    });
 };
+
+const deletedImage = () => getImages();
 </script>
 <template>
     <Head title="Produk dan Jasa" />
@@ -62,10 +64,12 @@ const getImages = () => {
 
             <Button
                 variant="default"
-                @click="router.get(route('backoffice.product.index'))"
                 class="flex items-center gap-2 font-semibold"
+                as-child
             >
-                <MoveLeft class="w-4 h-4" stroke-width="3px" /> Kembali
+                <Link :href="route('backoffice.product.index')" replace>
+                    <MoveLeft class="w-4 h-4" stroke-width="3px" /> Kembali
+                </Link>
             </Button>
         </div>
         <div
@@ -112,20 +116,36 @@ const getImages = () => {
                     </div>
                     Tambah Gambar
                 </button>
-                <template v-if="images.data.length > 0">
+                <template v-if="images.data.length > 0 || !form.processing">
                     <ImageBox
                         v-for="image in images.data"
                         :key="image.id"
                         :image="image"
+                        @deleted="deletedImage"
                     />
                 </template>
-                <Alert class="bg-yellow-100 w-1/2" v-else>
+                <Alert
+                    class="bg-yellow-100 w-1/2"
+                    v-if="images.data.length == 0"
+                >
                     <BadgeInfo class="h-5 w-5" />
                     <AlertTitle>Keterangan</AlertTitle>
                     <AlertDescription>
                         Gambar masih kosong, silahkan tambahkan gambar baru.
                     </AlertDescription>
                 </Alert>
+                <div class="flex items-center gap-3" v-if="form.processing">
+                    <div
+                        v-for="index in 2"
+                        :key="index"
+                        class="h-40 w-44 space-y-2"
+                    >
+                        <Skeleton class="h-full w-full rounded-xl" />
+                        <div class="space-y-2">
+                            <Skeleton class="h-4 w-full" />
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <ProductImageForm

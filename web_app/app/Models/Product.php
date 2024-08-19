@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Traits\Uuid;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -16,6 +15,15 @@ class Product extends Model
 
     protected $guarded = [];
 
+    public static function boot()
+    {
+        parent::boot();
+        self::deleting(function ($product) {
+            $product->images()->each(function ($image) {
+                $image->delete();
+            });
+        });
+    }
 
     protected function name(): Attribute
     {
@@ -39,12 +47,12 @@ class Product extends Model
 
     public function images()
     {
-        return $this->hasMany(Image::class);
+        return $this->hasMany(ProductImage::class);
     }
 
     public function image()
     {
-        return $this->hasOne(Image::class)->latest();
+        return $this->hasOne(ProductImage::class)->latest();
     }
 
     public function user()

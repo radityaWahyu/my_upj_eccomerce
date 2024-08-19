@@ -8,6 +8,7 @@ use App\Traits\Image;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Support\Str;
+use App\Models\ProductImage;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
@@ -185,7 +186,18 @@ class ProductController extends Controller
                 'image_url' => $fullImagePath,
             ]);
 
-            return redirect()->back()->with('success', 'Gambar berhasil disimpan');
+            return redirect()->back()->with('success', 'Gambar berhasil ditambahkan');
+        } catch (\Illuminate\Database\QueryException $exception) {
+            return redirect()->back()->with('error', $exception->errorInfo);
+        }
+    }
+
+    public function deleteImage(ProductImage $image)
+    {
+        try {
+            $image->delete();
+
+            return redirect()->back()->with('success', 'Gambar berhasil dihapus.');
         } catch (\Illuminate\Database\QueryException $exception) {
             return redirect()->back()->with('error', $exception->errorInfo);
         }
