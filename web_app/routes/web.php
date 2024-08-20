@@ -10,6 +10,7 @@ use App\Http\Controllers\BackOffice\BannerController;
 use App\Http\Controllers\BackOffice\ProductController;
 use App\Http\Controllers\BackOffice\CategoryController;
 use App\Http\Controllers\BackOffice\EmployeeController;
+use App\Http\Controllers\BackOffice\SettingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -89,6 +90,11 @@ Route::prefix('backoffice')->group(function () {
             Route::post('/delete_all', 'deleteAll')->name('backoffice.user.delete-all');
             Route::delete('/{user}', 'destroy')->name('backoffice.user.delete');
             Route::put('/{user}', 'update')->name('backoffice.user.update');
+        });
+
+        Route::prefix('setting')->controller(SettingController::class)->group(function () {
+            Route::get('/', 'index')->name('backoffice.setting.index');
+            Route::post('/', 'store')->name('backoffice.setting.store');
         });
 
         Route::prefix('banner')->controller(BannerController::class)->group(function () {

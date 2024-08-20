@@ -93,10 +93,8 @@ import HeaderLinkNavigation from "./HeaderLinkNavigation.vue";
                     Users
                 </link-navigation>
                 <link-navigation
-                    to="coba"
-                    :is-active="
-                        $page.url.startsWith('backoffice/pengaturan', 2)
-                    "
+                    to="/backoffice/setting"
+                    :is-active="$page.url.startsWith('backoffice/setting', 1)"
                 >
                     <Settings class="h-4 w-4" />
                     Sistem

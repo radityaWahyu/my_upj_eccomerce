@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\BackOffice;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\BackOffice\StoreSettingRequest;
-use App\Http\Requests\BackOffice\UpdateSettingRequest;
 use App\Models\Setting;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\SettingResource;
 
 class SettingController extends Controller
 {
@@ -14,7 +14,11 @@ class SettingController extends Controller
      */
     public function index()
     {
-        //
+        $settings = Setting::query()->get();
+
+        return inertia('BackOffice/Setting/Index', [
+            'setttings' => fn() => SettingResource::collection($settings)
+        ]);
     }
 
     /**
@@ -28,7 +32,7 @@ class SettingController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreSettingRequest $request)
+    public function store(Request $request)
     {
         //
     }
@@ -52,7 +56,7 @@ class SettingController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateSettingRequest $request, Setting $setting)
+    public function update(Request $request, Setting $setting)
     {
         //
     }
