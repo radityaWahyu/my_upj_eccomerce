@@ -102,8 +102,8 @@ import HeaderLinkNavigation from "./HeaderLinkNavigation.vue";
                     Sistem
                 </link-navigation>
                 <link-navigation
-                    to="coba"
-                    :is-active="$page.url.startsWith('backoffice/banner', 2)"
+                    to="/backoffice/banner"
+                    :is-active="$page.url.startsWith('backoffice/banner', 1)"
                 >
                     <BetweenHorizonalEnd class="h-4 w-4" />
                     Banner

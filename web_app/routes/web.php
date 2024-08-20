@@ -6,6 +6,7 @@ use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\BackOffice\AuthController;
 use App\Http\Controllers\BackOffice\ShopController;
 use App\Http\Controllers\BackOffice\UserController;
+use App\Http\Controllers\BackOffice\BannerController;
 use App\Http\Controllers\BackOffice\ProductController;
 use App\Http\Controllers\BackOffice\CategoryController;
 use App\Http\Controllers\BackOffice\EmployeeController;
@@ -88,6 +89,14 @@ Route::prefix('backoffice')->group(function () {
             Route::post('/delete_all', 'deleteAll')->name('backoffice.user.delete-all');
             Route::delete('/{user}', 'destroy')->name('backoffice.user.delete');
             Route::put('/{user}', 'update')->name('backoffice.user.update');
+        });
+
+        Route::prefix('banner')->controller(BannerController::class)->group(function () {
+            Route::get('/', 'index')->name('backoffice.banner.index');
+            Route::get('/create', 'create')->name('backoffice.banner.create');
+            Route::post('/', 'store')->name('backoffice.banner.store');
+            Route::post('/set-active/{banner}', 'setActive')->name('backoffice.banner.activated');
+            Route::delete('/{banner}', 'destroy')->name('backoffice.banner.delete');
         });
     });
 });

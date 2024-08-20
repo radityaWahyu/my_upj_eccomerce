@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Banner;
 use App\Models\Product;
 use App\Models\ProductImage;
+use App\Observers\BannerObserver;
 use App\Observers\ProductObserver;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
@@ -31,6 +33,7 @@ class EventServiceProvider extends ServiceProvider
     {
         //
         ProductImage::observe(ProductImageObserver::class);
+        Banner::observe(BannerObserver::class);
     }
 
     /**
