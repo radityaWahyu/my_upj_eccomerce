@@ -1,29 +1,41 @@
 <template>
-    <div class="p-2 m-auto container text-center relative">
-        <swiper
-            :slides-per-view="1"
-            :space-between="50"
-            class="rounded-lg lg:w-[500px] lg:drop-shadow-md"
-            :modules="modules"
-            :scrollbar="{ draggable: true }"
-            navigation
-            watch-slides-progress
-            @slideChange="onSlideChange"
-            @swiper="onSwiper"
-        >
-            <swiper-slide v-for="product in props.images">
-                <img
-                    :src="product.image"
-                    :alt="product.alt"
-                    class="object-cover w-screen"
-                />
-            </swiper-slide>
-        </swiper>
+    <div class="m-auto container text-center">
+        <div class="relative" v-if="images.length > 0">
+            <swiper
+                :slides-per-view="1"
+                :space-between="50"
+                class="rounded-lg lg:w-[500px] lg:drop-shadow-md h-[500px] overflow-hidden"
+                :modules="modules"
+                :scrollbar="{ draggable: true }"
+                navigation
+                watch-slides-progress
+                @slideChange="onSlideChange"
+                @swiper="onSwiper"
+            >
+                <swiper-slide v-for="image in images">
+                    <img
+                        :src="image.image"
+                        :alt="image.title"
+                        class="object-cover w-full h-full"
+                    />
+                </swiper-slide>
+            </swiper>
+            <div
+                class="absolute bottom-0 mb-5 z-10 mx-auto block bg-tomato text-white px-2 py-1 text-[12px] font-semibold rounded-full left-[40%]"
+            >
+                Gambar ke {{ swipperValue.activeIndex }} /
+                {{ swipperValue.total }}
+            </div>
+        </div>
         <div
-            class="absolute bottom-0 mb-5 z-10 mx-auto block bg-tomato text-white px-2 py-1 text-[12px] font-semibold rounded-full left-[40%]"
+            v-else
+            class="rounded-lg lg:w-[500px] lg:drop-shadow-md h-[500px] overflow-hidden"
         >
-            Gambar ke {{ swipperValue.activeIndex }} /
-            {{ swipperValue.total }}
+            <img
+                :src="NoImage"
+                alt="no-image"
+                class="object-cover w-full h-full"
+            />
         </div>
     </div>
 </template>
@@ -31,6 +43,7 @@
 import { Navigation, EffectFade, Scrollbar } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { reactive } from "vue";
+import NoImage from "@/Assets/images/no-image.jpg";
 
 // Import Swiper styles
 import "swiper/css/bundle";
@@ -39,8 +52,8 @@ const modules = [Navigation, EffectFade, Scrollbar];
 
 import { defineProps, PropType } from "vue";
 type TImageProducts = {
-    image: any;
-    alt: string;
+    image: string;
+    title: string;
 };
 
 type TSwipperValues = {
@@ -48,9 +61,9 @@ type TSwipperValues = {
     total: number;
 };
 
-const props = defineProps({
-    images: Array as PropType<TImageProducts[]>,
-});
+const props = defineProps<{
+    images: TImageProducts[];
+}>();
 
 const swipperValue = reactive<TSwipperValues>({
     activeIndex: 1,

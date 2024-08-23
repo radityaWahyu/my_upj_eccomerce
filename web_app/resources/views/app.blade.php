@@ -5,6 +5,24 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    @if(isset($page['props']['event']))
+    <meta name="og:author" content="{{ (isset($page['props']['event']['author'])) ? $page['props']['event']['author'] : '' }}" />
+    <meta property="og:type" content="post">
+    <meta property="og:title" content="{{ isset($page['props']['event']['title']) ? $page['props']['event']['title'] : '' }}" />
+    <meta property="og:description" content="{{ (isset($page['props']['event']['description'])) ? $page['props']['event']['description'] : '' }}" />
+    <meta property="og:image" content="{{  (isset($page['props']['event']['image'])) ? ($page['props']['event']['image']) : '' }}" />
+    <meta property="og:url" content="{{ url()->current() }}" />
+    @endif
+
+    @if(isset($page['props']['event']))
+    <meta name="author" content="{{ (isset($page['props']['event']['author'])) ? $page['props']['event']['author'] : '' }}" />
+    <meta property="type" content="post">
+    <meta property="title" content="{{ isset($page['props']['event']['title']) ? $page['props']['event']['title'] : '' }}" />
+    <meta name="description" content="{{ (isset($page['props']['event']['description'])) ? $page['props']['event']['description'] : '' }}" />
+    <meta property="image" content="{{  (isset($page['props']['event']['image'])) ? ($page['props']['event']['image']) : '' }}" />
+    <meta property="url" content="{{ url()->current() }}" />
+    @endif
+
     <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Fonts -->

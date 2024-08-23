@@ -3,11 +3,11 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ProductResource extends JsonResource
+class ProductDetailResource extends JsonResource
 {
+    public static $wrap = null;
     /**
      * Transform the resource into an array.
      *
@@ -19,15 +19,13 @@ class ProductResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'shop' => $this->shop->name,
-            'slug' => $this->slug,
+            'shop_address' => $this->shop->address,
+            'contacts' => $this->shop->employees,
             'category' => $this->category->name,
             'type' => $this->type,
-            'image' => empty($this->image) ? null : "data:image/jpeg;base64," . base64_encode(Storage::get($this->image->image_url)),
-            'user' => $this->user->userable->name,
+            'images' => empty($this->images) ? null : ProductImageResource::collection($this->images),
             'price' => $this->price,
-            'description' => $this->desrcription,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'description' => $this->description,
         ];
     }
 }

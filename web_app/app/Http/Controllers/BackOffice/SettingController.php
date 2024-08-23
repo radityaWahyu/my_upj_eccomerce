@@ -6,6 +6,7 @@ use App\Models\Setting;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SettingResource;
+use App\Http\Requests\BackOffice\SettingRequest;
 
 class SettingController extends Controller
 {
@@ -14,10 +15,11 @@ class SettingController extends Controller
      */
     public function index()
     {
-        $settings = Setting::query()->get();
+        $settings = Setting::get();
+
 
         return inertia('BackOffice/Setting/Index', [
-            'setttings' => fn() => SettingResource::collection($settings)
+            'settings' => fn() => SettingResource::collection($settings)
         ]);
     }
 
@@ -32,9 +34,18 @@ class SettingController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(SettingRequest $request)
     {
-        //
+        try {
+            foreach ($request->settings as $setting) {
+                Setting::find($setting['id'])->update([
+                    'data' => $setting['value']
+                ]);
+            }
+            return redirect()->back()->with('success', 'Pengaturan berhasil disimpan');
+        } catch (\Illuminate\Database\QueryException $exception) {
+            return redirect()->back()->with('error', $exception->errorInfo);
+        }
     }
 
     /**

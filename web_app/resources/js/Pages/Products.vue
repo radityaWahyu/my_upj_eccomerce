@@ -1,108 +1,141 @@
+<script lang="ts">
+import Frontend from "@/Layouts/Frontend.vue";
+
+export default {
+    layout: Frontend,
+};
+</script>
+<script setup lang="ts">
+import { ref } from "vue";
+import { Head, Link, router } from "@inertiajs/vue3";
+import { ArrowRight } from "lucide-vue-next";
+import { Skeleton } from "@/shadcn/ui/skeleton";
+import Product from "@/Components/app/Product.vue";
+
+type TProduct = {
+    id: string;
+    name: string;
+    image: string;
+    price: number;
+    type: string;
+    shop: string;
+    category: string;
+    slug: string;
+};
+type TCategories = {
+    id: string;
+    name: string;
+};
+type TProductMeta = {
+    current_page: number;
+    from: number;
+    last_page: number;
+    per_page: number;
+    to: number;
+    total: number;
+};
+const perPages = ref([
+    { label: "10", value: 10 },
+    { label: "25", value: 25 },
+    { label: "50", value: 50 },
+    { label: "75", value: 75 },
+    { label: "100", value: 100 },
+]);
+const props = defineProps<{
+    categories: { data: TCategories[] };
+    products: {
+        data: TProduct[];
+        meta: TProductMeta;
+    };
+    params: {
+        category?: string;
+        per_page?: number;
+    };
+    active: string;
+}>();
+
+const category = ref(props.params?.category);
+const isLoading = ref<boolean>(false);
+const perPage = ref(props.products.meta.per_page);
+
+const getProducts = (page: number) => {
+    const url = ref({ per_page: perPage.value });
+    if (props.params?.category)
+        Object.assign(url.value, { category: category.value });
+
+    console.log(page);
+    if (page > 1) Object.assign(url.value, { page });
+
+    router.get(route("frontend.products"), url.value, {
+        preserveState: true,
+        onStart: () => (isLoading.value = true),
+        onError: (errors: any) => console.log(errors),
+        onFinish: () => (isLoading.value = false),
+    });
+};
+</script>
 <template>
+    <Head title="Daftar Produk dan Jasa" />
     <div class="lg:container">
         <div class="px-2 space-y-4 mt-4">
             <select
                 id="countries"
                 class="bg-nasplesyellow border border-white text-sm rounded-none focus:ring-yellow-500 focus:border-yellow-500 block w-full p-2.5 lg:hidden"
+                v-model="category"
             >
-                <option value="all" selected>Semua Kategori</option>
-                <option value="US">United States</option>
-                <option value="CA">Canada</option>
-                <option value="FR">France</option>
-                <option value="DE">Germany</option>
+                <option value="all">Semua Kategori</option>
+                <option
+                    :value="category.id"
+                    v-for="(category, index) in categories.data"
+                    :key="index"
+                >
+                    {{ category.name }}
+                </option>
             </select>
 
             <div
                 class="lg:flex lg:items-start lg:divide-x-[1px] lg:divide-nasplesyellow gap-2"
             >
                 <div class="hidden lg:block lg:w-[200px] space-y-2">
-                    <h4 class="text-sm font-medium px-2">
-                        Kategori Produk-Jasa
-                    </h4>
-                    <ul class="text-[12px] space-y-1 font-light w-full">
+                    <h4 class="text-lg font-medium px-2">Kategori</h4>
+                    <ul class="text-sm space-y-1 font-medium w-full">
                         <li>
-                            <a
-                                href=""
-                                class="w-full block px-2 py-1 hover:bg-yellow-400/40 hover:rounded"
+                            <Link
+                                :href="
+                                    route('frontend.products', {
+                                        category: 'all',
+                                    })
+                                "
+                                :class="{
+                                    'bg-yellow-400/40': active === 'all',
+                                }"
+                                class="w-full inline-flex items-center justify-between px-2 py-2 hover:bg-yellow-400/40 rounded-lg capitalize"
+                                replace
                             >
-                                Kategori 1
-                            </a>
+                                <span>Semua Kategori</span>
+                                <ArrowRight class="h-4 w-4" />
+                            </Link>
                         </li>
-                        <li>
-                            <a
-                                href=""
-                                class="w-full block px-2 py-1 hover:bg-yellow-400/40 hover:rounded"
+                        <li
+                            v-for="(category, index) in categories.data"
+                            :key="index"
+                        >
+                            <Link
+                                :href="route('frontend.products')"
+                                :data="{ category: category.id }"
+                                :class="{
+                                    'bg-yellow-400/40': active === category.id,
+                                }"
+                                class="w-full inline-flex items-center justify-between px-2 py-2 hover:bg-yellow-400/40 rounded-lg capitalize"
+                                replace
                             >
-                                Kategori 1
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                href=""
-                                class="w-full block px-2 py-1 hover:bg-yellow-400/40 hover:rounded"
-                            >
-                                Kategori 1
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                href=""
-                                class="w-full block px-2 py-1 hover:bg-yellow-400/40 hover:rounded"
-                            >
-                                Kategori 1
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                href=""
-                                class="w-full block px-2 py-1 hover:bg-yellow-400/40 hover:rounded"
-                            >
-                                Kategori 1
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                href=""
-                                class="w-full block px-2 py-1 hover:bg-yellow-400/40 hover:rounded"
-                            >
-                                Kategori 1
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                href=""
-                                class="w-full block px-2 py-1 hover:bg-yellow-400/40 hover:rounded"
-                            >
-                                Kategori 1
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                href=""
-                                class="w-full block px-2 py-1 hover:bg-yellow-400/40 hover:rounded"
-                            >
-                                Kategori 1
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                href=""
-                                class="w-full block px-2 py-1 hover:bg-yellow-400/40 hover:rounded"
-                            >
-                                Kategori 1
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                href=""
-                                class="w-full block px-2 py-1 hover:bg-yellow-400/40 hover:rounded"
-                            >
-                                Kategori 1
-                            </a>
+                                <span>{{ category.name }}</span>
+                                <ArrowRight class="h-4 w-4" />
+                            </Link>
                         </li>
                     </ul>
                 </div>
-                <div class="space-y-5 lg:px-3">
+                <div class="space-y-5 lg:px-3 lg:min-h-[600px] lg:w-11/12">
                     <div class="space-y-3">
                         <div class="flex items-start justify-between">
                             <h2
@@ -111,28 +144,42 @@
                                 Daftar Produk dan Jasa
                             </h2>
                             <select
-                                id="countries"
+                                v-model="perPage"
                                 class="bg-nasplesyellow border border-white text-[12px] font-semibold rounded focus:ring-yellow-500 focus:border-yellow-500 p-1 w-24"
+                                @change="getProducts(1)"
                             >
-                                <option value="10" selected>10 Data</option>
-                                <option value="US">20 Data</option>
-                                <option value="CA">20 Data</option>
-                                <option value="FR">20 Data</option>
-                                <option value="DE">20 Data</option>
+                                <option
+                                    v-for="(limit, index) in perPages"
+                                    :value="limit.value"
+                                    :key="index"
+                                >
+                                    {{ limit.label }}
+                                </option>
                             </select>
                         </div>
-                        <div
-                            class="w-full grid grid-cols-2 lg:grid-cols-5 gap-3"
-                        >
+                        <div class="grid grid-cols-2 lg:grid-cols-5 gap-3">
                             <product
+                                v-if="!isLoading"
                                 :product="product"
-                                v-for="product in products"
+                                v-for="product in products.data"
                             />
+
+                            <div class="space-y-3" v-for="index in 5" v-else>
+                                <Skeleton class="h-[200px] w-full rounded-xl" />
+                                <div class="space-y-2">
+                                    <Skeleton class="h-4 w-full" />
+                                    <Skeleton class="h-4 w-full" />
+                                </div>
+                            </div>
                         </div>
                         <div class="flex items-center justify-between">
                             <button
                                 type="button"
-                                class="bg-white border-[2px] border-gray-300 focus:outline-none hover:bg-nasplesyellow hover:text-white hover:border-yellow-400 focus:ring-1 focus:ring-yellow-400 font-semibold rounded text-sm px-4 py-2 me-2 mb-2"
+                                class="bg-white border-[2px] border-gray-300 focus:outline-none hover:bg-nasplesyellow hover:text-white hover:border-yellow-400 focus:ring-1 focus:ring-yellow-400 font-semibold rounded text-sm px-4 py-2 me-2 mb-2 disabled disabled:bg-gray-50 disabled:border-gray-200 disabled:text-gray-500"
+                                :disabled="products.meta.current_page === 1"
+                                @click="
+                                    getProducts(products.meta.current_page - 1)
+                                "
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -148,11 +195,19 @@
                                 </svg>
                             </button>
                             <div class="text-sm font-medium lg:font-normal">
-                                halaman 1 dari 100 Data
+                                halaman {{ products.meta.current_page }} dari
+                                {{ products.meta.total }} Data
                             </div>
                             <button
                                 type="button"
-                                class="bg-white border-[2px] border-gray-300 focus:outline-none hover:bg-nasplesyellow hover:text-white hover:border-yellow-400 focus:ring-1 focus:ring-yellow-400 font-semibold rounded text-sm px-4 py-2 me-2 mb-2"
+                                class="bg-white border-[2px] border-gray-300 focus:outline-none hover:bg-nasplesyellow hover:text-white hover:border-yellow-400 focus:ring-1 focus:ring-yellow-400 font-semibold rounded text-sm px-4 py-2 me-2 mb-2 disabled disabled:bg-gray-50 disabled:border-gray-200 disabled:text-gray-500"
+                                :disabled="
+                                    products.meta.current_page ===
+                                    products.meta.last_page
+                                "
+                                @click="
+                                    getProducts(products.meta.current_page + 1)
+                                "
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -174,87 +229,3 @@
         </div>
     </div>
 </template>
-
-<script lang="ts">
-import Frontend from "@/Layouts/Frontend.vue";
-
-export default {
-    layout: Frontend,
-};
-</script>
-<script setup lang="ts">
-import { ref } from "vue";
-import Product from "@/Components/app/Product.vue";
-import ProductOne from "@/Assets/images/product_1.webp";
-import ProductTwo from "@/Assets/images/product_2.webp";
-import ProductFour from "@/Assets/images/product_4.webp";
-import ProductFive from "@/Assets/images/product_5.jpg";
-import ProductSix from "@/Assets/images/product_6.jpeg";
-import AphpShop from "@/Assets/images/aphp.jpeg";
-import AtphShop from "@/Assets/images/atph.jpeg";
-import MktShop from "@/Assets/images/mkt.jpg";
-import TkjShop from "@/Assets/images/tkj.jpg";
-
-const frameworks = [
-    { value: "next.js", label: "Semua Kategori" },
-    { value: "sveltekit", label: "Kue Kering" },
-    { value: "nuxt", label: "Roti" },
-    { value: "remix", label: "Service Mobil" },
-    { value: "astro", label: "Service Body" },
-];
-
-const products = ref([
-    {
-        file: ProductOne,
-        title: "Product One",
-        price: "50000",
-        shop: "UPJ Teknik Informatika",
-    },
-    {
-        file: ProductTwo,
-        title: "Product Two",
-        price: "50000",
-        shop: "UPJ Teknik Pengelasa",
-    },
-    {
-        file: ProductFour,
-        title: "Product Four",
-        price: "50000",
-        shop: "UPJ APHP",
-    },
-    {
-        file: ProductFive,
-        title: "Product Five",
-        price: "50000",
-        shop: "UPJ Teknik ATPH",
-    },
-    {
-        file: ProductSix,
-        title: "Product Six",
-        price: "50000",
-        shop: "UPJ Teknik Kendaraan Ringan",
-    },
-]);
-
-const open = ref(false);
-const value = ref("");
-
-const shops = ref([
-    {
-        image: AphpShop,
-        name: "UPJ APHP",
-    },
-    {
-        image: AtphShop,
-        name: "UPJ ATPH",
-    },
-    {
-        image: MktShop,
-        name: "UPJ Mekatronika",
-    },
-    {
-        image: TkjShop,
-        name: "UPJ Teknik Komputer Jaringan",
-    },
-]);
-</script>

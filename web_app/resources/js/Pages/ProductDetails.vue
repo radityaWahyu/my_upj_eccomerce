@@ -1,16 +1,68 @@
+<script lang="ts">
+import ProductDetail from "@/Layouts/ProductDetail.vue";
+
+export default {
+    layout: ProductDetail,
+};
+</script>
+<script setup lang="ts">
+import { Head, Link } from "@inertiajs/vue3";
+import Banner from "@/Components/productDetails/Banner.vue";
+import Product from "@/Components/app/Product.vue";
+
+type TImage = {
+    image: string;
+    title: string;
+};
+
+type TContact = {
+    id: string;
+    name: string;
+    whatsapp: "12312312";
+};
+
+type TProduct = {
+    id: string;
+    name: string;
+    shop: string;
+    shop_address: string;
+    contacts: TContact[];
+    category: string;
+    type: string;
+    images: TImage[];
+    price: number;
+    description: string;
+};
+
+type TProducts = {
+    id: string;
+    name: string;
+    image: string;
+    price: number;
+    type: string;
+    shop: string;
+    slug: string;
+    category: string;
+};
+const props = defineProps<{
+    product: TProduct;
+    products: { data: TProducts[] };
+}>();
+</script>
 <template>
+    <Head :title="product.name" />
     <div class="min-h-lvh mb-20 lg:container lg:py-4">
-        <div class="lg:grid-cols-2 lg:grid gap-3">
-            <banner :images="images" />
+        <div class="lg:grid-cols-2 lg:grid gap-3 items-start">
+            <Banner :images="product.images" />
             <div class="space-y-2">
                 <div
                     class="p-2 m-auto container w-full bg-gray-200/50 rounded-b-lg shadow"
                 >
-                    <p class="text-sm lg:text-lg font-regular">
-                        Produk Aplikasi Kasir (Point Of Sales)
+                    <p class="text-sm lg:text-lg font-regular capitalize">
+                        {{ product.name }}
                     </p>
                     <h2 class="text-lg lg:text-sm font-semibold">
-                        Rp 2.000.000
+                        {{ product.price }}
                     </h2>
                 </div>
 
@@ -20,15 +72,11 @@
                     <h3 class="text-sm font-semibold">Deskripsi</h3>
                     <p class="text-[11px] font-regular">
                         Kategori :
-                        <span class="text-tomato">Makanan Ringan</span>
+                        <span class="text-tomato capitalize">{{
+                            product.category
+                        }}</span>
                     </p>
-                    <p class="text-[13px]">
-                        Lorem ipsum dolor sit, amet consectetur adipisicing
-                        elit. Quod beatae corrupti ipsam voluptatibus? Optio
-                        omnis ipsum similique obcaecati atque voluptatibus? Nisi
-                        rem perferendis repellat labore debitis maxime,
-                        accusantium eius quasi!
-                    </p>
+                    <p class="text-[13px]" v-html="product.description" />
                 </div>
                 <div
                     class="p-4 mb-4 text-[12px] text-blue-800 bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
@@ -73,7 +121,7 @@
                         <p class="text-[12px] font-regular flex flex-col">
                             Nama Unit Pelayanan
                             <span class="text-tomato font-semibold">
-                                UPJ AGRIBISNIS TANAMAN PANGAN DAN HORTIKULTURA
+                                {{ product.shop }}
                             </span>
                         </p>
                     </div>
@@ -93,13 +141,16 @@
                         <p class="text-[12px] font-regular flex flex-col">
                             Lokasi Kantor
                             <span class="text-tomato">
-                                Gedung kantor instruktur ATPH Belakang Kawasan
-                                SMKN 1 Purwosari Pasuruan
+                                {{ product.shop_address }}
                             </span>
                         </p>
                     </div>
                     <div class="divide-y divide-gray-300">
-                        <div class="flex items-center gap-2 px-4 py-2">
+                        <div
+                            class="flex items-center gap-2 px-4 py-2"
+                            v-for="(contact, index) in product.contacts"
+                            :key="index"
+                        >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="32"
@@ -114,38 +165,11 @@
                             </svg>
                             <div>
                                 <h3 class="text-tomato text-[12px]">
-                                    Raditya Wahyu Sasono
+                                    {{ contact.name }}
                                 </h3>
                                 <p class="text-[11px] font-medium">
-                                    Whatasapp : <span>085649926667</span>
-                                </p>
-                            </div>
-                            <button
-                                type="button"
-                                class="focus:outline-none bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-xs px-5 py-2.5"
-                            >
-                                Chat WA
-                            </button>
-                        </div>
-                        <div class="flex items-center gap-2 px-4 py-2">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="32"
-                                height="32"
-                                viewBox="0 0 24 24"
-                                class="w-6 h-6 fill-current text-tomato"
-                            >
-                                <path
-                                    fill="currentColor"
-                                    d="m12 23l-3-3H5q-.825 0-1.412-.587T3 18V4q0-.825.588-1.412T5 2h14q.825 0 1.413.588T21 4v14q0 .825-.587 1.413T19 20h-4zm-7-6.15q1.35-1.325 3.138-2.087T12 14t3.863.763T19 16.85V4H5zM12 12q1.45 0 2.475-1.025T15.5 8.5t-1.025-2.475T12 5T9.525 6.025T8.5 8.5t1.025 2.475T12 12m-5 6h10v-.25q-1.05-.875-2.325-1.312T12 16t-2.675.438T7 17.75zm5-8q-.625 0-1.062-.437T10.5 8.5t.438-1.062T12 7t1.063.438T13.5 8.5t-.437 1.063T12 10m0 .425"
-                                />
-                            </svg>
-                            <div>
-                                <h3 class="text-tomato text-[12px]">
-                                    Erik Setyawan
-                                </h3>
-                                <p class="text-[11px] font-medium">
-                                    Whatasapp : <span>085649926667</span>
+                                    Whatasapp :
+                                    <span>{{ contact.whatsapp }}</span>
                                 </p>
                             </div>
                             <button
@@ -166,15 +190,19 @@
                     <h2 class="text-sm lg:text-lg font-semibold text-tomato">
                         Produk lainya
                     </h2>
-                    <p class="text-xs lg:text-sm text-tomato font-semibold">
+                    <Link
+                        :href="route('frontend.products')"
+                        class="text-xs lg:text-sm text-tomato font-semibold"
+                    >
                         lainnya...
-                    </p>
+                    </Link>
                 </div>
                 <div class="space-y-4 lg:text-center">
                     <div class="w-full grid grid-cols-2 lg:grid-cols-6 gap-3">
-                        <product
+                        <Product
                             :product="product"
-                            v-for="product in products"
+                            v-for="(product, index) in products.data"
+                            :key="index"
                         />
                     </div>
                 </div>
@@ -182,78 +210,3 @@
         </div>
     </div>
 </template>
-
-<script lang="ts">
-import ProductDetail from "@/Layouts/ProductDetail.vue";
-
-export default {
-    layout: ProductDetail,
-};
-</script>
-<script setup lang="ts">
-import { ref } from "vue";
-import Banner from "@/Components/productDetails/Banner.vue";
-import Product from "@/Components/app/Product.vue";
-
-import ProductOne from "@/Assets/images/product_1.webp";
-import ProductTwo from "@/Assets/images/product_2.webp";
-import ProductFour from "@/Assets/images/product_4.webp";
-import ProductFive from "@/Assets/images/product_5.jpg";
-import ProductSix from "@/Assets/images/product_6.jpeg";
-
-const images = ref([
-    {
-        image: ProductOne,
-        alt: "Product One",
-    },
-    {
-        image: ProductTwo,
-        alt: "Product Two",
-    },
-    {
-        image: ProductFour,
-        alt: "Product Four",
-    },
-    {
-        image: ProductFive,
-        alt: "Product Five",
-    },
-    {
-        image: ProductSix,
-        alt: "Product Six",
-    },
-]);
-
-const products = ref([
-    {
-        file: ProductOne,
-        title: "Product One",
-        price: "50000",
-        shop: "UPJ Teknik Informatika",
-    },
-    {
-        file: ProductTwo,
-        title: "Product Two",
-        price: "50000",
-        shop: "UPJ Teknik Pengelasa",
-    },
-    {
-        file: ProductFour,
-        title: "Product Four",
-        price: "50000",
-        shop: "UPJ APHP",
-    },
-    {
-        file: ProductFive,
-        title: "Product Five",
-        price: "50000",
-        shop: "UPJ Teknik ATPH",
-    },
-    {
-        file: ProductSix,
-        title: "Product Six",
-        price: "50000",
-        shop: "UPJ Teknik Kendaraan Ringan",
-    },
-]);
-</script>

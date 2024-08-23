@@ -1,10 +1,30 @@
+<script setup lang="ts">
+import { computed, ComputedRef } from "vue";
+import { usePage } from "@inertiajs/vue3";
+import LogoSekolah from "@/Assets/images/fav.png";
+
+type TSettings = {
+    instagram: string;
+    facebook: string;
+    youtube: string;
+    alamat: string;
+    google_map: string;
+};
+
+const { settings } = usePage().props;
+
+const Settings = computed((): TSettings => settings as TSettings);
+</script>
+
 <template>
     <div class="bg-transparent py-2">
         <div
             id="footer"
             class="lg:container py-3 space-y-4 border-t-[1px] border-t-nasplesyellow"
         >
-            <div class="flex items-center justify-between flex-wrap px-2">
+            <div
+                class="flex items-start justify-center lg:justify-between flex-wrap px-2"
+            >
                 <div id="logo" class="flex items-center gap-1">
                     <svg
                         class="text-tomato fill-current lg:h-20 lg:w-20"
@@ -32,11 +52,11 @@
                     </div>
                 </div>
                 <div
-                    class="flex items-center space-x-2 divide-x-2 divide-yaleblue"
+                    class="flex items-center space-x-2 divide-x-2 divide-yaleblue mt-4 lg:mt-0"
                     id="logo-smk"
                 >
                     <img
-                        src="https://www.smkn1purwosari.sch.id/public/img/fav.png"
+                        :src="LogoSekolah"
                         class="w-[45px] h-[45px] lg:w-[60px] lg:h-[60px] object-cover"
                         alt="Logo SMKN 1 Purwosari"
                     />
@@ -49,16 +69,16 @@
                 </div>
                 <div
                     id="info"
-                    class="w-[300px] text-[12px] font-normal space-y-2 mt-5 lg:mt-0"
+                    class="w-[300px] text-[12px] font-normal space-y-3 mt-5 lg:mt-0"
                 >
                     <p>
-                        Kantor : Jl Raya Purwosari No. 1 Kec. Purwosari Kab.
-                        Pasuruan, Provinsi Jawa Timur Kode Pos 67162
+                        <strong class="block">Alamat :</strong>
+                        {{ Settings.alamat }}
                     </p>
 
                     <div class="flex space-x-3" id="media sosial">
                         <a
-                            href="https://web.facebook.com/SMKN-1-PURWOSARI-187165261339073/"
+                            :href="Settings.facebook"
                             target="_BLANK"
                             class="bg-gray-200 p-3 rounded-full"
                             ><svg
@@ -78,7 +98,7 @@
                             ><!-- <i class="fab fa-facebook"></i> --></a
                         >
                         <a
-                            href="https://www.twitter.com/smkn1purwosari"
+                            :href="Settings.youtube"
                             target="_BLANK"
                             class="bg-gray-200 p-3 rounded-full"
                         >
@@ -109,7 +129,7 @@
                             </svg>
                         </a>
                         <a
-                            href="https://www.instagram.com/smkn1purwosari_official/"
+                            :href="Settings.instagram"
                             target="_BLANK"
                             class="bg-gray-200 p-3 rounded-full"
                             ><svg
@@ -132,7 +152,9 @@
                     </div>
                 </div>
             </div>
-            <p class="lg:text-xs text-[10px] py-2 px-2 font-medium">
+            <p
+                class="lg:text-xs text-[10px] py-2 px-2 font-medium text-center lg:text-left"
+            >
                 SMKN 1 Purwosari &copy; 2024 | Dibuat Oleh Tim Rekayasa
                 Perangkat Lunak
             </p>

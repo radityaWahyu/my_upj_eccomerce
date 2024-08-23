@@ -1,3 +1,8 @@
+<script setup lang="ts">
+import { MagnifyingGlassIcon } from "@radix-icons/vue";
+import { Input } from "@/shadcn/ui/input";
+import TopLink from "./TopLink.vue";
+</script>
 <template>
     <div class="min-w-max bg-nasplesyellow lg:sticky lg:z-20 lg:top-0">
         <div
@@ -44,34 +49,32 @@
             </div>
             <div class="flex items-center lg:divide-x-2 lg:divide-yellow-600">
                 <div class="lg:block hidden px-2" id="desktop-navigation">
-                    <ul class="inline-flex text-sm font-medium">
+                    <ul class="inline-flex text-sm font-medium gap-1">
                         <li>
-                            <a
-                                href="http://"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                class="hover:bg-yellow-500 hover:text-white px-3 py-1 rounded transition-colors duration-500 ease-in-out"
+                            <TopLink
+                                :to="route('frontend.index')"
+                                :active="$page.component === 'Home'"
                             >
-                                Home
-                            </a>
+                                Beranda
+                            </TopLink>
                         </li>
                         <li>
-                            <a
-                                href="http://"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                class="hover:bg-yellow-500 hover:text-white px-3 py-1 rounded transition-colors duration-500 ease-in-out"
-                                >Produk</a
+                            <TopLink
+                                :to="route('frontend.products')"
+                                :active="$page.url.startsWith('products', 1)"
                             >
+                                Produk & Jasa
+                            </TopLink>
                         </li>
                         <li>
-                            <a
-                                href="http://"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                class="hover:bg-yellow-500 hover:text-white px-3 py-1 rounded transition-colors duration-500 ease-in-out"
-                                >Unit Pelayanan</a
+                            <TopLink
+                                :to="route('frontend.shops')"
+                                :active="
+                                    $page.url.startsWith('unit-layanan', 1)
+                                "
                             >
+                                Unit Layanan
+                            </TopLink>
                         </li>
                         <li>
                             <a
@@ -138,7 +141,3 @@
         </div>
     </div>
 </template>
-<script setup lang="ts">
-import { MagnifyingGlassIcon } from "@radix-icons/vue";
-import { Input } from "@/shadcn/ui/input";
-</script>

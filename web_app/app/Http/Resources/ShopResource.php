@@ -20,6 +20,7 @@ class ShopResource extends JsonResource
             'name' => $this->name,
             'image' => "data:image/jpeg;base64," . base64_encode(Storage::get($this->image)),
             'address' => $this->address,
+            'slug' => $this->slug,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

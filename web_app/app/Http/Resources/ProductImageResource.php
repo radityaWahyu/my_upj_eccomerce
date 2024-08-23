@@ -19,7 +19,7 @@ class ProductImageResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'title' => $this->name,
+            'title' => $this->title,
             'image' => "data:image/jpeg;base64," . base64_encode(Storage::get($this->image_url)),
         ];
     }
