@@ -6,7 +6,7 @@ export default {
 };
 </script>
 <script setup lang="ts">
-import { ref } from "vue";
+import { Head } from "@inertiajs/vue3";
 import { Store } from "lucide-vue-next";
 import Shop from "@/Components/app/Shop.vue";
 
@@ -23,6 +23,7 @@ defineProps<{
 </script>
 
 <template>
+    <Head title="Unit Layanan" />
     <div class="container py-4 space-y-8 min-h-screen">
         <div class="space-y-4">
             <h2 class="text-xl font-semibold">Daftar Unit Layanan</h2>

@@ -1,6 +1,5 @@
 <script lang="ts">
 import Backoffice from "@/Layouts/Backoffice.vue";
-import { object } from "zod";
 
 export default {
     layout: Backoffice,

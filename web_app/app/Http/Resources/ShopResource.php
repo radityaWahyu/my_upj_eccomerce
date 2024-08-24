@@ -8,6 +8,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class ShopResource extends JsonResource
 {
+    public static $wrap = null;
     /**
      * Transform the resource into an array.
      *
@@ -21,6 +22,7 @@ class ShopResource extends JsonResource
             'image' => "data:image/jpeg;base64," . base64_encode(Storage::get($this->image)),
             'address' => $this->address,
             'slug' => $this->slug,
+            'product_count' => $this->products_count,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

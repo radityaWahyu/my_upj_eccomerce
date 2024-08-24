@@ -25,6 +25,7 @@ type TProduct = {
 type TCategories = {
     id: string;
     name: string;
+    slug: string;
 };
 type TProductMeta = {
     current_page: number;
@@ -50,8 +51,8 @@ const props = defineProps<{
     params: {
         category?: string;
         per_page?: number;
-    };
-    active: string;
+    } | null;
+    active: string | null;
 }>();
 
 const category = ref(props.params?.category);
@@ -122,9 +123,10 @@ const getProducts = (page: number) => {
                         >
                             <Link
                                 :href="route('frontend.products')"
-                                :data="{ category: category.id }"
+                                :data="{ category: category.slug }"
                                 :class="{
-                                    'bg-yellow-400/40': active === category.id,
+                                    'bg-yellow-400/40':
+                                        active === category.slug,
                                 }"
                                 class="w-full inline-flex items-center justify-between px-2 py-2 hover:bg-yellow-400/40 rounded-lg capitalize"
                                 replace

@@ -12,6 +12,7 @@ use App\Http\Resources\ShopResource;
 use App\Http\Resources\BannerResource;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\CategoryResource;
+use App\Http\Resources\EmployeeResource;
 use App\Http\Resources\ProductDetailResource;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -53,8 +54,8 @@ class FrontendController extends Controller
 
         $categories = Category::get();
         $products = Product::query()->with(['category', 'shop']);
-        $products = $products->when($request->has('category'), function ($query) use ($request) {
-            if ($request->category !== 'all') return $query->where('category_id', $request->category);
+        $products = $products->whereHas('category', function ($query) use ($request) {
+            if ($request->category !== 'all' && $request->has('category')) return $query->where('slug', $request->category);
         });
         $products = $products->latest()
             ->paginate($per_page);
@@ -72,19 +73,12 @@ class FrontendController extends Controller
         ]);
     }
 
-    public function productDetails(Request $request, $slug)
+    public function productDetails(Product $product)
     {
 
-        if ($request->missing('token')) return abort(404, 'Data Produk tidak ditemukan');
-
         try {
-
-            $product = Product::with(['images', 'shop' => ['employees'], 'category:id,name', 'images'])
-                ->find($request->token);
-
             $products = Product::with(['images', 'shop' => ['employees'], 'category:id,name', 'images'])
-                ->whereNotIn('id', [$request->token])->limit(5)->get();
-
+                ->whereNotIn('id', [$product->id])->limit(5)->get();
 
             $description = strip_tags($product->description);
             if (!empty($description)) {
@@ -95,7 +89,7 @@ class FrontendController extends Controller
 
 
             return inertia('ProductDetails', [
-                'product' => fn() => new ProductDetailResource($product),
+                'product' => fn() => new ProductDetailResource($product->load(['images', 'shop' => ['employees'], 'category:id,name', 'images'])),
                 'products' => fn() => ProductResource::collection($products),
                 'event' => fn() => [
                     'author' => 'SMKN 1 Purwosari Kab Pasuruan',
@@ -118,11 +112,6 @@ class FrontendController extends Controller
         return inertia('Login');
     }
 
-    public function shop()
-    {
-        return inertia('Shop');
-    }
-
     public function shops(Request $request)
     {
         $per_page = 10;
@@ -142,5 +131,36 @@ class FrontendController extends Controller
                 'description' => 'Daftar unit layanan yang terdapat di setiap konsentrasi keahlian untuk memberikan pelayanan produk jadi dan jasa kepada umum',
             ]
         ]);
+    }
+
+    public function shopsDetail(Request $request, Shop $shop)
+    {
+
+        try {
+            $per_page = 10;
+            $params = [];
+
+            if ($request->has('per_page')) $per_page = $request->per_page;
+            if ($request->has('page')) $params += ['page' => $request->page];
+
+            $shop->load(['employees', 'products'])
+                ->withCount('products');
+
+            $products = $shop->products()->paginate($per_page);
+
+            return inertia('ShopsDetail', [
+                'shop' => fn() => new ShopResource($shop),
+                'products' => fn() => ProductResource::collection($products),
+                'employees' => fn() => EmployeeResource::collection($shop->employees),
+                'params' => fn() => $params,
+                'event' => fn() => [
+                    'author' => 'SMKN 1 Purwosari Kab Pasuruan',
+                    'title' => $shop->name,
+                    'description' => $shop->name,
+                ],
+            ]);
+        } catch (ModelNotFoundException $exception) {
+            abort(404, 'Unit Layanan tidak ditemukan');
+        }
     }
 }

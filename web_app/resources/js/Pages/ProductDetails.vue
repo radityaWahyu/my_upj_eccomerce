@@ -48,6 +48,13 @@ const props = defineProps<{
     product: TProduct;
     products: { data: TProducts[] };
 }>();
+
+const Rupiah = (price: number) =>
+    new Intl.NumberFormat("en-ID", {
+        style: "currency",
+        currency: "IDR",
+        maximumFractionDigits: 0,
+    }).format(price);
 </script>
 <template>
     <Head :title="product.name" />
@@ -62,7 +69,7 @@ const props = defineProps<{
                         {{ product.name }}
                     </p>
                     <h2 class="text-lg lg:text-sm font-semibold">
-                        {{ product.price }}
+                        {{ Rupiah(product.price) }}
                     </h2>
                 </div>
 

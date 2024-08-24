@@ -29,6 +29,7 @@ type TShop = {
     id: string;
     name: string;
     image: string;
+    slug: string;
 };
 
 const props = defineProps<{
@@ -56,7 +57,6 @@ const props = defineProps<{
                         <Link
                             :href="route('frontend.products')"
                             class="text-xs lg:text-sm text-tomato font-semibold"
-                            replace
                         >
                             lainnya...
                         </Link>
@@ -87,9 +87,12 @@ const props = defineProps<{
                         >
                             Unit Layanan
                         </h2>
-                        <p class="text-xs lg:text-sm text-tomato font-semibold">
+                        <Link
+                            :href="route('frontend.shops')"
+                            class="text-xs lg:text-sm text-tomato font-semibold"
+                        >
                             lainnya...
-                        </p>
+                        </Link>
                     </div>
                     <div>
                         <div class="w-full flex overflow-x-scroll gap-2">
