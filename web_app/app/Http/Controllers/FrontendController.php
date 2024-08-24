@@ -163,4 +163,40 @@ class FrontendController extends Controller
             abort(404, 'Unit Layanan tidak ditemukan');
         }
     }
+
+    public function search(Request $request)
+    {
+        if ($request->has('key')) {
+            $per_page = 10;
+            $params = ['key' => $request->key];
+
+            if ($request->has('per_page')) $per_page = $request->per_page;
+            if ($request->has('category')) $params += ['category' => $request->category];
+            if ($request->has('page')) $params += ['page' => $request->page];
+
+
+            $categories = Category::get();
+            $products = Product::query()->with(['category', 'shop']);
+            $products = $products->whereHas('category', function ($query) use ($request) {
+                if ($request->category !== 'all' && $request->has('category')) return $query->where('slug', $request->category);
+            });
+            $products = $products->where('name', 'like', '%' . $request->key . '%');
+            $products = $products->latest()
+                ->paginate($per_page);
+
+            return inertia('Search', [
+                'categories' => fn() => CategoryResource::collection($categories),
+                'products' => fn() => ProductResource::collection($products),
+                'params' => fn() => empty($params) ? null : $params,
+                'active' => fn() => ($request->has('category')) ? $request->category : null,
+                'event' => fn() => [
+                    'author' => 'SMKN 1 Purwosari Kab Pasuruan',
+                    'title' => 'Daftar Produk dan Jasa',
+                    'description' => 'Daftar Produk dan jasa yang terdapat pada setiap unit layanan di SMKN 1 Purwosari Kab. Pasuruan',
+                ]
+            ]);
+        }
+
+        return abort(404, 'Produk & jasa yang anda cari tidak ditemukan');
+    }
 }

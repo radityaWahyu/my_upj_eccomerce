@@ -1,7 +1,29 @@
 <script setup lang="ts">
+import { ref, onMounted, watch } from "vue";
+import { router, usePage } from "@inertiajs/vue3";
 import { MagnifyingGlassIcon } from "@radix-icons/vue";
 import { Input } from "@/shadcn/ui/input";
 import TopLink from "./TopLink.vue";
+
+const page = usePage();
+
+const keyString = ref<any>("");
+const search = () => {
+    //alert(keyString.value);
+    router.get(route("frontend.search"), { key: keyString.value });
+};
+onMounted(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has("key")) {
+        keyString.value = urlParams.get("key");
+    }
+});
+watch(
+    () => page.url,
+    (url) => {
+        if (url === "/") keyString.value = "";
+    }
+);
 </script>
 <template>
     <div class="min-w-max bg-nasplesyellow lg:sticky lg:z-20 lg:top-0">
@@ -37,6 +59,8 @@ import TopLink from "./TopLink.vue";
                         type="text"
                         placeholder="cari produk / jasa.."
                         class="pl-10 rounded-none bg-white/90"
+                        v-model="keyString"
+                        @keyup.enter="search"
                     />
                     <span
                         class="absolute start-0 inset-y-0 flex items-center justify-center px-2"
@@ -61,7 +85,10 @@ import TopLink from "./TopLink.vue";
                         <li>
                             <TopLink
                                 :to="route('frontend.products')"
-                                :active="$page.url.startsWith('products', 1)"
+                                :active="
+                                    $page.url.startsWith('products', 1) ||
+                                    $page.url.startsWith('search', 1)
+                                "
                             >
                                 Produk & Jasa
                             </TopLink>
