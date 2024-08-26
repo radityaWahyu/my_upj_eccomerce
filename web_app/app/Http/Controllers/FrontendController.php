@@ -125,6 +125,8 @@ class FrontendController extends Controller
                 'is_enabled' => true,
                 'is_verified' => true,
             ]);
+
+            return inertia('SuccessRegistration');
         } catch (\Illuminate\Database\QueryException $exception) {
             return redirect()->back()->with('error', $exception->errorInfo);
         }
@@ -167,7 +169,7 @@ class FrontendController extends Controller
             if ($request->has('page')) $params += ['page' => $request->page];
 
             $shop->load(['employees', 'products'])
-                ->withCount('products');
+                ->loadCount('products');
 
             $products = $shop->products()->paginate($per_page);
 

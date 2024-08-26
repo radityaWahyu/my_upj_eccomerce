@@ -34,6 +34,7 @@ Route::controller(FrontendController::class)->group(
         Route::get('/unit-layanan', 'shops')->name('frontend.shops');
         Route::get('/unit-layanan/{shop:slug}', 'shopsDetail')->name('frontend.shops.detail');
         Route::get('/search', 'search')->name('frontend.search');
+        // Route::get('/success-registration', 'success');
     }
 );
 
