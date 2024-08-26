@@ -28,6 +28,7 @@ Route::controller(FrontendController::class)->group(
         Route::get('/', 'index')->name('frontend.index');
         Route::get('/login', 'login')->name('frontend.login');
         Route::get('/register', 'register')->name('frontend.register');
+        Route::post('/register', 'registerStore')->name('frontend.register.store');
         Route::get('/products', 'products')->name('frontend.products');
         Route::get('/products/{product:slug}', 'productDetails')->name('frontend.product.details');
         Route::get('/unit-layanan', 'shops')->name('frontend.shops');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BackOffice\CustomerRequest;
 use App\Models\Shop;
 use App\Models\Banner;
 use App\Models\Product;
@@ -14,6 +15,7 @@ use App\Http\Resources\ProductResource;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\EmployeeResource;
 use App\Http\Resources\ProductDetailResource;
+use App\Models\Customer;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class FrontendController extends Controller
@@ -104,7 +106,28 @@ class FrontendController extends Controller
 
     public function register()
     {
-        return inertia('Register');
+        return inertia('Register', [
+            'event' => fn() => [
+                'author' => 'SMKN 1 Purwosari Kab Pasuruan',
+                'title' => 'Form Pendaftaraan Pelanggan',
+                'description' => 'Form yang dipergunakan untuk mendaftarkan pelanggan baru yang akan menggunakan aplikasi MY UPJ di SMKN 1 Purwosari',
+            ],
+        ]);
+    }
+
+    public function registerStore(CustomerRequest $request)
+    {
+        try {
+            $customer = Customer::create($request->except('username', 'password'));
+            $customer->user()->create([
+                'username' => $request->username,
+                'password' => $request->password,
+                'is_enabled' => true,
+                'is_verified' => true,
+            ]);
+        } catch (\Illuminate\Database\QueryException $exception) {
+            return redirect()->back()->with('error', $exception->errorInfo);
+        }
     }
 
     public function login()

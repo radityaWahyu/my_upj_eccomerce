@@ -1,35 +1,106 @@
+<script setup lang="ts">
+import {
+    Link,
+    Head,
+    useForm as useInertiaForm,
+    usePage,
+} from "@inertiajs/vue3";
+import {
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/shadcn/ui/form";
+import { useForm } from "vee-validate";
+import { toTypedSchema } from "@vee-validate/zod";
+import * as zod from "zod";
+import validator from "validator";
+const page = usePage();
+
+const userSchema = () => {
+    return toTypedSchema(
+        zod.object({
+            name: zod
+                .string({ message: "Pegawai harus diisi" })
+                .min(1, { message: "Pegawai harus diisi." }),
+            address: zod
+                .string({ message: "Alamat harus diisi" })
+                .min(1, { message: "Alamat harus diisi." }),
+            username: zod
+                .string({ message: "username harus diisi" })
+                .min(1, { message: "username harus diisi." }),
+            password: zod
+                .string({ message: "password harus diisi" })
+                .min(8, { message: "password minimal 8 digit." }),
+            whatsapp: zod
+                .string({ message: "Whatsapp harus diisi angka" })
+                .refine(validator.isMobilePhone, {
+                    message: "Whatsapp harus diisi angka",
+                }),
+            phone: zod
+                .string({ message: "Telepon harus diisi angka" })
+                .refine(validator.isMobilePhone, {
+                    message: "Telepone harus diisi angka",
+                }),
+        })
+    );
+};
+
+const validationSchema = userSchema();
+const form = useForm({
+    validationSchema,
+});
+
+const registerForm = useInertiaForm({
+    _token: page.props.csrf_token,
+    name: "",
+    phone: "",
+    whatsapp: "",
+    address: "",
+    username: "",
+    password: "",
+});
+
+const onSubmit = form.handleSubmit((formData) => {
+    registerForm.post(route("frontend.register.store"), {
+        onError: (error) => console.log(error),
+    });
+});
+</script>
 <template>
+    <Head title="Pendafaran Pelanggan" />
     <div class="relative bg-nasplesyellow/10 max-h-full lg:flex lg:items-start">
-        <div class="lg:w-3/5 hidden h-screen lg:block lg:p-2">
-            <a
-                href="http://"
-                class="text-tomato hover:bg-tomato/60 hover:rounded hover:text-white text-sm font-medium inline-flex items-center px-3 py-1 lg:gap-2 group"
+        <div class="lg:w-3/5 hidden h-screen lg:block">
+            <Link
+                :href="route('frontend.index')"
+                class="bg-tomato text-white hover:bg-tomato/80 hover:text-white text-sm font-medium inline-flex items-center px-4 py-2 lg:gap-2 group"
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="32"
                     height="32"
                     viewBox="0 0 24 24"
-                    class="fill-current w-6 h-6 text-tomato group-hover:text-white"
+                    class="fill-current w-6 h-6 o text-white"
                 >
                     <path
                         fill="currentColor"
                         d="m10 18l-6-6l6-6l1.4 1.45L7.85 11H20v2H7.85l3.55 3.55z"
                     />
                 </svg>
-                <span> Kembali ke Halaman Utama</span>
-            </a>
+                <span> kembali ke Beranda</span>
+            </Link>
             <img
                 src="@/Assets/images/signup.svg"
                 alt=""
                 srcset=""
-                class="h-[500px] w-[500px] mx-auto"
+                class="h-[500px] w-[500px] mx-auto object-cover object-center"
             />
         </div>
         <div
             class="px-6 lg:w-2/5 lg:bg-gray-50 lg:h-full flex flex-col justify-center gap-4 shadow-inner shadow-gray-200"
         >
-            <div class="px-4 mt-10">
+            <div class="px-4 mt-2">
                 <div id="logo" class="flex items-center gap-1">
                     <svg
                         class="text-tomato fill-current lg:w-20 lg:h-20"
@@ -66,102 +137,275 @@
                     verifikasi pendaftar.
                 </div>
                 <div>
-                    <form class="max-w-md mx-auto space-y-3 mb-6">
+                    <form
+                        @submit="onSubmit"
+                        class="max-w-md mx-auto space-y-3 mb-6"
+                    >
                         <div>
-                            <label
-                                for="nama"
-                                class="block mb-2 text-xs font-medium text-gray-900"
-                            >
-                                Nama
-                            </label>
-                            <input
-                                type="text"
-                                id="name"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                                placeholder="ex:radit"
-                                required
-                            />
+                            <FormField v-slot="{ componentField }" name="name">
+                                <FormItem>
+                                    <FormLabel
+                                        :class="{
+                                            'text-red-500':
+                                                registerForm.errors.name,
+                                        }"
+                                        >Nama Lengkap</FormLabel
+                                    >
+                                    <FormControl>
+                                        <input
+                                            type="text"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                                            placeholder="ex:radit"
+                                            v-bind="componentField"
+                                            v-model="registerForm.name"
+                                            :disabled="registerForm.processing"
+                                        />
+                                    </FormControl>
+                                    <p
+                                        class="text-xs text-red-500 font-medium"
+                                        v-if="registerForm.errors.name"
+                                    >
+                                        {{ registerForm.errors.name }}
+                                    </p>
+                                    <FormMessage v-else />
+                                </FormItem>
+                            </FormField>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="grow">
+                                <FormField
+                                    v-slot="{ componentField }"
+                                    name="phone"
+                                >
+                                    <FormItem>
+                                        <FormLabel
+                                            :class="{
+                                                'text-red-500':
+                                                    registerForm.errors.phone,
+                                            }"
+                                        >
+                                            No Telepon
+                                        </FormLabel>
+                                        <FormControl>
+                                            <input
+                                                type="text"
+                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                                                placeholder="ex: 08534225423"
+                                                v-bind="componentField"
+                                                v-model="registerForm.phone"
+                                                :disabled="
+                                                    registerForm.processing
+                                                "
+                                            />
+                                        </FormControl>
+                                        <p
+                                            class="text-xs text-red-500 font-medium"
+                                            v-if="registerForm.errors.phone"
+                                        >
+                                            {{ registerForm.errors.phone }}
+                                        </p>
+                                        <FormMessage v-else />
+                                    </FormItem>
+                                </FormField>
+                            </div>
+                            <div class="grow">
+                                <FormField
+                                    v-slot="{ componentField }"
+                                    name="whatsapp"
+                                    class="grow"
+                                >
+                                    <FormItem>
+                                        <FormLabel
+                                            :class="{
+                                                'text-red-500':
+                                                    registerForm.errors
+                                                        .whatsapp,
+                                            }"
+                                        >
+                                            No. Whatsapp
+                                        </FormLabel>
+                                        <FormControl>
+                                            <input
+                                                type="text"
+                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                                                placeholder="ex: 08534225423"
+                                                v-bind="componentField"
+                                                v-model="registerForm.whatsapp"
+                                                :disabled="
+                                                    registerForm.processing
+                                                "
+                                            />
+                                        </FormControl>
+                                        <p
+                                            class="text-xs text-red-500 font-medium"
+                                            v-if="registerForm.errors.whatsapp"
+                                        >
+                                            {{ registerForm.errors.whatsapp }}
+                                        </p>
+                                        <FormMessage v-else />
+                                    </FormItem>
+                                </FormField>
+                            </div>
                         </div>
                         <div>
-                            <label
-                                for="whatsapp"
-                                class="block mb-2 text-xs font-medium text-gray-900"
+                            <FormField
+                                v-slot="{ componentField }"
+                                name="address"
+                                class="grow-0"
                             >
-                                Whatsapp
-                            </label>
-                            <input
-                                type="text"
-                                id="name"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                                placeholder="ex: 08534225423"
-                                required
-                            />
+                                <FormItem>
+                                    <FormLabel
+                                        :class="{
+                                            'text-red-500':
+                                                registerForm.errors.address,
+                                        }"
+                                    >
+                                        Alamat
+                                    </FormLabel>
+                                    <FormControl>
+                                        <textarea
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                                            placeholder="ex: alamat lengkap"
+                                            v-model="registerForm.address"
+                                            v-bind="componentField"
+                                            :disabled="registerForm.processing"
+                                        ></textarea>
+                                    </FormControl>
+                                    <p
+                                        class="text-xs text-red-500 font-medium"
+                                        v-if="registerForm.errors.address"
+                                    >
+                                        {{ registerForm.errors.address }}
+                                    </p>
+                                    <FormMessage v-else />
+                                </FormItem>
+                            </FormField>
                         </div>
-                        <div>
-                            <label
-                                for="handphone"
-                                class="block mb-2 text-xs font-medium text-gray-900"
+                        <div class="flex items-center gap-2">
+                            <div class="grow">
+                                <FormField
+                                    v-slot="{ componentField }"
+                                    name="username"
+                                    class="grow"
+                                >
+                                    <FormItem>
+                                        <FormLabel
+                                            :class="{
+                                                'text-red-500':
+                                                    registerForm.errors
+                                                        .username,
+                                            }"
+                                        >
+                                            Username
+                                        </FormLabel>
+                                        <FormControl>
+                                            <input
+                                                type="text"
+                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                                                placeholder="ex: username"
+                                                v-model="registerForm.username"
+                                                v-bind="componentField"
+                                                :disabled="
+                                                    registerForm.processing
+                                                "
+                                            />
+                                        </FormControl>
+                                        <p
+                                            class="text-xs text-red-500 font-medium"
+                                            v-if="registerForm.errors.username"
+                                        >
+                                            {{ registerForm.errors.username }}
+                                        </p>
+                                        <FormMessage v-else />
+                                    </FormItem>
+                                </FormField>
+                            </div>
+                            <div class="grow">
+                                <FormField
+                                    v-slot="{ componentField }"
+                                    name="password"
+                                    class="grow"
+                                >
+                                    <FormItem>
+                                        <FormLabel
+                                            :class="{
+                                                'text-red-500':
+                                                    registerForm.errors
+                                                        .password,
+                                            }"
+                                        >
+                                            Password
+                                        </FormLabel>
+                                        <FormControl>
+                                            <input
+                                                type="password"
+                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                                                placeholder="ex: password"
+                                                v-model="registerForm.password"
+                                                v-bind="componentField"
+                                                :disabled="
+                                                    registerForm.processing
+                                                "
+                                            />
+                                        </FormControl>
+                                        <p
+                                            class="text-xs text-red-500 font-medium"
+                                            v-if="registerForm.errors.password"
+                                        >
+                                            {{ registerForm.errors.password }}
+                                        </p>
+                                        <FormMessage v-else />
+                                    </FormItem>
+                                </FormField>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <button
+                                type="submit"
+                                @click="onSubmit"
+                                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-3 focus:outline-none focus:ring-blue-300 font-semibold rounded text-sm w-full px-5 py-2.5 text-center"
+                                :disabled="registerForm.processing"
                             >
-                                Handphone
-                            </label>
-                            <input
-                                type="text"
-                                id="name"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                                placeholder="ex: 08534225423"
-                                required
-                            />
-                        </div>
-                        <div>
-                            <label
-                                for="address"
-                                class="block mb-2 text-xs font-medium text-gray-900"
+                                <span
+                                    class="flex items-center gap-2 justify-center"
+                                    v-if="registerForm.processing"
+                                >
+                                    <svg
+                                        class="h-4 w-4 animate-spin"
+                                        viewBox="0 0 100 100"
+                                    >
+                                        <circle
+                                            fill="none"
+                                            stroke-width="10"
+                                            class="stroke-current opacity-40"
+                                            cx="50"
+                                            cy="50"
+                                            r="40"
+                                        />
+                                        <circle
+                                            fill="none"
+                                            stroke-width="10"
+                                            class="stroke-current"
+                                            stroke-dasharray="250"
+                                            stroke-dashoffset="210"
+                                            cx="50"
+                                            cy="50"
+                                            r="40"
+                                        />
+                                    </svg>
+                                    Mengirim data...
+                                </span>
+                                <span v-else>Kirim Data</span>
+                            </button>
+                            <Link
+                                :href="route('frontend.login')"
+                                as="button"
+                                class="text-gray-500 bg-gray-200 hover:bg-gray-300 focus:ring-2 focus:outline-none focus:ring-gray-300 font-semibold rounded text-sm w-full px-5 py-2.5 text-center"
+                                :disabled="registerForm.processing"
                             >
-                                Alamat
-                            </label>
-                            <textarea
-                                id="name"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                                placeholder="ex: alamat lengkap"
-                                required
-                            ></textarea>
+                                Login Akun
+                            </Link>
                         </div>
-                        <div>
-                            <label
-                                for="username"
-                                class="block mb-2 text-xs font-medium text-gray-900"
-                            >
-                                Username
-                            </label>
-                            <input
-                                type="text"
-                                id="username"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                                placeholder="ex: username"
-                                required
-                            />
-                        </div>
-                        <div>
-                            <label
-                                for="username"
-                                class="block mb-2 text-xs font-medium text-gray-900"
-                            >
-                                Password
-                            </label>
-                            <input
-                                type="password"
-                                id="username"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                                placeholder="ex: password"
-                                required
-                            />
-                        </div>
-                        <button
-                            type="submit"
-                            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
-                        >
-                            Submit
-                        </button>
                     </form>
                 </div>
             </div>
