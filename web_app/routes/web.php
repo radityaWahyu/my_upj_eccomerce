@@ -21,6 +21,8 @@ Route::controller(FrontendController::class)->group(
     function () {
         Route::get('/', 'index')->name('frontend.index');
         Route::get('/login', 'login')->name('frontend.login');
+        Route::post('/login', 'loginStore')->name('frontend.login.store');
+        Route::post('/logout', 'logout')->name('frontend.logout');
         Route::get('/register', 'register')->name('frontend.register');
         Route::post('/register', 'registerStore')->name('frontend.register.store');
         Route::get('/products', 'products')->name('frontend.products');
@@ -28,6 +30,7 @@ Route::controller(FrontendController::class)->group(
         Route::get('/unit-layanan', 'shops')->name('frontend.shops');
         Route::get('/unit-layanan/{shop:slug}', 'shopsDetail')->name('frontend.shops.detail');
         Route::get('/search', 'search')->name('frontend.search');
+        Route::get('/my-profile', 'myProfile')->name('frontend.profile');
         // Route::get('/success-registration', 'success');
     }
 );

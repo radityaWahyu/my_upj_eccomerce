@@ -15,8 +15,9 @@ class LoginResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $modelType = explode('\\', $this->userable_type);
-        if ($modelType[2] == 'Employee') {
+        $isAdmin = get_class($this->userable) == 'App\Models\Employee';
+
+        if ($isAdmin) {
             return [
                 'id' => $this->userable->id,
                 'name' => $this->userable->name,
@@ -24,5 +25,11 @@ class LoginResource extends JsonResource
                 'level' => $this->getRoleNames()[0],
             ];
         }
+        return [
+            'id' => $this->userable->id,
+            'name' => $this->userable->name,
+            'username' => $this->username,
+            'whatsapp' => $this->userable->whatsapp,
+        ];
     }
 }

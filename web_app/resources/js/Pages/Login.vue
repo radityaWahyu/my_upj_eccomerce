@@ -1,26 +1,119 @@
+<script setup lang="ts">
+import { ref, watch } from "vue";
+import {
+    Link,
+    Head,
+    usePage,
+    useForm as useInertiaForm,
+} from "@inertiajs/vue3";
+import {
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/shadcn/ui/form";
+import { useForm } from "vee-validate";
+import { toTypedSchema } from "@vee-validate/zod";
+import * as zod from "zod";
+import validator from "validator";
+import { BadgeAlert, CircleX } from "lucide-vue-next";
+
+const page = usePage();
+
+const userSchema = () => {
+    return toTypedSchema(
+        zod.object({
+            username: zod
+                .string({ message: "username harus diisi" })
+                .min(1, { message: "username harus diisi." }),
+            password: zod
+                .string({ message: "password harus diisi" })
+                .min(1, { message: "password harus diisi" }),
+        })
+    );
+};
+
+const validationSchema = userSchema();
+const form = useForm({
+    validationSchema,
+});
+
+const loginForm = useInertiaForm({
+    _token: page.props.csrf_token,
+    username: "",
+    password: "",
+});
+
+const props = defineProps<{ flash: any }>();
+const showErrorAlert = ref<boolean>(false);
+
+watch(
+    () => props.flash,
+    (alert) => {
+        if (!!alert.error) {
+            showErrorAlert.value = !!alert.error;
+        } else {
+            showErrorAlert.value = false;
+        }
+    },
+    { immediate: true }
+);
+
+const onSubmit = form.handleSubmit((formData) => {
+    loginForm.post(route("frontend.login.store"), {
+        onError: (error) => console.log(error),
+    });
+});
+</script>
 <template>
+    <Head title="Login Akun" />
     <div
         class="relative h-screen bg-nasplesyellow/10 flex items-center lg:items-center justify-center lg:justify-normal"
     >
-        <div class="lg:w-3/5 hidden h-screen lg:block lg:p-3">
-            <a
-                href="http://"
-                class="text-tomato hover:bg-tomato/60 hover:rounded hover:text-white text-sm font-medium inline-flex items-center px-3 py-1 lg:gap-2 group"
+        <Transition>
+            <div class="absolute z-10 top-0 w-full py-2" v-if="showErrorAlert">
+                <div
+                    class="flex items-center justify-between gap-4 bg-red-100 w-1/2 mx-auto rounded overflow-hidden"
+                >
+                    <div class="flex items-center gap-2">
+                        <div class="bg-red-200 p-3">
+                            <BadgeAlert class="w-8 h-8 text-red-400" />
+                        </div>
+                        <p class="text-sm">
+                            <strong class="block">Peringatan :</strong>
+                            {{ flash.error }}
+                        </p>
+                    </div>
+                    <button
+                        type="button"
+                        class="bg-gray-100 p-1 rounded-full mr-2"
+                        @click="showErrorAlert = false"
+                    >
+                        <CircleX class="h-4 w-4" />
+                    </button>
+                </div>
+            </div>
+        </Transition>
+        <div class="lg:w-3/5 hidden h-screen lg:block">
+            <Link
+                :href="route('frontend.index')"
+                class="bg-tomato text-white hover:bg-tomato/80 hover:text-white text-sm font-medium inline-flex items-center px-4 py-2 lg:gap-2 group"
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="32"
                     height="32"
                     viewBox="0 0 24 24"
-                    class="fill-current w-6 h-6 text-tomato group-hover:text-white"
+                    class="fill-current w-6 h-6 o text-white"
                 >
                     <path
                         fill="currentColor"
                         d="m10 18l-6-6l6-6l1.4 1.45L7.85 11H20v2H7.85l3.55 3.55z"
                     />
                 </svg>
-                <span> Kembali ke Halaman Utama</span>
-            </a>
+                <span> kembali ke Beranda</span>
+            </Link>
             <img
                 src="@/Assets/images/login.svg"
                 alt=""
@@ -67,41 +160,62 @@
                 silahkan untuk menghubungi adminstrator sistem.
             </div>
             <div>
-                <form class="max-w-md mx-auto space-y-3 mb-6">
+                <form
+                    @submit="onSubmit"
+                    class="max-w-md mx-auto space-y-3 mb-6"
+                >
                     <div>
-                        <label
-                            for="username"
-                            class="block mb-2 text-xs font-medium text-gray-900"
-                        >
-                            Username <span class="text-red-400">*</span>
-                        </label>
-                        <input
-                            type="text"
-                            id="username"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                            placeholder="masukkan username"
-                            required
-                        />
+                        <FormField v-slot="{ componentField }" name="username">
+                            <FormItem>
+                                <FormLabel
+                                    :class="{
+                                        'text-red-500':
+                                            loginForm.errors.username,
+                                    }"
+                                    >Username</FormLabel
+                                >
+                                <FormControl>
+                                    <input
+                                        type="text"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                                        placeholder="masukkan username"
+                                        v-model="loginForm.username"
+                                        v-bind="componentField"
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        </FormField>
                     </div>
                     <div>
-                        <label
-                            for="password"
-                            class="block mb-2 text-xs font-medium text-gray-900"
-                        >
-                            Password <span class="text-red-400">*</span>
-                        </label>
-                        <input
-                            type="password"
-                            id="password"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                            placeholder="masukkan password"
-                            required
-                        />
+                        <FormField v-slot="{ componentField }" name="password">
+                            <FormItem>
+                                <FormLabel
+                                    :class="{
+                                        'text-red-500':
+                                            loginForm.errors.password,
+                                    }"
+                                >
+                                    Password
+                                </FormLabel>
+                                <FormControl>
+                                    <input
+                                        type="password"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                                        placeholder="masukkan password"
+                                        v-model="loginForm.password"
+                                        v-bind="componentField"
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        </FormField>
                     </div>
 
                     <div class="divide-y divide-gray-300 space-y-3">
                         <div>
                             <button
+                                @click="onSubmit"
                                 type="submit"
                                 class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded text-sm w-full px-5 py-2.5 text-center"
                             >
@@ -109,12 +223,13 @@
                             </button>
                         </div>
                         <div class="pt-3">
-                            <button
-                                type="submit"
+                            <Link
+                                :href="route('frontend.register')"
+                                as="button"
                                 class="bg-gray-200 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded text-sm w-full px-5 py-2.5 text-center"
                             >
                                 Daftar Akun Baru
-                            </button>
+                            </Link>
                         </div>
                     </div>
                 </form>

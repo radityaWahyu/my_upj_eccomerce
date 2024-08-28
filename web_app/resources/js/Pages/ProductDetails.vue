@@ -6,7 +6,9 @@ export default {
 };
 </script>
 <script setup lang="ts">
-import { Head, Link } from "@inertiajs/vue3";
+import { computed } from "vue";
+import { Head, Link, usePage, useForm } from "@inertiajs/vue3";
+import { BadgeInfo } from "lucide-vue-next";
 import Banner from "@/Components/productDetails/Banner.vue";
 import Product from "@/Components/app/Product.vue";
 
@@ -49,12 +51,26 @@ const props = defineProps<{
     products: { data: TProducts[] };
 }>();
 
+const page = usePage<any>();
+const form = useForm({
+    product_id: "",
+    qty: 1,
+});
+
 const Rupiah = (price: number) =>
     new Intl.NumberFormat("en-ID", {
         style: "currency",
         currency: "IDR",
         maximumFractionDigits: 0,
     }).format(price);
+
+const isCustomerLoggedIn = computed(
+    () => page.props.auth !== null && page.props.auth.user !== null
+);
+const increaseQty = () => (form.qty = form.qty + 1);
+const decreaseQty = () => {
+    if (form.qty > 1) form.qty--;
+};
 </script>
 <template>
     <Head :title="product.name" />
@@ -84,6 +100,69 @@ const Rupiah = (price: number) =>
                         }}</span>
                     </p>
                     <p class="text-[13px]" v-html="product.description" />
+                </div>
+                <div v-if="isCustomerLoggedIn">
+                    <form class="flex items-center gap-2">
+                        <button
+                            type="submit"
+                            class="grow bg-tomato text-gray-50 font-semibold p-2 rounded"
+                        >
+                            Tambahkan ke keranjang
+                        </button>
+                        <div>
+                            <div
+                                class="grow flex items-center rounded border border-gray-200 bg-white"
+                            >
+                                <button
+                                    type="button"
+                                    class="size-10 leading-10 text-gray-600 transition hover:opacity-75"
+                                    @click="decreaseQty"
+                                >
+                                    &minus;
+                                </button>
+
+                                <input
+                                    type="number"
+                                    v-model="form.qty"
+                                    class="h-10 border-transparent text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
+                                />
+
+                                <button
+                                    type="button"
+                                    class="size-10 leading-10 text-gray-600 transition hover:opacity-75"
+                                    @click="increaseQty"
+                                >
+                                    &plus;
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="w-full py-2" v-else>
+                    <div
+                        class="w-full flex items-center justify-between gap-4 bg-blue-100 rounded overflow-hidden"
+                    >
+                        <div class="flex items-center gap-2">
+                            <div class="bg-blue-200 p-3">
+                                <BadgeInfo class="w-8 h-8 text-blue-400" />
+                            </div>
+                            <p class="text-xs">
+                                <strong class="block">Peringatan :</strong>
+                                Untuk fitur pemesanan silahkan login terlebih
+                                dahulu. Apabila belum punya akun silahkan klik
+                                tombol daftar sekarang
+                            </p>
+                        </div>
+                    </div>
+                    <div class="pt-3">
+                        <Link
+                            :href="route('frontend.register')"
+                            as="button"
+                            class="bg-blue-200 hover:bg-blue-300 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded text-sm w-full px-5 py-2.5 text-center"
+                        >
+                            Daftar Sekarang
+                        </Link>
+                    </div>
                 </div>
                 <div
                     class="p-4 mb-4 text-[12px] text-blue-800 bg-blue-50 dark:bg-gray-800 dark:text-blue-400"

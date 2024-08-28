@@ -61,14 +61,14 @@ class User extends Authenticatable
         return $this->hasMany(Product::class);
     }
 
-    public function isAdmin()
+    public function scopeIsAdmin()
     {
-        return $this->where('userable_type', 'App\Models\Employee')->exists();
+        return get_class($this->userable) == 'App\Models\Employee';
     }
 
-    public function isCustomer()
+    public function scopeIsCustomer()
     {
-        return $this->where('userable_type', 'App\Models\Customer')->exists();
+        return get_class($this->userable) == 'App\Models\Customer';
     }
 
 

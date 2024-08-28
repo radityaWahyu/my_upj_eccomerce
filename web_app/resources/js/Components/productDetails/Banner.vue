@@ -1,5 +1,5 @@
 <template>
-    <div class="m-auto container text-center">
+    <div class="container text-center">
         <div class="relative" v-if="images.length > 0">
             <swiper
                 :slides-per-view="1"

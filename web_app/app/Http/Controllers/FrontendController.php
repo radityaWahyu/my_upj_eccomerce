@@ -2,20 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\BackOffice\CustomerRequest;
 use App\Models\Shop;
 use App\Models\Banner;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Customer;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Resources\ShopResource;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\BannerResource;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\EmployeeResource;
 use App\Http\Resources\ProductDetailResource;
-use App\Models\Customer;
+use App\Http\Requests\BackOffice\CustomerRequest;
+use App\Http\Requests\LoginFrontendRequest;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class FrontendController extends Controller
@@ -55,11 +57,12 @@ class FrontendController extends Controller
 
 
         $categories = Category::get();
-        $products = Product::query()->with(['category', 'shop']);
-        $products = $products->whereHas('category', function ($query) use ($request) {
-            if ($request->category !== 'all' && $request->has('category')) return $query->where('slug', $request->category);
-        });
-        $products = $products->latest()
+
+        $products = Product::query()->with(['category', 'shop'])
+            ->whereHas('category', function ($query) use ($request) {
+                if ($request->category !== 'all' && $request->has('category')) return $query->where('slug', $request->category);
+            })
+            ->latest()
             ->paginate($per_page);
 
         return inertia('Products', [
@@ -83,6 +86,7 @@ class FrontendController extends Controller
                 ->whereNotIn('id', [$product->id])->limit(5)->get();
 
             $description = strip_tags($product->description);
+
             if (!empty($description)) {
                 $description = Str::substr($description, 0, 100);
             } else {
@@ -119,6 +123,7 @@ class FrontendController extends Controller
     {
         try {
             $customer = Customer::create($request->except('username', 'password'));
+
             $customer->user()->create([
                 'username' => $request->username,
                 'password' => $request->password,
@@ -135,6 +140,30 @@ class FrontendController extends Controller
     public function login()
     {
         return inertia('Login');
+    }
+
+    public function loginStore(LoginFrontendRequest $request)
+    {
+        if (!Auth::attempt($request->only('username', 'password')))
+            return redirect()
+                ->back()
+                ->with('error', 'Username dan password salah, silahkan mengecek kembali penulisan username dan password');
+
+
+        $request->session()->regenerate();
+
+        return to_route('frontend.index')->with('success', 'Selamat datang ' . $request->username);
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        return redirect()->back()->with('success', 'Anda berhasil keluar dari sistem');
     }
 
     public function shops(Request $request)
@@ -191,37 +220,40 @@ class FrontendController extends Controller
 
     public function search(Request $request)
     {
-        if ($request->has('key')) {
-            $per_page = 10;
-            $params = ['key' => $request->key];
+        if ($request->missing('key')) return abort(404, 'Produk & jasa yang anda cari tidak ditemukan');
 
-            if ($request->has('per_page')) $per_page = $request->per_page;
-            if ($request->has('category')) $params += ['category' => $request->category];
-            if ($request->has('page')) $params += ['page' => $request->page];
+        $per_page = 10;
+        $params = ['key' => $request->key];
 
+        if ($request->has('per_page')) $per_page = $request->per_page;
+        if ($request->has('category')) $params += ['category' => $request->category];
+        if ($request->has('page')) $params += ['page' => $request->page];
 
-            $categories = Category::get();
-            $products = Product::query()->with(['category', 'shop']);
-            $products = $products->whereHas('category', function ($query) use ($request) {
+        $categories = Category::get();
+
+        $products = Product::query()->with(['category', 'shop'])
+            ->whereHas('category', function ($query) use ($request) {
                 if ($request->category !== 'all' && $request->has('category')) return $query->where('slug', $request->category);
-            });
-            $products = $products->where('name', 'like', '%' . $request->key . '%');
-            $products = $products->latest()
-                ->paginate($per_page);
+            })
+            ->where('name', 'like', '%' . $request->key . '%')
+            ->latest()
+            ->paginate($per_page);
 
-            return inertia('Search', [
-                'categories' => fn() => CategoryResource::collection($categories),
-                'products' => fn() => ProductResource::collection($products),
-                'params' => fn() => empty($params) ? null : $params,
-                'active' => fn() => ($request->has('category')) ? $request->category : null,
-                'event' => fn() => [
-                    'author' => 'SMKN 1 Purwosari Kab Pasuruan',
-                    'title' => 'Daftar Produk dan Jasa',
-                    'description' => 'Daftar Produk dan jasa yang terdapat pada setiap unit layanan di SMKN 1 Purwosari Kab. Pasuruan',
-                ]
-            ]);
-        }
+        return inertia('Search', [
+            'categories' => fn() => CategoryResource::collection($categories),
+            'products' => fn() => ProductResource::collection($products),
+            'params' => fn() => empty($params) ? null : $params,
+            'active' => fn() => ($request->has('category')) ? $request->category : null,
+            'event' => fn() => [
+                'author' => 'SMKN 1 Purwosari Kab Pasuruan',
+                'title' => 'Daftar Produk dan Jasa',
+                'description' => 'Daftar Produk dan jasa yang terdapat pada setiap unit layanan di SMKN 1 Purwosari Kab. Pasuruan',
+            ]
+        ]);
+    }
 
-        return abort(404, 'Produk & jasa yang anda cari tidak ditemukan');
+    public function myProfile(Request $request)
+    {
+        dd($request->user()->isCustomer());
     }
 }

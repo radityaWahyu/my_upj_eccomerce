@@ -1,17 +1,21 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from "vue";
-import { router, usePage } from "@inertiajs/vue3";
+import { ref, onMounted, watch, computed, ComputedRef } from "vue";
+import { router, usePage, Link } from "@inertiajs/vue3";
 import { MagnifyingGlassIcon } from "@radix-icons/vue";
 import { Input } from "@/shadcn/ui/input";
+import { LogIn, UserPlus, CircleUser, UserPen, LogOut } from "lucide-vue-next";
 import TopLink from "./TopLink.vue";
 
-const page = usePage();
+const page = usePage<any>();
 
 const keyString = ref<any>("");
+const isUserMenuOpen = ref<boolean>(false);
 const search = () => {
     //alert(keyString.value);
     router.get(route("frontend.search"), { key: keyString.value });
 };
+const customerProfile = computed(() => page.props.auth);
+
 onMounted(() => {
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has("key")) {
@@ -129,20 +133,99 @@ watch(
                             />
                         </svg>
                     </a>
-                    <a href="http://">
+                    <button
+                        type="button"
+                        class="group hover:bg-tomato p-1 rounded-full"
+                        @click="isUserMenuOpen = !isUserMenuOpen"
+                    >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="22"
                             height="22"
                             viewBox="0 0 24 24"
-                            class="text-tomato"
+                            class="text-tomato group-hover:text-white"
                         >
                             <path
                                 fill="currentColor"
                                 d="M12 11q.825 0 1.413-.588Q14 9.825 14 9t-.587-1.413Q12.825 7 12 7q-.825 0-1.412.587Q10 8.175 10 9q0 .825.588 1.412Q11.175 11 12 11Zm0 2q-1.65 0-2.825-1.175Q8 10.65 8 9q0-1.65 1.175-2.825Q10.35 5 12 5q1.65 0 2.825 1.175Q16 7.35 16 9q0 1.65-1.175 2.825Q13.65 13 12 13Zm0 11q-2.475 0-4.662-.938q-2.188-.937-3.825-2.574Q1.875 18.85.938 16.663Q0 14.475 0 12t.938-4.663q.937-2.187 2.575-3.825Q5.15 1.875 7.338.938Q9.525 0 12 0t4.663.938q2.187.937 3.825 2.574q1.637 1.638 2.574 3.825Q24 9.525 24 12t-.938 4.663q-.937 2.187-2.574 3.825q-1.638 1.637-3.825 2.574Q14.475 24 12 24Zm0-2q1.8 0 3.375-.575T18.25 19.8q-.825-.925-2.425-1.612q-1.6-.688-3.825-.688t-3.825.688q-1.6.687-2.425 1.612q1.3 1.05 2.875 1.625T12 22Zm-7.7-3.6q1.2-1.3 3.225-2.1q2.025-.8 4.475-.8q2.45 0 4.463.8q2.012.8 3.212 2.1q1.1-1.325 1.713-2.95Q22 13.825 22 12q0-2.075-.788-3.887q-.787-1.813-2.15-3.175q-1.362-1.363-3.175-2.151Q14.075 2 12 2q-2.05 0-3.875.787q-1.825.788-3.187 2.151Q3.575 6.3 2.788 8.113Q2 9.925 2 12q0 1.825.6 3.463q.6 1.637 1.7 2.937Z"
                             />
                         </svg>
-                    </a>
+                    </button>
+                    <div
+                        v-if="isUserMenuOpen"
+                        class="absolute end-20 z-10 top-10 mt-2 w-56 rounded-md border border-gray-100 bg-white shadow-lg"
+                    >
+                        <div
+                            class="w-full divide-y divide-gray-200"
+                            v-if="customerProfile === null"
+                        >
+                            <div class="p-2">
+                                <Link
+                                    :href="route('frontend.register')"
+                                    as="button"
+                                    class="flex items-center justify-center gap-2 bg-gray-200 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded text-sm w-full px-5 py-2.5 text-center"
+                                >
+                                    <UserPlus class="w-5 h-5" />
+                                    Daftar Akun
+                                </Link>
+                            </div>
+                            <div class="p-2">
+                                <Link
+                                    :href="route('frontend.login')"
+                                    as="button"
+                                    class="flex items-center justify-center gap-2 bg-blue-200 hover:bg-blue-300 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded text-sm w-full px-5 py-2.5 text-center"
+                                >
+                                    <LogIn class="w-5 h-5" />
+                                    Login Akun
+                                </Link>
+                            </div>
+                        </div>
+                        <div class="w-full divide-y divide-gray-200" v-else>
+                            <div class="p-3">
+                                <strong
+                                    class="block p-1 text-xs font-medium uppercase text-gray-400"
+                                >
+                                    Profil Saya
+                                </strong>
+                                <div
+                                    class="flex items-center justify-start gap-2"
+                                >
+                                    <div class="p-1 bg-gray-300 rounded-full">
+                                        <CircleUser class="w-6 h-6" />
+                                    </div>
+                                    <div class="text-xs">
+                                        <p class="font-semibold capitalize">
+                                            {{ customerProfile.user.name }}
+                                        </p>
+                                        <p>
+                                            {{ customerProfile.user.username }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-2">
+                                <Link
+                                    :href="route('frontend.profile')"
+                                    as="button"
+                                    class="flex items-center justify-center gap-2 bg-blue-200 hover:bg-blue-300 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded text-sm w-full px-5 py-2.5 text-center"
+                                >
+                                    <UserPen class="w-5 h-5" />
+                                    Edit Profil
+                                </Link>
+                            </div>
+                            <div class="p-2">
+                                <Link
+                                    :href="route('frontend.logout')"
+                                    as="button"
+                                    method="post"
+                                    class="flex items-center justify-center gap-2 bg-gray-200 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded text-sm w-full px-5 py-2.5 text-center"
+                                >
+                                    <LogOut class="w-5 h-5" />
+                                    Log Out
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

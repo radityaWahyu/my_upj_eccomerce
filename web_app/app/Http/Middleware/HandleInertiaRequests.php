@@ -40,11 +40,16 @@ class HandleInertiaRequests extends Middleware
             $settingData += [$name => $setting->data];
         }
 
+        // $isAdmin = get_class($request->user()->userable) == 'App\Models\Employee';
+        // $isCustomer = get_class($request->user()->userable) == 'App\Models\Customer';
+
+
         return array_merge(
             parent::share($request),
             [
                 'auth' => Auth::check() ? [
-                    'admin' => new LoginResource($request->user()),
+                    'admin' => $request->user()->isAdmin() ? new LoginResource($request->user()) : null,
+                    'user' => $request->user()->isCustomer() ? new LoginResource(($request->user())) : null,
                 ] : null,
                 'csrf_token' => csrf_token(),
                 'flash' => [
