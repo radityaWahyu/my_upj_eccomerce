@@ -248,7 +248,7 @@ const onSubmit = form.handleSubmit((formData) => {
                                     </svg>
                                     Autentikasi akun...
                                 </span>
-                                <span>Log In</span>
+                                <span v-else>Log In</span>
                             </button>
                         </div>
                         <div class="pt-3">

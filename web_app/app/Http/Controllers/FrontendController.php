@@ -148,6 +148,9 @@ class FrontendController extends Controller
     public function loginStore(LoginFrontendRequest $request)
     {
         $credentials = $request->only('username', 'password');
+        $credentials += ['userable_type' => 'App\Models\Customer'];
+        $credentials += ['is_enabled' => true];
+        //dd($credentials);
         if (!Auth::attempt($credentials))
             return redirect()
                 ->back()
@@ -291,17 +294,64 @@ class FrontendController extends Controller
 
     public function getCart(Request $request)
     {
-        $carts = Cart::with(['product' => ['shop']])
-            ->where('user_id', $request->user()->id)
-            ->get();
+        if (Auth::check() && $request->user()->isCustomer()) {
+            $carts = Cart::with(['product' => ['shop']])
+                ->where('user_id', $request->user()->id)
+                ->get();
+
+            return inertia('Carts', [
+                'carts' => fn() => CartResource::collection($carts),
+                'event' => fn() => [
+                    'author' => 'SMKN 1 Purwosari Kab Pasuruan',
+                    'title' => 'Keranjang Belanja',
+                    'description' => 'Daftar produk yang masuk dalam keranjang belanja',
+                ]
+            ]);
+        }
 
         return inertia('Carts', [
-            'carts' => fn() => CartResource::collection($carts),
+            'carts' => fn() => null,
             'event' => fn() => [
                 'author' => 'SMKN 1 Purwosari Kab Pasuruan',
                 'title' => 'Keranjang Belanja',
                 'description' => 'Daftar produk yang masuk dalam keranjang belanja',
             ]
         ]);
+    }
+
+    public function updateProductCartQty(Request $request, Cart $cart)
+    {
+        try {
+            $total = $cart->price * $request->qty;
+            $cart->quantity = $request->qty;
+            $cart->total = $total;
+            $cart->save();
+
+            return redirect()->back();
+        } catch (\Illuminate\Database\QueryException $exception) {
+            return redirect()->back()->with('error', $exception->errorInfo);
+        }
+    }
+
+    public function deleteProductCart(Cart $cart)
+    {
+        try {
+            $cart->delete();
+
+            return redirect()->back()->with('success', 'Item dihapus dari keranjang');
+        } catch (\Illuminate\Database\QueryException $exception) {
+            return redirect()->back()->with('error', $exception->errorInfo);
+        }
+    }
+
+    public function emptyProductCart(Request $request)
+    {
+        try {
+            Cart::where('user_id', $request->user()->id)->delete();
+
+            return redirect()->back()->with('success', 'Item dihapus semua');
+        } catch (\Illuminate\Database\QueryException $exception) {
+            return redirect()->back()->with('error', $exception->errorInfo);
+        }
     }
 }

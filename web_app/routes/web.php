@@ -33,6 +33,10 @@ Route::controller(FrontendController::class)->group(
         Route::get('/my-profile', 'myProfile')->name('frontend.profile');
         Route::get('/carts', 'getCart')->name('frontend.cart.index');
         Route::post('/carts/{product}', 'addToCart')->name('frontend.cart.store');
+        Route::put('/carts/{cart}', 'updateProductCartQty')->name('frontend.cart.update');
+        Route::delete('/carts/empty', 'emptyProductCart')->name('frontend.cart.empty');
+        Route::delete('/carts/{cart}', 'deleteProductCart')->name('frontend.cart.delete');
+
         // Route::get('/success-registration', 'success');
     }
 );
