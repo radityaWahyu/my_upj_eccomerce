@@ -1,3 +1,33 @@
+<script setup lang="ts">
+import { ref, watch } from "vue";
+import { BadgeAlert, CircleX, BadgeInfo } from "lucide-vue-next";
+import HeaderApp from "@/Components/app/Header.vue";
+import FooterApp from "@/Components/app/Footer.vue";
+
+const props = defineProps<{ flash: any }>();
+const showErrorAlert = ref<boolean>(false);
+const showSuccessAlert = ref<boolean>(false);
+
+watch(
+    () => props.flash,
+    (alert) => {
+        if (!!alert.error) {
+            showErrorAlert.value = !!alert.error;
+            setTimeout(() => (showErrorAlert.value = false), 3000);
+        } else {
+            showErrorAlert.value = false;
+        }
+
+        if (!!alert.success) {
+            showSuccessAlert.value = !!alert.success;
+            setTimeout(() => (showSuccessAlert.value = false), 3000);
+        } else {
+            showSuccessAlert.value = false;
+        }
+    },
+    { immediate: true }
+);
+</script>
 <template>
     <header-app />
 
@@ -68,7 +98,58 @@
             </a>
         </div>
     </div> -->
-    <div class="max-w-full bg-lemonchiffon/30 min-h-screen">
+    <div class="relative max-w-full bg-lemonchiffon/30 min-h-screen">
+        <Transition>
+            <div
+                class="absolute z-10 top-0 w-full py-2"
+                v-if="showSuccessAlert"
+            >
+                <div
+                    class="flex items-center justify-between gap-4 bg-blue-100 w-1/2 mx-auto rounded overflow-hidden"
+                >
+                    <div class="flex items-center gap-2">
+                        <div class="bg-blue-200 p-3">
+                            <BadgeInfo class="w-8 h-8 text-blue-400" />
+                        </div>
+                        <p class="text-xs">
+                            <strong class="block">Informasi :</strong>
+                            {{ flash.success }}
+                        </p>
+                    </div>
+                    <button
+                        type="button"
+                        class="bg-gray-100 p-1 rounded-full mr-2"
+                        @click="showSuccessAlert = false"
+                    >
+                        <CircleX class="h-4 w-4" />
+                    </button>
+                </div>
+            </div>
+        </Transition>
+        <Transition>
+            <div class="absolute z-10 top-0 w-full py-2" v-if="showErrorAlert">
+                <div
+                    class="flex items-center justify-between gap-4 bg-red-100 w-1/2 mx-auto rounded overflow-hidden"
+                >
+                    <div class="flex items-center gap-2">
+                        <div class="bg-red-200 p-3">
+                            <BadgeAlert class="w-8 h-8 text-red-400" />
+                        </div>
+                        <p class="text-xs">
+                            <strong class="block">Peringatan :</strong>
+                            {{ flash.error }}
+                        </p>
+                    </div>
+                    <button
+                        type="button"
+                        class="bg-gray-100 p-1 rounded-full mr-2"
+                        @click="showErrorAlert = false"
+                    >
+                        <CircleX class="h-4 w-4" />
+                    </button>
+                </div>
+            </div>
+        </Transition>
         <section>
             <slot />
         </section>
@@ -93,12 +174,6 @@
     <div class="lg:hidden mb-[2rem]"></div>
 </template>
 
-<script setup lang="ts">
-import { MagnifyingGlassIcon } from "@radix-icons/vue";
-import { Input } from "@/shadcn/ui/input";
-import HeaderApp from "@/Components/app/Header.vue";
-import FooterApp from "@/Components/app/Footer.vue";
-</script>
 <style lang="scss">
 body {
     @apply text-yaleblue;

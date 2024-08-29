@@ -219,7 +219,36 @@ const onSubmit = form.handleSubmit((formData) => {
                                 type="submit"
                                 class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded text-sm w-full px-5 py-2.5 text-center"
                             >
-                                Login
+                                <span
+                                    class="flex items-center gap-2 justify-center"
+                                    v-if="loginForm.processing"
+                                >
+                                    <svg
+                                        class="h-4 w-4 animate-spin"
+                                        viewBox="0 0 100 100"
+                                    >
+                                        <circle
+                                            fill="none"
+                                            stroke-width="10"
+                                            class="stroke-current opacity-40"
+                                            cx="50"
+                                            cy="50"
+                                            r="40"
+                                        />
+                                        <circle
+                                            fill="none"
+                                            stroke-width="10"
+                                            class="stroke-current"
+                                            stroke-dasharray="250"
+                                            stroke-dashoffset="210"
+                                            cx="50"
+                                            cy="50"
+                                            r="40"
+                                        />
+                                    </svg>
+                                    Autentikasi akun...
+                                </span>
+                                <span>Log In</span>
                             </button>
                         </div>
                         <div class="pt-3">

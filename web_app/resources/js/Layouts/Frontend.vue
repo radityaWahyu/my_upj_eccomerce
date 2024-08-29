@@ -1,6 +1,6 @@
 <template>
     <div
-        class="max-w-full bg-lemonchiffon/30 min-h-screen text-yaleblue font-poppins antialiased"
+        class="relative max-w-full bg-lemonchiffon/30 min-h-screen text-yaleblue font-poppins antialiased"
     >
         <Header />
         <section>

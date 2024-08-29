@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
 use App\Models\Shop;
 use App\Models\Banner;
 use App\Models\Product;
@@ -15,9 +16,10 @@ use App\Http\Resources\BannerResource;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\EmployeeResource;
+use App\Http\Requests\LoginFrontendRequest;
 use App\Http\Resources\ProductDetailResource;
 use App\Http\Requests\BackOffice\CustomerRequest;
-use App\Http\Requests\LoginFrontendRequest;
+use App\Http\Resources\CartResource;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class FrontendController extends Controller
@@ -60,7 +62,8 @@ class FrontendController extends Controller
 
         $products = Product::query()->with(['category', 'shop'])
             ->whereHas('category', function ($query) use ($request) {
-                if ($request->category !== 'all' && $request->has('category')) return $query->where('slug', $request->category);
+                if ($request->category !== 'all' && $request->has('category'))
+                    return $query->where('slug', $request->category);
             })
             ->latest()
             ->paginate($per_page);
@@ -69,7 +72,7 @@ class FrontendController extends Controller
             'categories' => fn() => CategoryResource::collection($categories),
             'products' => fn() => ProductResource::collection($products),
             'params' => fn() => empty($params) ? null : $params,
-            'active' => fn() => ($request->has('category')) ? $request->category : null,
+            'active' => fn() => ($request->has('category')) ? $request->category : 'all',
             'event' => fn() => [
                 'author' => 'SMKN 1 Purwosari Kab Pasuruan',
                 'title' => 'Daftar Produk dan Jasa',
@@ -144,7 +147,8 @@ class FrontendController extends Controller
 
     public function loginStore(LoginFrontendRequest $request)
     {
-        if (!Auth::attempt($request->only('username', 'password')))
+        $credentials = $request->only('username', 'password');
+        if (!Auth::attempt($credentials))
             return redirect()
                 ->back()
                 ->with('error', 'Username dan password salah, silahkan mengecek kembali penulisan username dan password');
@@ -255,5 +259,49 @@ class FrontendController extends Controller
     public function myProfile(Request $request)
     {
         dd($request->user()->isCustomer());
+    }
+
+    public function addToCart(Request $request, Product $product)
+    {
+        try {
+
+            $cart = Cart::where(['product_id' => $product->id, 'user_id' => $request->user()->id])->first();
+
+            if (!empty($cart)) {
+                $newQuantity = $cart->quantity + $request->qty;
+                $cart->quantity = $newQuantity;
+                $cart->total = $newQuantity * $cart->price;
+                $cart->save();
+            } else {
+                $request->user()->carts()->create([
+                    'quantity' => $request->qty,
+                    'price' => $product->price,
+                    'total' => $request->qty * $product->price,
+                    'product_id' => $product->id,
+                ]);
+            }
+
+
+
+            return redirect()->back()->with('success', 'Item ditambahkan ke keranjang');
+        } catch (\Illuminate\Database\QueryException $exception) {
+            return redirect()->back()->with('error', $exception->errorInfo);
+        }
+    }
+
+    public function getCart(Request $request)
+    {
+        $carts = Cart::with(['product' => ['shop']])
+            ->where('user_id', $request->user()->id)
+            ->get();
+
+        return inertia('Carts', [
+            'carts' => fn() => CartResource::collection($carts),
+            'event' => fn() => [
+                'author' => 'SMKN 1 Purwosari Kab Pasuruan',
+                'title' => 'Keranjang Belanja',
+                'description' => 'Daftar produk yang masuk dalam keranjang belanja',
+            ]
+        ]);
     }
 }

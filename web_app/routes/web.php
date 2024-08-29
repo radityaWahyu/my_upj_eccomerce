@@ -31,6 +31,8 @@ Route::controller(FrontendController::class)->group(
         Route::get('/unit-layanan/{shop:slug}', 'shopsDetail')->name('frontend.shops.detail');
         Route::get('/search', 'search')->name('frontend.search');
         Route::get('/my-profile', 'myProfile')->name('frontend.profile');
+        Route::get('/carts', 'getCart')->name('frontend.cart.index');
+        Route::post('/carts/{product}', 'addToCart')->name('frontend.cart.store');
         // Route::get('/success-registration', 'success');
     }
 );

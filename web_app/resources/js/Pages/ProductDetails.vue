@@ -52,8 +52,7 @@ const props = defineProps<{
 }>();
 
 const page = usePage<any>();
-const form = useForm({
-    product_id: "",
+const cartForm = useForm({
     qty: 1,
 });
 
@@ -67,9 +66,18 @@ const Rupiah = (price: number) =>
 const isCustomerLoggedIn = computed(
     () => page.props.auth !== null && page.props.auth.user !== null
 );
-const increaseQty = () => (form.qty = form.qty + 1);
+const increaseQty = () => (cartForm.qty = cartForm.qty + 1);
 const decreaseQty = () => {
-    if (form.qty > 1) form.qty--;
+    if (cartForm.qty > 1) cartForm.qty--;
+};
+
+const addToCart = () => {
+    cartForm.post(route("frontend.cart.store", props.product.id), {
+        onError: (error) => console.log(error),
+        onFinish: () => {
+            cartForm.qty = 1;
+        },
+    });
 };
 </script>
 <template>
@@ -102,12 +110,45 @@ const decreaseQty = () => {
                     <p class="text-[13px]" v-html="product.description" />
                 </div>
                 <div v-if="isCustomerLoggedIn">
-                    <form class="flex items-center gap-2">
+                    <form
+                        @submit.prevent="addToCart"
+                        class="flex items-center gap-2"
+                    >
                         <button
                             type="submit"
                             class="grow bg-tomato text-gray-50 font-semibold p-2 rounded"
+                            :disabled="cartForm.processing"
                         >
-                            Tambahkan ke keranjang
+                            <span
+                                class="flex items-center gap-2 justify-center"
+                                v-if="cartForm.processing"
+                            >
+                                <svg
+                                    class="h-4 w-4 animate-spin"
+                                    viewBox="0 0 100 100"
+                                >
+                                    <circle
+                                        fill="none"
+                                        stroke-width="10"
+                                        class="stroke-current opacity-40"
+                                        cx="50"
+                                        cy="50"
+                                        r="40"
+                                    />
+                                    <circle
+                                        fill="none"
+                                        stroke-width="10"
+                                        class="stroke-current"
+                                        stroke-dasharray="250"
+                                        stroke-dashoffset="210"
+                                        cx="50"
+                                        cy="50"
+                                        r="40"
+                                    />
+                                </svg>
+                                Menambahkan Produk...
+                            </span>
+                            <span v-else>Tambahkan ke keranjang</span>
                         </button>
                         <div>
                             <div
@@ -117,13 +158,14 @@ const decreaseQty = () => {
                                     type="button"
                                     class="size-10 leading-10 text-gray-600 transition hover:opacity-75"
                                     @click="decreaseQty"
+                                    :disable="cartForm.processing"
                                 >
                                     &minus;
                                 </button>
 
                                 <input
                                     type="number"
-                                    v-model="form.qty"
+                                    v-model="cartForm.qty"
                                     class="h-10 border-transparent text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
                                 />
 
@@ -131,6 +173,7 @@ const decreaseQty = () => {
                                     type="button"
                                     class="size-10 leading-10 text-gray-600 transition hover:opacity-75"
                                     @click="increaseQty"
+                                    :disabled="cartForm.processing"
                                 >
                                     &plus;
                                 </button>
