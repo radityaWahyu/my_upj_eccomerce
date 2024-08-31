@@ -23,6 +23,7 @@ use App\Http\Requests\LoginFrontendRequest;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use App\Http\Resources\ProductDetailResource;
 use App\Http\Requests\BackOffice\CustomerRequest;
+use App\Http\Resources\CustomerProfilResource;
 use App\Http\Resources\TransactionDetailResource;
 use App\Http\Resources\TransactionResource;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -415,6 +416,13 @@ class FrontendController extends Controller
 
     public function getTransactions(Request $request)
     {
+        if (!Auth::check())
+            return inertia('Transactions', [
+                'transactions' => fn() => null,
+                'params' => fn() => null,
+            ]);
+
+
         $per_page = 10;
         $params = [];
 
@@ -444,6 +452,30 @@ class FrontendController extends Controller
 
         return inertia('TransactionsDetail', [
             'transaction' => fn() => new TransactionDetailResource($transaction),
+        ]);
+    }
+
+    public function cancelTransaction(Transaction $transaction)
+    {
+        try {
+            $transaction->status = 'batal';
+            $transaction->save();
+
+            return redirect()->back()->with('success', 'Transaksi dibatalkan');
+        } catch (\Illuminate\Database\QueryException $exception) {
+            return redirect()->back()->with('error', $exception->errorInfo);
+        }
+    }
+
+    public function getProfil(Request $request)
+    {
+        if (!$request->user()->isCustomer()) return abort('404', 'Profil anda tidak ditemukan dalam sistem');
+
+        $user = $request->user();
+        // dd($user->userable()->customer());
+
+        return inertia('ProfilEditForm', [
+            'customer' => fn() => new CustomerProfilResource($user),
         ]);
     }
 }

@@ -23,6 +23,8 @@ Route::controller(FrontendController::class)->group(
         Route::get('/login', 'login')->name('frontend.login');
         Route::post('/login', 'loginStore')->name('frontend.login.store');
         Route::post('/logout', 'logout')->name('frontend.logout');
+        Route::get('/profil', 'getProfil')->name('frontend.profil.index');
+        Route::put('/profil', 'updateProfil')->name('frontend.profil.update');
         Route::get('/register', 'register')->name('frontend.register');
         Route::post('/register', 'registerStore')->name('frontend.register.store');
         Route::get('/products', 'products')->name('frontend.products');
@@ -38,7 +40,9 @@ Route::controller(FrontendController::class)->group(
         Route::delete('/carts/empty', 'emptyProductCart')->name('frontend.cart.empty');
         Route::delete('/carts/{cart}', 'deleteProductCart')->name('frontend.cart.delete');
         Route::get('/transactions', 'getTransactions')->name('frontend.transaction.index');
+        Route::put('/transactions/cancel/{transaction}', 'cancelTransaction')->name('frontend.transaction.cancel');
         Route::get('/transactions/{transaction}', 'transactionDetails')->name('frontend.transaction.detail');
+
 
         // Route::get('/success-registration', 'success');
     }

@@ -56,6 +56,11 @@ class User extends Authenticatable
         return $this->morphTo();
     }
 
+    public function customer()
+    {
+        return $this->userable()->customer();
+    }
+
     public function product()
     {
         return $this->hasMany(Product::class);

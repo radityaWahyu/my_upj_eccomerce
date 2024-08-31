@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignIdFor(User::class)->constrained()->restrictOnDelete();
             $table->foreignIdFor(Shop::class)->constrained()->restrictOnDelete();
             $table->string('transaction_code', 20);
-            $table->enum('status', ['pesan', 'proses', 'selesai', 'dibayar'])->default('pesan');
+            $table->enum('status', ['batal', 'pesan', 'proses', 'selesai', 'dibayar'])->default('pesan');
             $table->integer('total');
             $table->dateTime('finisihed_at')->nullable();
             $table->timestamps();
