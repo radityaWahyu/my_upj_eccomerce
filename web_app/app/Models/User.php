@@ -66,6 +66,11 @@ class User extends Authenticatable
         return $this->hasMany(Cart::class);
     }
 
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
     public function scopeIsAdmin()
     {
         return get_class($this->userable) == 'App\Models\Employee';

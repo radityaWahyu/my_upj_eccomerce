@@ -32,10 +32,13 @@ Route::controller(FrontendController::class)->group(
         Route::get('/search', 'search')->name('frontend.search');
         Route::get('/my-profile', 'myProfile')->name('frontend.profile');
         Route::get('/carts', 'getCart')->name('frontend.cart.index');
+        Route::post('/carts/send', 'createTransaction')->name('frontend.cart.send');
         Route::post('/carts/{product}', 'addToCart')->name('frontend.cart.store');
         Route::put('/carts/{cart}', 'updateProductCartQty')->name('frontend.cart.update');
         Route::delete('/carts/empty', 'emptyProductCart')->name('frontend.cart.empty');
         Route::delete('/carts/{cart}', 'deleteProductCart')->name('frontend.cart.delete');
+        Route::get('/transactions', 'getTransactions')->name('frontend.transaction.index');
+        Route::get('/transactions/{transaction}', 'transactionDetails')->name('frontend.transaction.detail');
 
         // Route::get('/success-registration', 'success');
     }

@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Cart;
 use App\Models\Shop;
 use App\Models\Banner;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Customer;
+use App\Models\Transaction;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Http\Resources\CartResource;
 use App\Http\Resources\ShopResource;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\BannerResource;
@@ -17,9 +20,11 @@ use App\Http\Resources\ProductResource;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\EmployeeResource;
 use App\Http\Requests\LoginFrontendRequest;
+use Haruncpi\LaravelIdGenerator\IdGenerator;
 use App\Http\Resources\ProductDetailResource;
 use App\Http\Requests\BackOffice\CustomerRequest;
-use App\Http\Resources\CartResource;
+use App\Http\Resources\TransactionDetailResource;
+use App\Http\Resources\TransactionResource;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class FrontendController extends Controller
@@ -353,5 +358,92 @@ class FrontendController extends Controller
         } catch (\Illuminate\Database\QueryException $exception) {
             return redirect()->back()->with('error', $exception->errorInfo);
         }
+    }
+
+    public function createTransaction(Request $request)
+    {
+        if (!Auth::check() && !$request->user()->isCustomer()) return abort('403', 'Silahkan Login terlebih dahulu');
+
+        $shops = Cart::select('products.shop_id as id')
+            ->join('products', 'carts.product_id', '=', 'products.id')
+            ->orderBy('products.shop_id', 'asc')
+            ->groupBy('products.shop_id')
+            ->get()->toArray();
+
+        $carts = Cart::select('carts.*', 'products.shop_id')
+            ->join('products', 'carts.product_id', '=', 'products.id')
+            ->orderBy('products.shop_id', 'asc')
+            ->where('carts.user_id', $request->user()->id)
+            ->get()->toArray();
+
+
+
+        foreach ($shops as $shop) {
+            $transaction_count = Transaction::whereDate('created_at', Carbon::today())->count();
+            $transaction_code = 'TR' . Carbon::today()->format('dmY') . '' . str_pad($transaction_count + 1, 3, '0', STR_PAD_LEFT);
+
+            $transaction = Transaction::create([
+                'user_id' => $request->user()->id,
+                'transaction_code' => $transaction_code,
+                'shop_id' => $shop['id'],
+                'total' => 0,
+            ]);
+
+            $total = 0;
+            foreach ($carts as $cart) {
+                if ($cart['shop_id'] == $shop['id']) {
+                    $total += $cart['total'];
+                    $transaction->details()->create([
+                        'product_id' => $cart['product_id'],
+                        'quantity' => $cart['quantity'],
+                        'price' => $cart['price'],
+                        'total' => $cart['total'],
+                        'notes' => $cart['notes'],
+                    ]);
+                    Cart::find($cart['id'])->delete();
+                } else {
+                    continue;
+                }
+            }
+
+            Transaction::where('id', $transaction->id)
+                ->update(['total' => $total]);
+        }
+
+        return inertia('CartsSuccessSend');
+    }
+
+    public function getTransactions(Request $request)
+    {
+        $per_page = 10;
+        $params = [];
+
+        if ($request->has('per_page')) $per_page = $request->per_page;
+        if ($request->has('page')) $params += ['page' => $request->page];
+
+        $transactions = $request->user()
+            ->transactions()
+            ->with(['shop', 'details'])
+            ->withCount('details');
+
+        $transactions = $transactions->paginate($per_page);
+
+        // dd($transactions);
+
+        return inertia('Transactions', [
+            'transactions' => fn() => TransactionResource::collection($transactions),
+            'params' => fn() => empty($params) ? null : $params,
+        ]);
+    }
+
+    public function transactionDetails(Request $request, Transaction $transaction)
+    {
+        if (!Auth::check() && !$request->user()->isCustomer()) return abort('403', 'Anda harus login terlebih dahulu agar melihat detail transaksi anda.');
+
+        $transaction = $transaction->load(['shop', 'details'])->loadCount('details');
+
+        return inertia('TransactionsDetail', [
+            'transaction' => fn() => new TransactionDetailResource($transaction),
+        ]);
     }
 }

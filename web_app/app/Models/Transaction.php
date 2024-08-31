@@ -11,4 +11,25 @@ class Transaction extends Model
 {
     use HasUuids;
     use HasFactory;
+
+    protected $guarded = [];
+
+    protected $casts = [
+        'finished_at' => 'date',
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function shop()
+    {
+        return $this->belongsTo(Shop::class);
+    }
+
+    public function details()
+    {
+        return $this->hasMany(TransactionDetail::class);
+    }
 }
