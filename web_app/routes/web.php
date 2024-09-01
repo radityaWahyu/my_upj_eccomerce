@@ -42,6 +42,7 @@ Route::controller(FrontendController::class)->group(
         Route::get('/transactions', 'getTransactions')->name('frontend.transaction.index');
         Route::put('/transactions/cancel/{transaction}', 'cancelTransaction')->name('frontend.transaction.cancel');
         Route::get('/transactions/{transaction}', 'transactionDetails')->name('frontend.transaction.detail');
+        Route::get('/contact-us', 'contactUs')->name('frontend.contact');
 
 
         // Route::get('/success-registration', 'success');

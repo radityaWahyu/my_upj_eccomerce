@@ -23,6 +23,7 @@ use App\Http\Requests\LoginFrontendRequest;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use App\Http\Resources\ProductDetailResource;
 use App\Http\Requests\BackOffice\CustomerRequest;
+use App\Http\Requests\BackOffice\EditProfilCustomerRequest;
 use App\Http\Resources\CustomerProfilResource;
 use App\Http\Resources\TransactionDetailResource;
 use App\Http\Resources\TransactionResource;
@@ -477,5 +478,22 @@ class FrontendController extends Controller
         return inertia('ProfilEditForm', [
             'customer' => fn() => new CustomerProfilResource($user),
         ]);
+    }
+
+    public function updateProfil(EditProfilCustomerRequest $request)
+    {
+        try {
+            $customer = $request->user()->customer;
+            $customer->update($request->validated());
+
+            return redirect()->back()->with('success', 'Profil pelanggan berhasil diupdate');
+        } catch (\Illuminate\Database\QueryException $exception) {
+            return redirect()->back()->with('error', $exception->errorInfo);
+        }
+    }
+
+    public function contactUs()
+    {
+        return inertia('ContactUs');
     }
 }

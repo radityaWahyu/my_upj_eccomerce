@@ -43,7 +43,7 @@ watch(
                 });
             });
 
-            //console.log(settingForm.settings);
+            console.log(settingForm.settings);
         }
     },
     { immediate: true }
