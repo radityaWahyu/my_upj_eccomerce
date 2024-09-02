@@ -22,6 +22,8 @@ class CustomerProfilResource extends JsonResource
             'whatsapp' => $this->whatsapp,
             'phone' => $this->phone,
             'address' => $this->address,
+            'verified' => $this->is_verified,
+            'enabled' => $this->is_enabled
         ];
     }
 }

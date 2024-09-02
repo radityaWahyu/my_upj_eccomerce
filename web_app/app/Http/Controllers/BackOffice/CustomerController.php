@@ -5,17 +5,22 @@ namespace App\Http\Controllers\BackOffice;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\BackOffice\StoreCustomerRequest;
-use App\Http\Requests\BackOffice\UpdateCustomerRequest;
+use App\Http\Resources\CustomerProfilResource;
+
 
 class CustomerController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $response = $this->getCustomer($request);
+
+        return inertia('BackOffice/Customer/Index', [
+            'customers' => fn() => CustomerProfilResource::collection($response['customers']),
+            'params' => fn() => (object)$response['params'],
+        ]);
     }
 
     /**
@@ -64,5 +69,36 @@ class CustomerController extends Controller
     public function destroy(Customer $customer)
     {
         //
+    }
+
+    public function getCustomer(Request $request)
+    {
+        $perPage = 10;
+        $params = [];
+
+        if ($request->has('sortName') && $request->has('sortType')) {
+            $params += ['sortName' => $request->sortName, 'sortType' => $request->sortType];
+        } else {
+            $params += ['sortName' => null, 'sortType' => null];
+        }
+
+        if ($request->has('search')) {
+            $params += ['search' => $request->search];
+        } else {
+            $params += ['search' => null];
+        }
+
+        if ($request->has('perPage')) $perPage = $request->perPage;
+
+        $customers = Customer::query()
+            ->when($request->has('sortName'), function ($query) use ($request) {
+                return $query->orderBy($request->sortName, $request->sortType);
+            })
+            ->when($request->has('search'), function ($query) use ($request) {
+                return $query->where('customers', $request->search);
+            })
+            ->latest()->paginate($perPage);
+
+        return ['customers' => $customers, 'params' => $params];
     }
 }

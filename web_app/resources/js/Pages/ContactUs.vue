@@ -7,7 +7,7 @@ export default {
 </script>
 <script setup lang="ts">
 import { computed } from "vue";
-import { usePage } from "@inertiajs/vue3";
+import { usePage, Head } from "@inertiajs/vue3";
 
 type TSettings = {
     instagram: string;
@@ -22,6 +22,7 @@ const { settings } = usePage().props;
 const Settings = computed((): TSettings => settings as TSettings);
 </script>
 <template>
+    <Head title="Kontak Kami" />
     <div class="lg:container min-h-[500px] flex flex-col justify-center">
         <div class="w-full px-5 mx-auto flex justify-between flex-wrap">
             <div

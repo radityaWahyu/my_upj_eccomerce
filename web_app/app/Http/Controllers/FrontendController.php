@@ -132,14 +132,8 @@ class FrontendController extends Controller
     public function registerStore(CustomerRequest $request)
     {
         try {
-            $customer = Customer::create($request->validated());
-
-            // $customer->user()->create([
-            //     'username' => $request->username,
-            //     'password' => $request->password,
-            //     'is_enabled' => true,
-            //     'is_verified' => true,
-            // ]);
+            $customerField = $request->validated() + ['is_verified' => true, 'is_enabled' => true];
+            $customer = Customer::create($customerField);
 
             return inertia('SuccessRegistration');
         } catch (\Illuminate\Database\QueryException $exception) {

@@ -8,6 +8,7 @@ use App\Http\Controllers\BackOffice\BannerController;
 use App\Http\Controllers\BackOffice\ProductController;
 use App\Http\Controllers\BackOffice\SettingController;
 use App\Http\Controllers\BackOffice\CategoryController;
+use App\Http\Controllers\BackOffice\CustomerController;
 use App\Http\Controllers\BackOffice\EmployeeController;
 use App\Http\Controllers\BackOffice\TransactionController;
 
@@ -34,6 +35,12 @@ Route::prefix('backoffice')->group(function () {
             Route::post('/delete_all', 'deleteAll')->name('backoffice.shop.delete-all');
             Route::delete('/{shop}', 'destroy')->name('backoffice.shop.delete');
             Route::put('/{shop}', 'update')->name('backoffice.shop.update');
+        });
+
+        Route::prefix('pelanggan')->controller(CustomerController::class)->group(function () {
+            Route::get('/', 'index')->name('backoffice.customer.index');
+            Route::put('/{customer}', 'update')->name('backoffice.customer.update');
+            Route::get('/{customer}', 'show')->name('backoffice.customer.detail');
         });
 
         Route::prefix('pegawai')->controller(EmployeeController::class)->group(function () {
