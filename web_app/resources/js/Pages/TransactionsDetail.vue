@@ -7,7 +7,7 @@ export default {
 </script>
 <script setup lang="ts">
 import { Head, Link } from "@inertiajs/vue3";
-import { MoveLeft, ClockArrowUp } from "lucide-vue-next";
+import { MoveLeft, ClockArrowUp, RefreshCw } from "lucide-vue-next";
 
 type TDetailTransaction = {
     id: string;
@@ -116,21 +116,30 @@ const Rupiah = (price: number) =>
                         :class="{
                             'bg-gray-100 text-gray-900':
                                 transaction.status === 'batal',
-                            'bg-green-300 text-green-600':
+                            'bg-yellow-300 text-yellow-900':
                                 transaction.status === 'pesan',
+                            'bg-green-300 text-green-900':
+                                transaction.status === 'proses',
                         }"
-                        class="capitalize focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5"
+                        class="capitalize focus:outline-none font-medium rounded text-xs px-4 py-2"
                     >
                         <span
                             v-if="transaction.status === 'pesan'"
-                            class="flex items-center gap-6"
+                            class="flex items-center gap-2"
                         >
                             <ClockArrowUp class="w-4 h-4" />
-                            Dipesan
+                            Menunggu di proses..
                         </span>
                         <span v-if="transaction.status === 'batal'"
-                            >Dibatalkan</span
+                            >Pesanan Dibatalkan</span
                         >
+                        <span
+                            v-if="transaction.status === 'proses'"
+                            class="flex items-center gap-2"
+                        >
+                            <RefreshCw class="w-3 h-3 animate-spin" />
+                            Pesanan sedang di proses
+                        </span>
                     </div>
                 </div>
             </div>

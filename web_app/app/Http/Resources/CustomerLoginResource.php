@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CustomerProfilResource extends JsonResource
+class CustomerLoginResource extends JsonResource
 {
     public static $wrap = null;
     /**
@@ -15,13 +15,13 @@ class CustomerProfilResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        // $isAdmin = get_class($this->userable) == 'App\Models\Employee';
+
         return [
             'id' => $this->id,
             'name' => $this->name,
             'username' => $this->username,
             'whatsapp' => $this->whatsapp,
-            'phone' => $this->phone,
-            'address' => $this->address,
         ];
     }
 }

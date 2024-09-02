@@ -18,6 +18,8 @@ class TransactionResource extends JsonResource
         return [
             'id' => $this->id,
             'transaction_code' => $this->transaction_code,
+            'customer_id' => $this->customer_id,
+            'customer_name' => $this->customer->name,
             'shop' => $this->shop->name,
             'product_count' => $this->details_count,
             'total' => $this->total,

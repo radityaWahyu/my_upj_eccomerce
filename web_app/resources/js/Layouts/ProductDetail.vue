@@ -13,7 +13,7 @@ watch(
     (alert) => {
         if (!!alert.error) {
             showErrorAlert.value = !!alert.error;
-            setTimeout(() => (showErrorAlert.value = false), 3000);
+            // setTimeout(() => (showErrorAlert.value = false), 3000);
         } else {
             showErrorAlert.value = false;
         }

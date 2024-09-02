@@ -19,6 +19,10 @@ return new class extends Migration
             $table->string('phone', 20);
             $table->string('whatsapp', 20);
             $table->string('address');
+            $table->string('username')->unique();
+            $table->string('password');
+            $table->boolean('is_enabled')->default(true);
+            $table->boolean('is_verified')->default(false);
             $table->timestamps();
         });
     }

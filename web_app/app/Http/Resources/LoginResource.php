@@ -15,21 +15,21 @@ class LoginResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $isAdmin = get_class($this->userable) == 'App\Models\Employee';
+        // $isAdmin = get_class($this->userable) == 'App\Models\Employee';
 
-        if ($isAdmin) {
+        if ($request->user('web')) {
             return [
-                'id' => $this->userable->id,
-                'name' => $this->userable->name,
+                'id' => $this->employee->id,
+                'name' => $this->employee->name,
                 'username' => $this->username,
                 'level' => $this->getRoleNames()[0],
             ];
         }
         return [
-            'id' => $this->userable->id,
-            'name' => $this->userable->name,
+            'id' => $this->id,
+            'name' => $this->name,
             'username' => $this->username,
-            'whatsapp' => $this->userable->whatsapp,
+            'whatsapp' => $this->whatsapp,
         ];
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\Shop;
-use App\Models\User;
+use App\Models\Customer;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignIdFor(User::class)->constrained()->restrictOnDelete();
+            $table->foreignIdFor(Customer::class)->constrained()->restrictOnDelete();
             $table->foreignIdFor(Shop::class)->constrained()->restrictOnDelete();
             $table->string('transaction_code', 20);
             $table->enum('status', ['batal', 'pesan', 'proses', 'selesai', 'dibayar'])->default('pesan');

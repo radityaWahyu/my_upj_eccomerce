@@ -16,7 +16,7 @@ class AuthBackoffice
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() && $request->user()->isAdmin()) {
+        if (Auth::check()) {
 
 
             $response = $next($request);

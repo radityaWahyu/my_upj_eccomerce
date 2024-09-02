@@ -51,41 +51,15 @@ class User extends Authenticatable
     ];
 
 
-    public function userable()
-    {
-        return $this->morphTo();
-    }
-
-    public function customer()
-    {
-        return $this->userable()->customer();
-    }
-
     public function product()
     {
         return $this->hasMany(Product::class);
     }
 
-    public function carts()
+    public function employee()
     {
-        return $this->hasMany(Cart::class);
+        return $this->belongsTo(Employee::class);
     }
-
-    public function transactions()
-    {
-        return $this->hasMany(Transaction::class);
-    }
-
-    public function scopeIsAdmin()
-    {
-        return get_class($this->userable) == 'App\Models\Employee';
-    }
-
-    public function scopeIsCustomer()
-    {
-        return get_class($this->userable) == 'App\Models\Customer';
-    }
-
 
     public function scopeIsAdministrator()
     {

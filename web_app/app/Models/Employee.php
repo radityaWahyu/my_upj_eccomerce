@@ -22,7 +22,7 @@ class Employee extends Model
 
     public function user()
     {
-        return $this->morphOne(User::class, 'userable');
+        return $this->hasOne(User::class);
     }
 
     public function shop()

@@ -18,9 +18,9 @@ class Transaction extends Model
         'finished_at' => 'date',
     ];
 
-    public function user()
+    public function customer()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Customer::class);
     }
 
     public function shop()

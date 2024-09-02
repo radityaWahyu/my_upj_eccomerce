@@ -232,17 +232,17 @@ class ProductController extends Controller
         if ($request->has('page')) $params += ['page' => $request->page];
 
 
-        $products = Product::query()->with(['shop', 'category', 'image']);
-        $products = $products->when($request->has('sortName'), function ($query) use ($request) {
-            return $query->orderBy($request->sortName, $request->sortType);
-        });
-        $products = $products->when($request->has('search'), function ($query) use ($request) {
-            return $query->where('name', 'like', '%' . $request->search . '%');
-        });
-
-        if ($request->user()->username !== 'administrator') $products = $products->where('shop_id', $request->user()->userable->shop->id);
-
-        $products = $products->latest()->paginate($perPage);
+        $products = Product::query()->with(['shop', 'category', 'image'])
+            ->when($request->has('sortName'), function ($query) use ($request) {
+                return $query->orderBy($request->sortName, $request->sortType);
+            })
+            ->when($request->has('search'), function ($query) use ($request) {
+                return $query->where('name', 'like', '%' . $request->search . '%');
+            })
+            ->when($request->user('web')->hasRole('operator'), function ($query) use ($request) {
+                return $query->where('shop_id', $request->user('web')->employee->shop_id);
+            })
+            ->latest()->paginate($perPage);
 
         return ['products' => $products, 'params' => $params];
     }

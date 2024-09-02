@@ -6,9 +6,10 @@ use App\Http\Controllers\BackOffice\ShopController;
 use App\Http\Controllers\BackOffice\UserController;
 use App\Http\Controllers\BackOffice\BannerController;
 use App\Http\Controllers\BackOffice\ProductController;
+use App\Http\Controllers\BackOffice\SettingController;
 use App\Http\Controllers\BackOffice\CategoryController;
 use App\Http\Controllers\BackOffice\EmployeeController;
-use App\Http\Controllers\BackOffice\SettingController;
+use App\Http\Controllers\BackOffice\TransactionController;
 
 Route::prefix('backoffice')->group(function () {
     Route::get('/', [AuthController::class, 'index'])->name('backoffice.auth.login');
@@ -56,6 +57,12 @@ Route::prefix('backoffice')->group(function () {
             Route::put('/{product}', 'update')->name('backoffice.product.update');
             Route::get('/{product}/images', 'images')->name('backoffice.product.images');
             Route::post('/{product}/images', 'imagesStore')->name('backoffice.product.images.store');
+        });
+
+        Route::prefix('transaksi')->controller(TransactionController::class)->group(function () {
+            Route::get('/{status}', 'index')->name('backoffice.transaction.index');
+            Route::put('/{transaction}', 'update')->name('backoffice.transaction.update');
+            Route::get('/{transaction}/detail', 'edit')->name('backoffice.transaction.detail');
         });
 
         Route::prefix('users')->controller(UserController::class)->group(function () {

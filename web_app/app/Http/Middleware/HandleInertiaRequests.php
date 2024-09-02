@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\LoginResource;
+use App\Http\Resources\CustomerLoginResource;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -47,10 +48,10 @@ class HandleInertiaRequests extends Middleware
         return array_merge(
             parent::share($request),
             [
-                'auth' => Auth::check() ? [
-                    'admin' => $request->user()->isAdmin() ? new LoginResource($request->user()) : null,
-                    'user' => $request->user()->isCustomer() ? new LoginResource(($request->user())) : null,
-                ] : null,
+                'auth' => [
+                    'admin' => Auth::guard('web')->check() ? new LoginResource($request->user()) : null,
+                    'user' => Auth::guard('customer')->check() ? new CustomerLoginResource(($request->user('customer'))) : null,
+                ],
                 'csrf_token' => csrf_token(),
                 'flash' => [
                     'error' => fn() => $request->session()->get('error'),

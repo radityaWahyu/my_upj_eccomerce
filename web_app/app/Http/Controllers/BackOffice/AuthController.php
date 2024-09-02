@@ -29,7 +29,7 @@ class AuthController extends Controller
             return redirect()->back()->with('error', 'Username dan password salah, silahkan mengecek kembali penulisan username dan password');
         }
 
-        $request->session()->regenerate();
+        // $request->session()->regenerate();
 
         return to_route('backoffice.category.index')->with('success', 'Selamat datang ' . $request->username);
     }
@@ -38,9 +38,9 @@ class AuthController extends Controller
     {
         Auth::logout();
 
-        $request->session()->invalidate();
+        // $request->session()->invalidate();
 
-        $request->session()->regenerateToken();
+        // $request->session()->regenerateToken();
 
         return to_route('backoffice.auth.login')->with('success', 'Anda berhasil keluar dari sistem');
     }

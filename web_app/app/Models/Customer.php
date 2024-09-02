@@ -3,19 +3,35 @@
 namespace App\Models;
 
 use App\Traits\Uuid;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class Customer extends Model
+class Customer extends Authenticatable
 {
     use HasUuids;
     use HasFactory;
 
     protected $guarded = [];
 
-    public function user()
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    protected $casts = [
+        'password' => 'hashed',
+    ];
+
+
+    public function carts()
     {
-        return $this->morphOne(User::class, 'userable');
+        return $this->hasMany(Cart::class);
+    }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
     }
 }

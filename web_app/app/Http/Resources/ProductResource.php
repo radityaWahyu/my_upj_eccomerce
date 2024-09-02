@@ -23,7 +23,7 @@ class ProductResource extends JsonResource
             'category' => $this->category->name,
             'type' => $this->type,
             'image' => empty($this->image) ? null : "data:image/jpeg;base64," . base64_encode(Storage::get($this->image->image_url)),
-            'user' => $this->user->userable->name,
+            'user' => $this->user->employee->name,
             'price' => $this->price,
             'description' => $this->desrcription,
             'created_at' => $this->created_at,

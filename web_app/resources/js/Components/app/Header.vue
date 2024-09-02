@@ -21,7 +21,7 @@ const search = () => {
     //alert(keyString.value);
     router.get(route("frontend.search"), { key: keyString.value });
 };
-const customerProfile = computed(() => page.props.auth);
+const customerProfile = computed(() => page.props.auth.user);
 
 onMounted(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -202,10 +202,10 @@ watch(
                                     </div>
                                     <div class="text-xs">
                                         <p class="font-semibold capitalize">
-                                            {{ customerProfile.user.name }}
+                                            {{ customerProfile.name }}
                                         </p>
                                         <p>
-                                            {{ customerProfile.user.username }}
+                                            {{ customerProfile.username }}
                                         </p>
                                     </div>
                                 </div>

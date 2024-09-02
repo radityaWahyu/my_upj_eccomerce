@@ -69,15 +69,19 @@ import HeaderLinkNavigation from "./HeaderLinkNavigation.vue";
             <div class="space-y-1">
                 <header-link-navigation>Transaksi</header-link-navigation>
                 <link-navigation
-                    to="coba"
-                    :is-active="$page.url.startsWith('backoffice/pemesanan', 2)"
+                    :to="route('backoffice.transaction.index', 'pesan')"
+                    :is-active="
+                        $page.url.startsWith('backoffice/transaksi/pesan', 1)
+                    "
                 >
                     <ShoppingBasket class="h-4 w-4" />
                     Pemesanan
                 </link-navigation>
                 <link-navigation
-                    to="coba"
-                    :is-active="$page.url.startsWith('backoffice/transaksi', 2)"
+                    :to="route('backoffice.transaction.index', 'selesai')"
+                    :is-active="
+                        $page.url.startsWith('backoffice/transaksi/selesai', 1)
+                    "
                 >
                     <ShoppingCart class="h-4 w-4" />
                     Penjualan

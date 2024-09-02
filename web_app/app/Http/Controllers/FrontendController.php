@@ -132,14 +132,14 @@ class FrontendController extends Controller
     public function registerStore(CustomerRequest $request)
     {
         try {
-            $customer = Customer::create($request->except('username', 'password'));
+            $customer = Customer::create($request->validated());
 
-            $customer->user()->create([
-                'username' => $request->username,
-                'password' => $request->password,
-                'is_enabled' => true,
-                'is_verified' => true,
-            ]);
+            // $customer->user()->create([
+            //     'username' => $request->username,
+            //     'password' => $request->password,
+            //     'is_enabled' => true,
+            //     'is_verified' => true,
+            // ]);
 
             return inertia('SuccessRegistration');
         } catch (\Illuminate\Database\QueryException $exception) {
@@ -155,10 +155,9 @@ class FrontendController extends Controller
     public function loginStore(LoginFrontendRequest $request)
     {
         $credentials = $request->only('username', 'password');
-        $credentials += ['userable_type' => 'App\Models\Customer'];
         $credentials += ['is_enabled' => true];
         //dd($credentials);
-        if (!Auth::attempt($credentials))
+        if (!Auth::guard('customer')->attempt($credentials))
             return redirect()
                 ->back()
                 ->with('error', 'Username dan password salah, silahkan mengecek kembali penulisan username dan password');
@@ -171,11 +170,7 @@ class FrontendController extends Controller
 
     public function logout(Request $request)
     {
-        Auth::logout();
-
-        $request->session()->invalidate();
-
-        $request->session()->regenerateToken();
+        Auth::guard('customer')->logout();
 
         return redirect()->back()->with('success', 'Anda berhasil keluar dari sistem');
     }
@@ -275,7 +270,8 @@ class FrontendController extends Controller
     {
         try {
 
-            $cart = Cart::where(['product_id' => $product->id, 'user_id' => $request->user()->id])->first();
+            $cart = $request->user('customer')->carts()->where('product_id', $product->id)->first();
+            //$cart = Cart::where(['product_id' => $product->id, 'customer_id' => $request->user('customer')->id])->first();
 
             if (!empty($cart)) {
                 $newQuantity = $cart->quantity + $request->qty;
@@ -283,12 +279,13 @@ class FrontendController extends Controller
                 $cart->total = $newQuantity * $cart->price;
                 $cart->save();
             } else {
-                $request->user()->carts()->create([
-                    'quantity' => $request->qty,
-                    'price' => $product->price,
-                    'total' => $request->qty * $product->price,
-                    'product_id' => $product->id,
-                ]);
+                $request->user('customer')
+                    ->carts()->create([
+                        'quantity' => $request->qty,
+                        'price' => $product->price,
+                        'total' => $request->qty * $product->price,
+                        'product_id' => $product->id,
+                    ]);
             }
 
 
@@ -301,10 +298,11 @@ class FrontendController extends Controller
 
     public function getCart(Request $request)
     {
-        if (Auth::check() && $request->user()->isCustomer()) {
-            $carts = Cart::with(['product' => ['shop']])
-                ->where('user_id', $request->user()->id)
+        if (Auth::guard('customer')->check()) {
+
+            $carts = $request->user('customer')->carts()->with(['product' => ['shop']])
                 ->get();
+
 
             return inertia('Carts', [
                 'carts' => fn() => CartResource::collection($carts),
@@ -364,7 +362,7 @@ class FrontendController extends Controller
 
     public function createTransaction(Request $request)
     {
-        if (!Auth::check() && !$request->user()->isCustomer()) return abort('403', 'Silahkan Login terlebih dahulu');
+        if (!Auth::guard('customer')->check()) return abort('403', 'Silahkan Login terlebih dahulu');
 
         $shops = Cart::select('products.shop_id as id')
             ->join('products', 'carts.product_id', '=', 'products.id')
@@ -375,7 +373,7 @@ class FrontendController extends Controller
         $carts = Cart::select('carts.*', 'products.shop_id')
             ->join('products', 'carts.product_id', '=', 'products.id')
             ->orderBy('products.shop_id', 'asc')
-            ->where('carts.user_id', $request->user()->id)
+            ->where('carts.customer_id', $request->user('customer')->id)
             ->get()->toArray();
 
 
@@ -385,7 +383,7 @@ class FrontendController extends Controller
             $transaction_code = 'TR' . Carbon::today()->format('dmY') . '' . str_pad($transaction_count + 1, 3, '0', STR_PAD_LEFT);
 
             $transaction = Transaction::create([
-                'user_id' => $request->user()->id,
+                'customer_id' => $request->user('customer')->id,
                 'transaction_code' => $transaction_code,
                 'shop_id' => $shop['id'],
                 'total' => 0,
@@ -417,7 +415,7 @@ class FrontendController extends Controller
 
     public function getTransactions(Request $request)
     {
-        if (!Auth::check())
+        if (!Auth::guard('customer')->check())
             return inertia('Transactions', [
                 'transactions' => fn() => null,
                 'params' => fn() => null,
@@ -430,7 +428,7 @@ class FrontendController extends Controller
         if ($request->has('per_page')) $per_page = $request->per_page;
         if ($request->has('page')) $params += ['page' => $request->page];
 
-        $transactions = $request->user()
+        $transactions = $request->user('customer')
             ->transactions()
             ->with(['shop', 'details'])
             ->withCount('details');
@@ -470,13 +468,13 @@ class FrontendController extends Controller
 
     public function getProfil(Request $request)
     {
-        if (!$request->user()->isCustomer()) return abort('404', 'Profil anda tidak ditemukan dalam sistem');
+        if (!Auth::guard('customer')->check()) return abort('404', 'Profil anda tidak ditemukan dalam sistem');
 
-        $user = $request->user();
+        $customer = $request->user('customer');
         // dd($user->userable()->customer());
 
         return inertia('ProfilEditForm', [
-            'customer' => fn() => new CustomerProfilResource($user),
+            'customer' => fn() => new CustomerProfilResource($customer),
         ]);
     }
 
