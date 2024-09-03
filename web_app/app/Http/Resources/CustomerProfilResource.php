@@ -23,7 +23,8 @@ class CustomerProfilResource extends JsonResource
             'phone' => $this->phone,
             'address' => $this->address,
             'verified' => $this->is_verified,
-            'enabled' => $this->is_enabled
+            'enabled' => $this->is_enabled,
+            'created_at' => $this->created_at->format('d/m/YY'),
         ];
     }
 }

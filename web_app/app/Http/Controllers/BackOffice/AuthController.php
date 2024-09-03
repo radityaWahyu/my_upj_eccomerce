@@ -23,15 +23,16 @@ class AuthController extends Controller
     public function store(LoginRequest $request)
     {
 
+        $credentials = $request->only('username', 'password') + ['is_enabled' => true];
+        //dd($credentials);
 
-
-        if (!Auth::attempt($request->only('username', 'password'))) {
+        if (!Auth::guard('web')->attempt($credentials)) {
             return redirect()->back()->with('error', 'Username dan password salah, silahkan mengecek kembali penulisan username dan password');
         }
 
         // $request->session()->regenerate();
 
-        return to_route('backoffice.category.index')->with('success', 'Selamat datang ' . $request->username);
+        return to_route('backoffice.dashboard')->with('success', 'Selamat datang ' . $request->username);
     }
 
     public function destroy(Request $request)

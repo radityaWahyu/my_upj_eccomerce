@@ -6,7 +6,7 @@ use App\Models\Customer;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CustomerProfilResource;
-
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class CustomerController extends Controller
 {
@@ -60,7 +60,17 @@ class CustomerController extends Controller
      */
     public function update(Request $request, Customer $customer)
     {
-        //
+        try {
+            $customer->update(['is_enabled' => $request->status]);
+
+            return redirect()->route('backoffice.customer.index')->with('success', 'Status Pelanggan berhasil diubah');
+        } catch (ModelNotFoundException $ex) {
+
+            return redirect()->route('backoffice.category.index')->with('error', 'Data Pelanggah tidak ditemukan.');
+        } catch (\Illuminate\Database\QueryException $exception) {
+
+            return redirect()->back()->with('error', $exception->errorInfo);
+        }
     }
 
     /**
@@ -95,7 +105,7 @@ class CustomerController extends Controller
                 return $query->orderBy($request->sortName, $request->sortType);
             })
             ->when($request->has('search'), function ($query) use ($request) {
-                return $query->where('customers', $request->search);
+                return $query->where('name', 'like', '%' . $request->search . '%');
             })
             ->latest()->paginate($perPage);
 

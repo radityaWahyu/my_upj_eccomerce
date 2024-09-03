@@ -10,6 +10,7 @@ use App\Http\Controllers\BackOffice\SettingController;
 use App\Http\Controllers\BackOffice\CategoryController;
 use App\Http\Controllers\BackOffice\CustomerController;
 use App\Http\Controllers\BackOffice\EmployeeController;
+use App\Http\Controllers\BackOffice\DashboardController;
 use App\Http\Controllers\BackOffice\TransactionController;
 
 Route::prefix('backoffice')->group(function () {
@@ -17,6 +18,7 @@ Route::prefix('backoffice')->group(function () {
     Route::post('/login', [AuthController::class, 'store'])->name('backoffice.auth.store');
 
     Route::middleware('auth.backoffice')->group(function () {
+        Route::get('/dashboard', DashboardController::class)->name('backoffice.dashboard');
         Route::post('/logout', [AuthController::class, 'destroy'])->name('backoffice.auth.logout');
 
         Route::prefix('category')->controller(CategoryController::class)->group(function () {

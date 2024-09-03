@@ -15,7 +15,7 @@ const props = defineProps<{
     <div>
         <Link
             :href="route('backoffice.transaction.detail', transaction.id)"
-            class="font-semibold"
+            class="font-semibold hover:underline hover:text-primary"
         >
             {{ transaction.transaction_code }}
         </Link>
