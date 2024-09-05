@@ -76,7 +76,9 @@ Route::prefix('backoffice')->group(function () {
         });
 
         Route::prefix('jurnal')->controller(JurnalController::class)->group(function () {
-            Route::get('/', 'index')->name('backoffice.jurnal.index');
+            Route::get('/all', 'index')->name('backoffice.jurnal.index');
+            Route::get('/create', 'create')->name('backoffice.jurnal.create');
+            Route::post('/store', 'store')->name('backoffice.jurnal.store');
             Route::get('/unit', 'getByUnit')->name('backoffice.jurnal.unit');
         });
 

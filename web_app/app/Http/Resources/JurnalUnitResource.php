@@ -19,6 +19,7 @@ class JurnalUnitResource extends JsonResource
             'name' => $this->name,
             'total_income' => $this->total_income,
             'total_expense' => $this->total_expense,
+            'total_saldo' => $this->total_saldo,
         ];
     }
 }

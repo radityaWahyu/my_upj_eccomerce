@@ -25,6 +25,7 @@ class DashboardController extends Controller
 
         $income = $jurnal->sum('income');
         $expense = $jurnal->sum('expense');
+        $saldo = $income - $expense;
 
         $products = Product::query()
             ->when($request->user()->hasRole('operator'), function ($query) use ($request) {
@@ -37,8 +38,16 @@ class DashboardController extends Controller
                 return $query->where('shop_id', $request->user()->employee->shop_id);
             });
 
-        $transactions_count = Transaction::where('status', 'pesan')->count();
-        $transactions_finished_count = Transaction::where('status', 'dibayar')->count();
+        $transactions_count = Transaction::where('status', 'pesan')
+            ->when($request->user()->hasRole('operator'), function ($query) use ($request) {
+                return $query->where('shop_id', $request->user()->employee->shop_id);
+            })
+            ->count();
+        $transactions_finished_count = Transaction::where('status', 'dibayar')
+            ->when($request->user()->hasRole('operator'), function ($query) use ($request) {
+                return $query->where('shop_id', $request->user()->employee->shop_id);
+            })
+            ->count();
 
         $transactions = $transactions->latest()
             ->take(6)
@@ -63,6 +72,7 @@ class DashboardController extends Controller
         return inertia('BackOffice/Dashboard/Index', [
             'income' => $income,
             'expense' => $expense,
+            'saldo' => $saldo,
             'jasa_count' => fn() => $jasa_count,
             'produk_count' => fn() => $product_count,
             'shop_count' => fn() => $shop_count,

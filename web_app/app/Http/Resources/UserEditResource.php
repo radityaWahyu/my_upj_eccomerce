@@ -19,7 +19,7 @@ class UserEditResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->userable->name,
+            'name' => $this->employee->name,
             'username' => $this->username,
             'shop' => !empty($this->userable->shop->name) ? $this->userable->shop->name : 'Unit Layanan Tidak Ditemukan',
         ];
