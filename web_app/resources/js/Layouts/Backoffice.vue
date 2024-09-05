@@ -34,7 +34,7 @@ watch(
 
 <template>
     <div
-        class="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[220px_1fr] font-poppins antialiased bg-gray-50"
+        class="grid min-h-screen w-full md:grid-cols-[250px_1fr] lg:grid-cols-[250px_1fr] font-poppins antialiased bg-gray-50"
     >
         <!-- start left component -->
         <div class="hidden border-r-2 border-slate-400 bg-slate-800 md:block">

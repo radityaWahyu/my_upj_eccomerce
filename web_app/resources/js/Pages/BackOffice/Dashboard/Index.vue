@@ -14,6 +14,9 @@ import {
     Package,
     Store,
     Users,
+    ShoppingCart,
+    BadgeCheck,
+    Banknote,
 } from "lucide-vue-next";
 import { Avatar } from "@/shadcn/ui/avatar";
 import { Alert, AlertDescription, AlertTitle } from "@/shadcn/ui/alert";
@@ -57,8 +60,11 @@ const props = defineProps<{
     customers: { data: TCustomer[] } | null;
     jasa_count: number;
     produk_count: number;
+    transaction_count: number;
+    transaction_finished_count: number;
     shop_count: number | null;
     customer_count: number | null;
+    income: number;
 }>();
 
 const Rupiah = (price: number) =>
@@ -154,6 +160,66 @@ const Rupiah = (price: number) =>
                         </p>
                     </CardContent>
                 </Card>
+                <Card>
+                    <CardHeader
+                        class="relative flex flex-row items-center justify-between space-y-0 pb-2"
+                    >
+                        <CardTitle class="text-sm font-medium">
+                            Pesanan
+                        </CardTitle>
+                        <ShoppingCart
+                            class="absolute right-1 h-12 w-12 text-blue-200"
+                        />
+                    </CardHeader>
+                    <CardContent>
+                        <div class="text-2xl font-bold">
+                            {{ transaction_count }} Pesanan
+                        </div>
+                        <p class="text-xs text-muted-foreground">
+                            Jumlah pesanan terbaru
+                        </p>
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardHeader
+                        class="relative flex flex-row items-center justify-between space-y-0 pb-2"
+                    >
+                        <CardTitle class="text-sm font-medium">
+                            Transaksi Selesai
+                        </CardTitle>
+                        <BadgeCheck
+                            class="absolute right-1 h-12 w-12 text-blue-200"
+                        />
+                    </CardHeader>
+                    <CardContent>
+                        <div class="text-2xl font-bold">
+                            {{ transaction_finished_count }} Transaksi
+                        </div>
+                        <p class="text-xs text-muted-foreground">
+                            Jumlah transaksi selesai.
+                        </p>
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardHeader
+                        class="relative flex flex-row items-center justify-between space-y-0 pb-2"
+                    >
+                        <CardTitle class="text-sm font-medium">
+                            Pemasukan
+                        </CardTitle>
+                        <Banknote
+                            class="absolute right-1 h-12 w-12 text-blue-200"
+                        />
+                    </CardHeader>
+                    <CardContent>
+                        <div class="text-2xl font-bold">
+                            {{ Rupiah(income) }}
+                        </div>
+                        <p class="text-xs text-muted-foreground">
+                            Pemasukan bulan ini.
+                        </p>
+                    </CardContent>
+                </Card>
             </div>
             <div class="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
                 <Card class="xl:col-span-2">
@@ -161,7 +227,7 @@ const Rupiah = (price: number) =>
                         <div class="grid gap-2">
                             <CardTitle>Daftar Pemesanan</CardTitle>
                             <CardDescription>
-                                Daftar pemesanan terbaru dari setiap unit
+                                Daftar 6 pemesanan terbaru dari setiap unit
                                 layanan.
                             </CardDescription>
                         </div>
@@ -281,14 +347,7 @@ const Rupiah = (price: number) =>
                             </div>
                         </div>
                         <Button as-child size="sm" class="w-full gap-1">
-                            <Link
-                                :href="
-                                    route(
-                                        'backoffice.transaction.index',
-                                        'pesan'
-                                    )
-                                "
-                            >
+                            <Link :href="route('backoffice.customer.index')">
                                 Lebih Detail
                                 <ArrowUpRight class="h-4 w-4" />
                             </Link>

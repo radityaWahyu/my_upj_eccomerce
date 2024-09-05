@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\BackOffice;
 
-use App\Http\Controllers\Controller;
-use App\Http\Resources\TransactionResource;
+use Carbon\Carbon;
+use App\Models\Jurnal;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\TransactionResource;
 
 class TransactionController extends Controller
 {
@@ -14,11 +17,20 @@ class TransactionController extends Controller
      */
     public function index(Request $request, $status)
     {
+
         $response = $this->getTransactions($request, $status);
+
+        if ($status == 'pesan') {
+            $title = 'Transaksi Pemesanan';
+        } else {
+            $title = 'Transaksi Selesai';
+        }
+
+        $params = $response['params'] + ['title' => $title];
 
         return inertia('BackOffice/Transaction/Index', [
             'transactions' => fn() => TransactionResource::collection($response['transactions']),
-            'params' => fn() => (object)$response['params'],
+            'params' => fn() => (object)$params,
         ]);
     }
 
@@ -60,7 +72,29 @@ class TransactionController extends Controller
     public function update(Request $request, Transaction $transaction)
     {
         try {
-            $transaction->update(['status' => $request->status]);
+
+            DB::transaction(function () use ($request, $transaction) {
+                $transaction->update(['status' => $request->status]);
+
+                if ($request->status == 'dibayar') {
+
+                    $finsihedTransactionDate = Carbon::today();
+                    $jurnal_count = Jurnal::whereDate('transaction_date', Carbon::today())->count();
+                    $jurnal_code = 'JR' . Carbon::today()->format('dmY') . '' . str_pad($jurnal_count + 1, 3, '0', STR_PAD_LEFT);
+
+                    Jurnal::create([
+                        'jurnal_code' => $jurnal_code,
+                        'income' => $transaction->total,
+                        'description' => 'Transaksi' . $transaction->transaction_code . ' telah dibayar pada tanggal ' . $finsihedTransactionDate->format('d/m/YY') . '.',
+                        'transaction_id' => $transaction->id,
+                        'user_id' => $request->user('web')->id,
+                        'shop_id' => $transaction->shop_id,
+                        'transaction_date' => $finsihedTransactionDate,
+                    ]);
+
+                    $transaction->update(['finished_at' => $finsihedTransactionDate]);
+                }
+            });
 
             return redirect()->back()->with('success', 'Status berhasil di rubah');
         } catch (\Illuminate\Database\QueryException $exception) {
@@ -106,8 +140,11 @@ class TransactionController extends Controller
             })
             ->when($request->user('web')->hasRole('operator'), function ($query) use ($request) {
                 return $query->where('shop_id', $request->user('web')->employee->shop_id);
-            })
-            ->latest()->paginate($perPage);
+            });
+
+        if ($status == 'pesan') $transactinos = $transactions->whereNotIn('status', ['dibayar']);
+
+        $transactions = $transactions->latest()->paginate($perPage);
 
         return ['transactions' => $transactions, 'params' => $params];
     }

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\BackOffice;
 
+use Carbon\Carbon;
 use App\Models\Shop;
+use App\Models\Jurnal;
 use App\Models\Product;
 use App\Models\Customer;
 use App\Models\Transaction;
@@ -16,6 +18,13 @@ class DashboardController extends Controller
     public function __invoke(Request $request)
     {
 
+        $jurnal = Jurnal::whereMonth('transaction_date', Carbon::today()->format('m'))
+            ->when($request->user('web')->hasRole('operator'), function ($query) use ($request) {
+                return $query->where('shop_id', $request->user('web')->employee->shop_id);
+            });
+
+        $income = $jurnal->sum('income');
+        $expense = $jurnal->sum('expense');
 
         $products = Product::query()
             ->when($request->user()->hasRole('operator'), function ($query) use ($request) {
@@ -24,11 +33,14 @@ class DashboardController extends Controller
 
         $transactions = Transaction::query()
             ->withCount(['details'])
-            ->where('status', 'pesan')
             ->when($request->user()->hasRole('operator'), function ($query) use ($request) {
                 return $query->where('shop_id', $request->user()->employee->shop_id);
-            })
-            ->latest()
+            });
+
+        $transactions_count = Transaction::where('status', 'pesan')->count();
+        $transactions_finished_count = Transaction::where('status', 'dibayar')->count();
+
+        $transactions = $transactions->latest()
             ->take(6)
             ->get();
 
@@ -49,10 +61,14 @@ class DashboardController extends Controller
 
 
         return inertia('BackOffice/Dashboard/Index', [
+            'income' => $income,
+            'expense' => $expense,
             'jasa_count' => fn() => $jasa_count,
             'produk_count' => fn() => $product_count,
             'shop_count' => fn() => $shop_count,
             'customer_count' => fn() => $customer_count,
+            'transaction_count' => fn() => $transactions_count,
+            'transaction_finished_count' => fn() => $transactions_finished_count,
             'customers' => fn() => $customers !== null ? CustomerProfilResource::collection($customers) : null,
             'transactions' => fn() => TransactionResource::collection($transactions),
         ]);

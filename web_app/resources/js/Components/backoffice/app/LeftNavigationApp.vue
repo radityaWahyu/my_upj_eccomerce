@@ -11,6 +11,8 @@ import {
     Users,
     Settings,
     BetweenHorizonalEnd,
+    PlusCircle,
+    Banknote,
 } from "lucide-vue-next";
 import { ComputedRef, computed } from "vue";
 import LinkNavigation from "./LinkNavigation.vue";
@@ -35,7 +37,10 @@ const page = usePage();
 const userProfile = computed(() => page.props.auth);
 </script>
 <template>
-    <div class="flex-1" id="backoffice-left-navigation">
+    <div
+        class="flex-1 overflow-y-auto scrollbar pb-2"
+        id="backoffice-left-navigation"
+    >
         <nav class="grid items-start px-2 text-sm font-medium lg:px-4 gap-4">
             <link-navigation
                 :to="route('backoffice.dashboard')"
@@ -108,6 +113,34 @@ const userProfile = computed(() => page.props.auth);
                 >
                     <ShoppingCart class="h-4 w-4" />
                     Penjualan
+                </link-navigation>
+            </div>
+            <div class="space-y-1">
+                <header-link-navigation>Jurnal</header-link-navigation>
+                <link-navigation
+                    :to="route('backoffice.transaction.index', 'pesan')"
+                    :is-active="
+                        $page.url.startsWith('backoffice/transaksi/pesan', 1)
+                    "
+                >
+                    <PlusCircle class="h-4 w-4" />
+                    Tambah Jurnal
+                </link-navigation>
+                <link-navigation
+                    :to="route('backoffice.jurnal.index')"
+                    :is-active="$page.url.startsWith('backoffice/jurnal', 1)"
+                >
+                    <Banknote class="h-4 w-4" />
+                    Keuangan
+                </link-navigation>
+                <link-navigation
+                    :to="route('backoffice.jurnal.unit')"
+                    :is-active="
+                        $page.url.startsWith('backoffice/jurnal/unit', 2)
+                    "
+                >
+                    <Banknote class="h-4 w-4" />
+                    Keuangan Per Unit
                 </link-navigation>
             </div>
             <div

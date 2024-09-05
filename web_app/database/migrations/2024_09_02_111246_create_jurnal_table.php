@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Shop;
 use App\Models\User;
 use App\Models\Transaction;
 use Illuminate\Support\Facades\Schema;
@@ -15,11 +16,14 @@ return new class extends Migration
     {
         Schema::create('jurnals', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->integer('debit')->default(0);
-            $table->integer('kredit')->default(0);
+            $table->string('jurnal_code')->index()->unique();
+            $table->integer('income')->default(0);
+            $table->integer('expense')->default(0);
             $table->string('description');
+            $table->date('transaction_date');
             $table->foreignIdFor(Transaction::class)->nullable()->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(User::class)->nullable()->constrained()->nullOnDelete();
+            $table->foreignIdFor(Shop::class)->constrained()->restrictOnDelete();
             $table->timestamps();
         });
     }

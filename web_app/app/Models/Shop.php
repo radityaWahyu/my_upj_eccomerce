@@ -34,4 +34,9 @@ class Shop extends Model
     {
         return $this->hasMany(Product::class);
     }
+
+    public function jurnals()
+    {
+        return $this->hasMany(Jurnal::class);
+    }
 }

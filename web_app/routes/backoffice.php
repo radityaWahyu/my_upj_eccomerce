@@ -5,6 +5,7 @@ use App\Http\Controllers\BackOffice\AuthController;
 use App\Http\Controllers\BackOffice\ShopController;
 use App\Http\Controllers\BackOffice\UserController;
 use App\Http\Controllers\BackOffice\BannerController;
+use App\Http\Controllers\BackOffice\JurnalController;
 use App\Http\Controllers\BackOffice\ProductController;
 use App\Http\Controllers\BackOffice\SettingController;
 use App\Http\Controllers\BackOffice\CategoryController;
@@ -72,6 +73,11 @@ Route::prefix('backoffice')->group(function () {
             Route::get('/{status}', 'index')->name('backoffice.transaction.index');
             Route::put('/{transaction}', 'update')->name('backoffice.transaction.update');
             Route::get('/{transaction}/detail', 'edit')->name('backoffice.transaction.detail');
+        });
+
+        Route::prefix('jurnal')->controller(JurnalController::class)->group(function () {
+            Route::get('/', 'index')->name('backoffice.jurnal.index');
+            Route::get('/unit', 'getByUnit')->name('backoffice.jurnal.unit');
         });
 
         Route::prefix('users')->controller(UserController::class)->group(function () {

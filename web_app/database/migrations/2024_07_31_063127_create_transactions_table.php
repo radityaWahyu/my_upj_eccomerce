@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('transaction_code', 20);
             $table->enum('status', ['batal', 'pesan', 'proses', 'selesai', 'dibayar'])->default('pesan');
             $table->integer('total');
-            $table->dateTime('finisihed_at')->nullable();
+            $table->dateTime('finished_at')->nullable();
             $table->timestamps();
         });
     }
