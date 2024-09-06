@@ -20,7 +20,9 @@ class JurnalResource extends JsonResource
             'jurnal_code' => $this->jurnal_code,
             'income' => $this->income,
             'expense' => (int)$this->expense,
-            'transaction_id' => empty($this->transaction_id)  ? null  : $this->transaction->transaction_code,
+            'transaction_id' =>
+            empty($this->transaction_id)  ? null  : $this->transaction->id,
+            'transaction_code' => empty($this->transaction_id)  ? null  : $this->transaction->transaction_code,
             'transaction_date' => $this->transaction_date->format('d/m/Y'),
             'description' => $this->description,
         ];

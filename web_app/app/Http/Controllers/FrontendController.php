@@ -20,7 +20,6 @@ use App\Http\Resources\ProductResource;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\EmployeeResource;
 use App\Http\Requests\LoginFrontendRequest;
-use Haruncpi\LaravelIdGenerator\IdGenerator;
 use App\Http\Resources\ProductDetailResource;
 use App\Http\Requests\BackOffice\CustomerRequest;
 use App\Http\Requests\BackOffice\EditProfilCustomerRequest;
@@ -265,7 +264,6 @@ class FrontendController extends Controller
         try {
 
             $cart = $request->user('customer')->carts()->where('product_id', $product->id)->first();
-            //$cart = Cart::where(['product_id' => $product->id, 'customer_id' => $request->user('customer')->id])->first();
 
             if (!empty($cart)) {
                 $newQuantity = $cart->quantity + $request->qty;
@@ -439,13 +437,17 @@ class FrontendController extends Controller
 
     public function transactionDetails(Request $request, Transaction $transaction)
     {
-        if (!Auth::check() && !$request->user()->isCustomer()) return abort('403', 'Anda harus login terlebih dahulu agar melihat detail transaksi anda.');
+        try {
+            if (!Auth::guard('customer')->check()) return abort('403', 'Anda harus login terlebih dahulu agar melihat detail transaksi anda.');
 
-        $transaction = $transaction->load(['shop', 'details'])->loadCount('details');
+            $transaction = $transaction->load(['shop', 'details'])->loadCount('details');
 
-        return inertia('TransactionsDetail', [
-            'transaction' => fn() => new TransactionDetailResource($transaction),
-        ]);
+            return inertia('TransactionsDetail', [
+                'transaction' => fn() => new TransactionDetailResource($transaction),
+            ]);
+        } catch (ModelNotFoundException $th) {
+            abort('404', 'Halaman tidak ditemukan');
+        }
     }
 
     public function cancelTransaction(Transaction $transaction)
@@ -465,7 +467,6 @@ class FrontendController extends Controller
         if (!Auth::guard('customer')->check()) return abort('404', 'Profil anda tidak ditemukan dalam sistem');
 
         $customer = $request->user('customer');
-        // dd($user->userable()->customer());
 
         return inertia('ProfilEditForm', [
             'customer' => fn() => new CustomerProfilResource($customer),

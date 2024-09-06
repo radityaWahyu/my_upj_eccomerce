@@ -2,8 +2,10 @@
 
 namespace App\Exceptions;
 
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+
 
 class Handler extends ExceptionHandler
 {
@@ -26,5 +28,46 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+
+        $this->renderable(function (\Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException $e, $request) {
+            return inertia('Errors', [
+                'status_code' => 503,
+            ])->toResponse($request)->setStatusCode($e->getStatusCode());
+        });
+    }
+
+    public function render($request, Throwable $e)
+    {
+        $status_code = [404, 500, 503];
+
+        $response = parent::render($request, $e);
+        $status = $response->getStatusCode();
+
+        //dd($status);
+
+        if (in_array($status, $status_code)) {
+            return inertia('Errors', [
+                'status_code' => $status,
+            ])->toResponse($request)->setStatusCode($status);
+        } elseif ($status == 403) {
+            return inertia('ErrorsAuthentication')->toResponse($request)->setStatusCode($status);
+        } elseif ($status == 419) {
+            redirect()->back()->with(['error' => 'Sesi anda telah habis, silahkan merefresh halaman ini.']);
+        } else {
+            return $response;
+        }
+
+
+        // if (app()->environment(['local', 'testing'])) {
+        //     return match ($status) {
+        //         404, 500, 503, 403, 401 => inertia('Errors', [
+        //             'status_code' => $status,
+        //         ])->toResponse($request)->setStatusCode($status),
+        //         419 => redirect()->back()->with(['error' => 'Sesi anda telah habis, silahkan merefresh halaman ini.']),
+        //         default => $response
+        //     };
+        // }
+
+        // return $response;
     }
 }

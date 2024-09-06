@@ -7,7 +7,6 @@ use Inertia\Inertia;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ShopResource;
 use App\Http\Resources\EmployeeResource;
 use App\Http\Resources\EmployeeFormResource;
 use App\Http\Requests\BackOffice\EmployeeRequest;

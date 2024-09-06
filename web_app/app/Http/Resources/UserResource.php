@@ -20,6 +20,8 @@ class UserResource extends JsonResource
             'username' => $this->user->username,
             'shop' => !empty($this->shop->name) ? $this->shop->name : 'Unit Layanan Tidak Ditemukan',
             'level' => $this->user->getRoleNames()[0],
+            'enabled' => $this->user->is_enabled,
+            'verified' => $this->user->is_verified
         ];
     }
 }

@@ -161,7 +161,7 @@ defineExpose({
             class="flex items-center justify-end space-x-2 py-4"
             v-if="pagination"
         >
-            <div class="flex-1 text-sm text-muted-foreground">
+            <div class="flex-1 text-xs text-muted-foreground">
                 <span v-if="loading">
                     <Skeleton class="h-2 w-1/4" />
                 </span>

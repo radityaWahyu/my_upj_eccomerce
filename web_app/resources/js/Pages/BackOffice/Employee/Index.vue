@@ -22,6 +22,7 @@ import DataTable from "@/Components/backoffice/app/DataTable.vue";
 import ButtonAction from "@/Components/backoffice/employee/ButtonAction.vue";
 import ComboBox from "@/Components/backoffice/app/ComboBox.vue";
 import ConfirmDialog from "@/Components/backoffice/app/ConfirmDialog.vue";
+import EmployeeNameBox from "@/Components/backoffice/employee/EmployeeNameBox.vue";
 
 type TEmployee = {
     id: string;
@@ -143,7 +144,7 @@ const columns: ColumnDef<TEmployee>[] = [
                 ]
             );
         },
-        cell: ({ row }) => h("div", {}, row.original.name),
+        cell: ({ row }) => h(EmployeeNameBox, { employee: row.original }),
     },
     {
         accessorKey: "phone",
@@ -240,7 +241,7 @@ const columns: ColumnDef<TEmployee>[] = [
             );
         },
         cell: ({ row }) =>
-            h(Badge, { class: "bg-blue-800" }, row.original.shop),
+            h(Badge, { variant: "secondary" }, row.original.shop),
     },
     {
         id: "actions",

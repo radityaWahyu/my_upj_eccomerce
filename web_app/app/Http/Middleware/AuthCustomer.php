@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class AuthBackoffice
+class AuthCustomer
 {
     /**
      * Handle an incoming request.
@@ -16,7 +16,7 @@ class AuthBackoffice
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::guard('web')->check()) {
+        if (Auth::guard('customer')->check()) {
 
 
             $response = $next($request);
@@ -27,6 +27,6 @@ class AuthBackoffice
             return $response;
         }
 
-        return to_route('backoffice.auth.login')->with('error', 'Anda harus login terlebih dahulu');
+        return abort('403', 'Anda harus login terlebih dahulu');
     }
 }
