@@ -43,13 +43,16 @@ class DashboardController extends Controller
                 return $query->where('shop_id', $request->user()->employee->shop_id);
             })
             ->count();
+
         $transactions_finished_count = Transaction::where('status', 'dibayar')
             ->when($request->user()->hasRole('operator'), function ($query) use ($request) {
                 return $query->where('shop_id', $request->user()->employee->shop_id);
             })
             ->count();
 
-        $transactions = $transactions->latest()
+        $transactions = $transactions
+            ->where('status', 'pesan')
+            ->latest()
             ->take(6)
             ->get();
 

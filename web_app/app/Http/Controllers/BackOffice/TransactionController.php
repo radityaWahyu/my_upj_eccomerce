@@ -8,6 +8,7 @@ use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\TransactionInvoiceResource;
 use App\Http\Resources\TransactionResource;
 
 class TransactionController extends Controller
@@ -35,35 +36,23 @@ class TransactionController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      */
     public function show(Transaction $transaction)
     {
-        //
+        return inertia('BackOffice/Transaction/TransactionDetails', [
+            'transaction' => fn() => new TransactionInvoiceResource($transaction)
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Transaction $transaction)
+    public function invoice(Transaction $transaction)
     {
-        //
+        return inertia('BackOffice/Prints/Invoices', [
+            'transaction' => fn() => new TransactionInvoiceResource($transaction)
+        ]);
     }
 
     /**

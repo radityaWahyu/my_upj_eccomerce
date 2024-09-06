@@ -110,7 +110,7 @@ const userProfile = computed(() => page.props.auth);
         <header-link-navigation>Jurnal</header-link-navigation>
         <link-navigation
           :to="route('backoffice.jurnal.create')"
-          :is-active="$page.url.startsWith('backoffice/transaksi/pesan', 1)"
+          :is-active="$page.url.startsWith('backoffice/jurnal/create', 1)"
           v-if="userProfile.admin.level === 'operator'"
         >
           <PlusCircle class="h-4 w-4" />

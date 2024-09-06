@@ -271,28 +271,32 @@ const getJurnal = () => {
         </div>
       </div>
       <div class="flex items-center py-1 justify-between w-full">
-        <div class="inline-flex items-center gap-4">
-          <Label class="text-sm">Tanggal Mulai</Label>
-          <input
-            type="date"
-            name="tanggal_mulai"
-            v-model="dateFilter.startDate"
-            class="text-sm py-1 px-2 border border-gray-300 bg-white rounded"
-          />
+        <div class="space-x-2">
+          <div class="inline-flex items-center gap-4">
+            <Label class="text-sm">Tanggal Mulai</Label>
+            <input
+              type="date"
+              name="tanggal_mulai"
+              v-model="dateFilter.startDate"
+              class="text-sm py-1 px-2 border border-gray-300 bg-white rounded"
+            />
+          </div>
+          <div class="inline-flex items-center gap-3">
+            <Label class="text-sm">Tanggal Mulai</Label>
+            <input
+              type="date"
+              name="tanggal_mulai"
+              v-model="dateFilter.endDate"
+              class="text-sm py-1 px-2 border border-gray-300 bg-white rounded"
+            />
+          </div>
         </div>
-        <div class="inline-flex items-center gap-3">
-          <Label class="text-sm">Tanggal Mulai</Label>
-          <input
-            type="date"
-            name="tanggal_mulai"
-            v-model="dateFilter.endDate"
-            class="text-sm py-1 px-2 border border-gray-300 bg-white rounded"
-          />
-        </div>
-
         <div class="flex items-center gap-3">
           <div>
-            <Select v-model:model-value="filterShop">
+            <Select
+              v-model:model-value="filterShop"
+              v-if="$page.props.auth.admin.level === 'administrator'"
+            >
               <SelectTrigger class="w-[300px]">
                 <SelectValue placeholder="Filter Unit Layanan" />
               </SelectTrigger>

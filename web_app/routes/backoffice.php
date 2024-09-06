@@ -6,6 +6,7 @@ use App\Http\Controllers\BackOffice\ShopController;
 use App\Http\Controllers\BackOffice\UserController;
 use App\Http\Controllers\BackOffice\BannerController;
 use App\Http\Controllers\BackOffice\JurnalController;
+use App\Http\Controllers\BackOffice\ProfilController;
 use App\Http\Controllers\BackOffice\ProductController;
 use App\Http\Controllers\BackOffice\SettingController;
 use App\Http\Controllers\BackOffice\CategoryController;
@@ -21,6 +22,8 @@ Route::prefix('backoffice')->group(function () {
     Route::middleware('auth.backoffice')->group(function () {
         Route::get('/dashboard', DashboardController::class)->name('backoffice.dashboard');
         Route::post('/logout', [AuthController::class, 'destroy'])->name('backoffice.auth.logout');
+        Route::get('/profil', [ProfilController::class, 'index'])->name('backoffice.profil.index');
+        Route::put('/profil/{profil}', [ProfilController::class, 'update'])->name('backoffice.profil.update');
 
         Route::prefix('category')->controller(CategoryController::class)->group(function () {
             Route::get('/', 'index')->name('backoffice.category.index');
@@ -72,7 +75,8 @@ Route::prefix('backoffice')->group(function () {
         Route::prefix('transaksi')->controller(TransactionController::class)->group(function () {
             Route::get('/{status}', 'index')->name('backoffice.transaction.index');
             Route::put('/{transaction}', 'update')->name('backoffice.transaction.update');
-            Route::get('/{transaction}/detail', 'edit')->name('backoffice.transaction.detail');
+            Route::get('/{transaction}/invoice', 'invoice')->name('backoffice.transaction.invoice');
+            Route::get('/{transaction}/detail', 'show')->name('backoffice.transaction.detail');
         });
 
         Route::prefix('jurnal')->controller(JurnalController::class)->group(function () {
