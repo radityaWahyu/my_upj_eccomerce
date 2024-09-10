@@ -27,7 +27,7 @@ const props = defineProps<{
     settings: { data: TSetting[] };
 }>();
 
-const settingForm = useForm<TSettingForm>({
+const settingForm = useForm<any>({
     settings: [],
 });
 
@@ -50,9 +50,7 @@ watch(
 );
 
 const onSubmit = () => {
-    settingForm.post(route("backoffice.setting.store"), {
-        onError: (error) => console.log(error),
-    });
+    settingForm.post(route("backoffice.setting.store"));
 };
 </script>
 <template>
