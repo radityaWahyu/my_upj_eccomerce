@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import type { ColumnDef } from "@tanstack/vue-table";
+import { ref } from "vue";
+import type { ColumnDef, ExpandedState } from "@tanstack/vue-table";
+import { valueUpdater } from "@/shadcn/utils";
 import { Skeleton } from "@/shadcn/ui/skeleton";
 import { defineEmits, useSlots, defineExpose } from "vue";
 import { OctagonAlert } from "lucide-vue-next";
@@ -9,6 +11,7 @@ import {
     getCoreRowModel,
     getPaginationRowModel,
     useVueTable,
+    getExpandedRowModel,
 } from "@tanstack/vue-table";
 
 import {
@@ -33,6 +36,7 @@ const props = withDefaults(
         prevPage: number;
         loading: boolean;
         pagination?: boolean;
+        expanded?: boolean;
     }>(),
     {
         pagination: true,
@@ -45,6 +49,7 @@ const emits = defineEmits<{
 }>();
 
 const changePage = (page: number) => emits("changePage", page);
+const expanded = ref<ExpandedState>({});
 
 const table = useVueTable({
     get data() {
@@ -55,7 +60,16 @@ const table = useVueTable({
     },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getExpandedRowModel: getExpandedRowModel(),
+    onExpandedChange: (updaterOrValue) => {
+        valueUpdater(updaterOrValue, expanded);
+    },
     manualPagination: true,
+    state: {
+        get expanded() {
+            return expanded.value;
+        },
+    },
 });
 
 const resetTable = () => {
@@ -114,23 +128,29 @@ defineExpose({
                 </TableBody>
                 <TableBody v-else>
                     <template v-if="table.getRowModel().rows?.length">
-                        <TableRow
+                        <template
                             v-for="row in table.getRowModel().rows"
                             :key="row.id"
-                            :data-state="
-                                row.getIsSelected() ? 'selected' : undefined
-                            "
                         >
-                            <TableCell
-                                v-for="cell in row.getVisibleCells()"
-                                :key="cell.id"
+                            <TableRow
+                                :data-state="row.getIsSelected() && 'selected'"
                             >
-                                <FlexRender
-                                    :render="cell.column.columnDef.cell"
-                                    :props="cell.getContext()"
-                                />
-                            </TableCell>
-                        </TableRow>
+                                <TableCell
+                                    v-for="cell in row.getVisibleCells()"
+                                    :key="cell.id"
+                                >
+                                    <FlexRender
+                                        :render="cell.column.columnDef.cell"
+                                        :props="cell.getContext()"
+                                    />
+                                </TableCell>
+                            </TableRow>
+                            <TableRow v-if="row.getIsExpanded()">
+                                <TableCell :colspan="row.getAllCells().length">
+                                    <slot name="expanded" :row="row" />
+                                </TableCell>
+                            </TableRow>
+                        </template>
                     </template>
                     <template v-else>
                         <TableRow>

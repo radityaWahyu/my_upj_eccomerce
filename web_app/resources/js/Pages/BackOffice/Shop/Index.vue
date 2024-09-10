@@ -309,7 +309,7 @@ watchDebounced(
         <div class="w-full">
             <div class="flex items-center justify-between py-4">
                 <Input
-                    placeholder="Cari kategori..."
+                    placeholder="Cari Unit layanan..."
                     v-model="search"
                     class="w-1/2 bg-white"
                 />

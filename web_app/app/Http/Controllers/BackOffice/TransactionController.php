@@ -74,7 +74,7 @@ class TransactionController extends Controller
                     Jurnal::create([
                         'jurnal_code' => $jurnal_code,
                         'income' => $transaction->total,
-                        'description' => 'Transaksi' . $transaction->transaction_code . ' telah dibayar pada tanggal ' . $finsihedTransactionDate->format('d/m/YY') . '.',
+                        'description' => 'Transaksi ' . $transaction->transaction_code . ' telah dibayar pada tanggal ' . $finsihedTransactionDate->format('d/m/Y') . '.',
                         'transaction_id' => $transaction->id,
                         'user_id' => $request->user('web')->id,
                         'shop_id' => $transaction->shop_id,

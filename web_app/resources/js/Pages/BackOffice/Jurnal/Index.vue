@@ -12,6 +12,7 @@ import { Head, router } from "@inertiajs/vue3";
 import type { ColumnDef } from "@tanstack/vue-table";
 import { Alert, AlertDescription } from "@/shadcn/ui/alert";
 import { OctagonAlert } from "lucide-vue-next";
+import { ChevronsDown } from "lucide-vue-next";
 import { Label } from "@/shadcn/ui/label";
 import { Button } from "@/shadcn/ui/button";
 import {
@@ -24,7 +25,8 @@ import {
 } from "@/shadcn/ui/select";
 import DataTable from "@/Components/backoffice/app/DataTable.vue";
 import JurnalMoney from "@/Components/backoffice/jurnal/JurnalMoney.vue";
-import TransactionCode from "@/Components/backoffice/jurnal/TransactionCode.vue";
+import JurnalTransactionCode from "@/Components/backoffice/jurnal/JurnalTransactionCode.vue";
+import JurnalExpandedButton from "@/Components/backoffice/jurnal/JurnalExpandedButton.vue";
 
 type TShop = {
     id: string;
@@ -77,6 +79,21 @@ const Rupiah = (price: number) =>
 
 const columns: ColumnDef<TJurnal>[] = [
     {
+        id: "actions",
+        enableHiding: false,
+        cell: ({ row }) => {
+            const id: string = row.original.id as string;
+            return h(
+                "div",
+                { class: "text-center" },
+                h(JurnalExpandedButton, {
+                    onExpand: row.toggleExpanded,
+                    expanded: row.getIsExpanded(),
+                })
+            );
+        },
+    },
+    {
         accessorKey: "jurnal_code",
         header: ({ column }) => {
             return h(
@@ -124,7 +141,7 @@ const columns: ColumnDef<TJurnal>[] = [
             );
         },
         cell: ({ row }) =>
-            h(TransactionCode, {
+            h(JurnalTransactionCode, {
                 transaction: {
                     id: row.original.transaction_id,
                     transaction_code: row.original.transaction_code,
@@ -180,14 +197,6 @@ const columns: ColumnDef<TJurnal>[] = [
         },
         cell: ({ row }) =>
             h("div", { class: "text-right" }, row.original.transaction_date),
-    },
-    {
-        id: "actions",
-        enableHiding: false,
-        cell: ({ row }) => {
-            const id: string = row.original.id as string;
-            return h("div", {}, "");
-        },
     },
 ];
 const PerPage = ref([
@@ -359,6 +368,12 @@ const getJurnal = () => {
                 :per-page="10"
                 :pagination="false"
             >
+                <template v-slot:expanded="{ row }">
+                    <div class="text-sm">
+                        <span class="font-semibold">Deksripsi Jurnal : </span>
+                        {{ row.original.description }}
+                    </div>
+                </template>
                 <template #empty>
                     <div
                         class="grid grid-cols-[10%_90%] items-center bg-blue-200 py-2 rounded text-blue-800"

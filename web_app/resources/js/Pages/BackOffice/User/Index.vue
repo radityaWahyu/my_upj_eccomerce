@@ -18,7 +18,7 @@ import { router, Head } from "@inertiajs/vue3";
 import DataTable from "@/Components/backoffice/app/DataTable.vue";
 import ButtonAction from "@/Components/backoffice/user/ButtonAction.vue";
 import ComboBox from "@/Components/backoffice/app/ComboBox.vue";
-import EmployeeNameBox from "@/Components/backoffice/employee/EmployeeNameBox.vue";
+import UserNameBox from "@/Components/backoffice/user/UserNameBox.vue";
 import UserEnabledBox from "@/Components/backoffice/user/UserEnabledBox.vue";
 
 type TUser = {
@@ -92,7 +92,12 @@ const columns: ColumnDef<TUser>[] = [
             );
         },
         cell: ({ row }) =>
-            h(EmployeeNameBox, { employee: { name: row.original.name } }),
+            h(UserNameBox, {
+                employee: {
+                    name: row.original.name,
+                    enabled: row.original.enabled,
+                },
+            }),
     },
     {
         accessorKey: "username",
