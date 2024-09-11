@@ -4,7 +4,6 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 
     @if(isset($page['props']['event']))
     <meta name="og:author" content="{{ (isset($page['props']['event']['author'])) ? $page['props']['event']['author'] : '' }}" />
