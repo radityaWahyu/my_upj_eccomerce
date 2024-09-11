@@ -63,7 +63,21 @@ const props = defineProps<{
                     </div>
                     <div class="w-full lg:text-center">
                         <div
+                            class="grid grid-cols-[10%_90%] items-center bg-blue-100 py-2 rounded text-blue-800"
+                            v-if="products.data.length === 0"
+                        >
+                            <div>
+                                <OctagonAlert class="h-8 w-8 m-auto" />
+                            </div>
+                            <p class="text-left">
+                                <strong class="block">Keterangan :</strong>
+                                Tidak terdapat data produk dan jasa yang
+                                tersimpan pada aplikasi.
+                            </p>
+                        </div>
+                        <div
                             class="w-full grid grid-cols-2 lg:grid-cols-6 gap-3 mb-10"
+                            v-if="products.data.length > 0"
                         >
                             <Product
                                 :product="product"
@@ -72,6 +86,7 @@ const props = defineProps<{
                             />
                         </div>
                         <Link
+                            v-if="products.data.length > 0"
                             :href="route('frontend.products')"
                             class="w-full lg:w-1/4 text-gray-900 bg-white border-[2px] border-gray-300 focus:outline-none hover:bg-nasplesyellow hover:text-white hover:border-yellow-400 focus:ring-1 focus:ring-yellow-400 font-semibold rounded text-sm lg:text-lg px-5 py-2.5 mb-2"
                             replace
@@ -95,6 +110,19 @@ const props = defineProps<{
                         </Link>
                     </div>
                     <div>
+                        <div
+                            class="grid grid-cols-[10%_90%] items-center bg-blue-100 py-2 rounded text-blue-800"
+                            v-if="shops.data.length === 0"
+                        >
+                            <div>
+                                <OctagonAlert class="h-8 w-8 m-auto" />
+                            </div>
+                            <p class="text-left">
+                                <strong class="block">Keterangan :</strong>
+                                Tidak terdapat data unit layanan yang tersimpan
+                                pada aplikasi.
+                            </p>
+                        </div>
                         <div class="w-full flex overflow-x-scroll gap-2">
                             <shop
                                 :shop="shop"

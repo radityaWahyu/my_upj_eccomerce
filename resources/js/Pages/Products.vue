@@ -8,7 +8,7 @@ export default {
 <script setup lang="ts">
 import { ref } from "vue";
 import { Head, Link, router } from "@inertiajs/vue3";
-import { ArrowRight } from "lucide-vue-next";
+import { ArrowRight, OctagonAlert } from "lucide-vue-next";
 import { Skeleton } from "@/shadcn/ui/skeleton";
 import Product from "@/Components/app/Product.vue";
 
@@ -159,7 +159,24 @@ const getProducts = (page: number) => {
                                 </option>
                             </select>
                         </div>
-                        <div class="grid grid-cols-2 lg:grid-cols-5 gap-3">
+                        <div v-if="products.data.length === 0">
+                            <div
+                                class="grid grid-cols-[10%_90%] items-center bg-blue-100 py-2 rounded text-blue-800"
+                            >
+                                <div>
+                                    <OctagonAlert class="h-8 w-8 m-auto" />
+                                </div>
+                                <p class="text-left">
+                                    <strong class="block">Keterangan :</strong>
+                                    Tidak terdapat data produk dan jasa yang
+                                    tersimpan pada aplikasi.
+                                </p>
+                            </div>
+                        </div>
+                        <div
+                            class="grid grid-cols-2 lg:grid-cols-5 gap-3"
+                            v-if="products.data.length > 0"
+                        >
                             <product
                                 v-if="!isLoading"
                                 :product="product"
@@ -174,7 +191,10 @@ const getProducts = (page: number) => {
                                 </div>
                             </div>
                         </div>
-                        <div class="flex items-center justify-between">
+                        <div
+                            class="flex items-center justify-between"
+                            v-if="products.data.length > 0"
+                        >
                             <button
                                 type="button"
                                 class="bg-white border-[2px] border-gray-300 focus:outline-none hover:bg-nasplesyellow hover:text-white hover:border-yellow-400 focus:ring-1 focus:ring-yellow-400 font-semibold rounded text-sm px-4 py-2 me-2 mb-2 disabled disabled:bg-gray-50 disabled:border-gray-200 disabled:text-gray-500"

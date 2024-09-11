@@ -20,7 +20,7 @@ class ProductDetailResource extends JsonResource
             'name' => $this->name,
             'shop' => $this->shop->name,
             'shop_address' => $this->shop->address,
-            'contacts' => $this->shop->employees,
+            'contacts' => EmployeeResource::collection($this->shop->employees),
             'category' => $this->category->name,
             'type' => $this->type,
             'images' => empty($this->images) ? null : ProductImageResource::collection($this->images),

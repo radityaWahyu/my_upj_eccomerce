@@ -79,6 +79,9 @@ const addToCart = () => {
         },
     });
 };
+
+const chatWhatsapp = (whatsapp: string) =>
+    `https://wa.me/${whatsapp}?text=Saya%20tertarik%20dengan%20produk%20anda`;
 </script>
 <template>
     <Head :title="product.name" />
@@ -301,12 +304,12 @@ const addToCart = () => {
                                     <span>{{ contact.whatsapp }}</span>
                                 </p>
                             </div>
-                            <button
-                                type="button"
+                            <a
                                 class="focus:outline-none bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-xs px-5 py-2.5"
+                                :href="chatWhatsapp(contact.whatsapp)"
                             >
                                 Chat WA
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
