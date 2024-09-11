@@ -9,7 +9,7 @@ export default {
 import { ref } from "vue";
 import { router, Head } from "@inertiajs/vue3";
 import { Skeleton } from "@/shadcn/ui/skeleton";
-import { ArrowLeft } from "lucide-vue-next";
+import { ArrowLeft, OctagonAlert } from "lucide-vue-next";
 import Product from "@/Components/app/Product.vue";
 
 type TShop = {
