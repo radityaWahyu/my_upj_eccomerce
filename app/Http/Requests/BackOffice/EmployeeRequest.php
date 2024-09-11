@@ -27,7 +27,7 @@ class EmployeeRequest extends FormRequest
             'name' => ['required'],
             'gender' => ['required', Rule::in(['l', 'p'])],
             'whatsapp' => ['required',  'max:15'],
-            'phone' => ['max:11'],
+            'phone' => ['max:15'],
             'shop' => ['required']
         ];
     }
