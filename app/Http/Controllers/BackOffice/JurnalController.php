@@ -94,9 +94,10 @@ class JurnalController extends Controller
                         return $query->whereMonth('jurnals.transaction_date', Carbon::today()->format('m'));
                     });
             })
-            ->groupBy('shops.id');
+            ->groupBy('shops.id')
+            ->get();
 
-        dd($shops);
+
         return inertia('BackOffice/Jurnal/JurnalUnit', [
             'shops' => fn() => JurnalUnitResource::collection($shops),
             'params' => (object)$params,
