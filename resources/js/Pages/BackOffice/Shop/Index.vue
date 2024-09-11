@@ -61,8 +61,8 @@ const isLoading = ref(false);
 
 const props = defineProps<{
     shops: { data: TShop[]; meta: TShopMeta };
-    params: TParams;
-    shop: TShop;
+    params?: TParams;
+    shop?: TShop;
 }>();
 const search = ref(props.params?.search);
 const pageOptions = ref({
@@ -89,7 +89,7 @@ const columns: ColumnDef<TShop>[] = [
                     table.getIsAllPageRowsSelected() ||
                     (table.getIsSomePageRowsSelected() && "indeterminate"),
                 "onUpdate:checked": (value: any) => {
-                    console.log(value);
+                    // console.log(value);
                     if (!value) {
                         selectedId.value = [];
                         table.resetRowSelection();
@@ -350,7 +350,7 @@ watchDebounced(
             :title="formState.title"
             @closed="closeForm"
             @saved="savedForm"
-            :shop="shop"
+            :shop="shop !== undefined ? shop : null"
             :edit="!!shop"
         />
 

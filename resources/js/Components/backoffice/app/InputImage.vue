@@ -33,7 +33,7 @@ const onChange = (e: any) => {
     };
 
     image.value = e.target.files[0];
-    console.log(image.value);
+    // console.log(image.value);
 
     emits("change", e.target.files[0]);
 };
@@ -41,7 +41,7 @@ const onChange = (e: any) => {
 watch(
     () => image,
     (image) => {
-        console.log(image.value);
+        // console.log(image.value);
         if (!!image.value) {
             previewImage.value = image.value;
             oldImage.value = image.value;

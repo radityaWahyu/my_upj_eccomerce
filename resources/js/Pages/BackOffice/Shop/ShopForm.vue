@@ -36,7 +36,7 @@ const props = withDefaults(
     defineProps<{
         open: boolean;
         title: string;
-        shop: TShop;
+        shop: TShop | null;
         edit: boolean;
     }>(),
     {
@@ -114,14 +114,14 @@ const shopForm = useInertiaForm({
 });
 
 watch(
-    () => props.edit,
+    () => props.shop,
     (values) => {
-        if (values) {
-            shopForm.name = props.shop.name;
-            shopForm.image = props.shop.image;
-            shopForm.address = props.shop.address;
-            form.setFieldValue("name", props.shop.name);
-            form.setFieldValue("address", props.shop.address);
+        if (values !== null) {
+            shopForm.name = values.name;
+            shopForm.image = values.image;
+            shopForm.address = values.address;
+            form.setFieldValue("name", values.name);
+            form.setFieldValue("address", values.address);
             //form.setFieldValue("image", values.image);
         }
     },
@@ -147,7 +147,7 @@ const closeForm = () => {
 
 const onSubmit = form.handleSubmit((formData) => {
     // console.log(shopForm.image);
-    if (props.edit) {
+    if (props.shop !== null) {
         // alert("update");
         shopForm
             .transform((data) => ({
