@@ -63,19 +63,11 @@ const props = defineProps<TError>();
             <h2
                 class="scroll-m-20 border-b pb-2 text-xl font-semibold tracking-tight transition-colors text-center"
             >
-                Anda harus LogIn terlebih dahulu untuk mengakses halaman ini.
+                Terjadi kesalahan data di server.
             </h2>
             <p class="text-center text-muted-foreground">
-                Apabila belum punya akun silahkan mendaftar terlebih dahulu
-                dengan mengklik tombol dibawah.
+                Apabila pesan ini muncul silahkan menghubungi penyedia aplikasi.
             </p>
-            <Link
-                :href="route('frontend.register')"
-                as="button"
-                class="mt-4 bg-gray-200 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded text-sm px-5 py-2.5 text-center"
-            >
-                Daftar Akun Baru
-            </Link>
         </div>
     </div>
 </template>

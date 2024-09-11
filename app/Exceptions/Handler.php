@@ -44,17 +44,19 @@ class Handler extends ExceptionHandler
         $status = $response->getStatusCode();
 
         //dd($status);
+        if (!app()->environment(['local', 'testing'])) {
 
-        if (in_array($status, $status_code)) {
-            return inertia('Errors', [
-                'status_code' => $status,
-            ])->toResponse($request)->setStatusCode($status);
-        } elseif ($status == 403) {
-            return inertia('ErrorsAuthentication')->toResponse($request)->setStatusCode($status);
-        } elseif ($status == 419) {
-            redirect()->back()->with(['error' => 'Sesi anda telah habis, silahkan merefresh halaman ini.']);
-        } else {
-            return $response;
+            if (in_array($status, $status_code)) {
+                return inertia('Errors', [
+                    'status_code' => $status,
+                ])->toResponse($request)->setStatusCode($status);
+            } elseif ($status == 403) {
+                return inertia('ErrorsAuthentication')->toResponse($request)->setStatusCode($status);
+            } elseif ($status == 419) {
+                redirect()->back()->with(['error' => 'Sesi anda telah habis, silahkan merefresh halaman ini.']);
+            } else {
+                return $response;
+            }
         }
 
 
@@ -68,6 +70,6 @@ class Handler extends ExceptionHandler
         //     };
         // }
 
-        // return $response;
+        return $response;
     }
 }
