@@ -142,7 +142,7 @@ const onSubmit = form.handleSubmit((formData) => {
             <FormField
                 v-slot="{ componentField }"
                 name="name"
-                v-if="$page.props.auth.admin.name !== 'Administrator'"
+                v-if="profilForm.name !== 'Administrator'"
             >
                 <FormItem>
                     <FormLabel
@@ -308,7 +308,7 @@ const onSubmit = form.handleSubmit((formData) => {
             <FormField
                 v-slot="{ componentField }"
                 name="username"
-                v-if="$page.props.auth.admin.name !== 'Administrator'"
+                v-if="profilForm.name !== 'Administrator'"
             >
                 <FormItem>
                     <FormLabel
