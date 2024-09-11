@@ -83,7 +83,7 @@ class JurnalController extends Controller
         }
 
         $shops = DB::table('shops')
-            ->select('shops.*', DB::raw('coalesce(sum(jurnals.income),0) as total_income'), DB::raw('coalesce(sum(jurnals.expense),0) as total_expense'), DB::raw('coalesce(sum(jurnals.income),0) - coalesce(sum(jurnals.expense),0) as total_saldo'))
+            ->select('shops.id', 'shops.name', DB::raw('coalesce(sum(jurnals.income),0) as total_income'), DB::raw('coalesce(sum(jurnals.expense),0) as total_expense'), DB::raw('coalesce(sum(jurnals.income),0) - coalesce(sum(jurnals.expense),0) as total_saldo'))
             ->leftJoin('jurnals', function ($query) use ($request) {
                 $query->on('jurnals.shop_id', '=', 'shops.id')
                     ->when($request->has('start_date') && $request->has('end_date'), function ($query) use ($request) {
