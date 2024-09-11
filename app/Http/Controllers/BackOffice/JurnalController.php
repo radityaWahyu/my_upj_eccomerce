@@ -95,6 +95,7 @@ class JurnalController extends Controller
                     });
             })
             ->groupBy('shops.id')
+            ->groupBy('shops.name')
             ->get();
 
 
