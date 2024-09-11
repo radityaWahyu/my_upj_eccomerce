@@ -165,7 +165,23 @@ const chatWhatsapp = (whatsapp: number) =>
                 </option>
             </select>
         </div>
-        <div class="w-full grid grid-cols-2 lg:grid-cols-5 gap-3">
+        <div
+            class="grid grid-cols-[10%_90%] items-center bg-blue-100 py-2 rounded text-blue-800"
+            v-if="products.data.length === 0"
+        >
+            <div>
+                <OctagonAlert class="h-8 w-8 m-auto" />
+            </div>
+            <p class="text-left">
+                <strong class="block">Keterangan :</strong>
+                Tidak terdapat data produk dan jasa yang tersimpan pada
+                aplikasi.
+            </p>
+        </div>
+        <div
+            class="w-full grid grid-cols-2 lg:grid-cols-5 gap-3"
+            v-if="products.data.length > 0"
+        >
             <Product
                 :product="product"
                 v-for="(product, index) in products.data"
@@ -180,7 +196,10 @@ const chatWhatsapp = (whatsapp: number) =>
                 </div>
             </div>
         </div>
-        <div class="flex items-center justify-between">
+        <div
+            class="flex items-center justify-between"
+            v-if="products.data.length > 0"
+        >
             <button
                 type="button"
                 class="bg-white border-[2px] border-gray-300 focus:outline-none hover:bg-nasplesyellow hover:text-white hover:border-yellow-400 focus:ring-1 focus:ring-yellow-400 font-semibold rounded text-sm px-4 py-2 me-2 mb-2 disabled disabled:bg-gray-50 disabled:border-gray-200 disabled:text-gray-500"
