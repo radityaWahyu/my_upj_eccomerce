@@ -59,17 +59,6 @@ class Handler extends ExceptionHandler
             }
         }
 
-
-        // if (app()->environment(['local', 'testing'])) {
-        //     return match ($status) {
-        //         404, 500, 503, 403, 401 => inertia('Errors', [
-        //             'status_code' => $status,
-        //         ])->toResponse($request)->setStatusCode($status),
-        //         419 => redirect()->back()->with(['error' => 'Sesi anda telah habis, silahkan merefresh halaman ini.']),
-        //         default => $response
-        //     };
-        // }
-
         return $response;
     }
 }

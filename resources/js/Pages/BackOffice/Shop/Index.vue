@@ -44,6 +44,13 @@ type TShopMeta = {
     path: string;
 };
 
+type TParams = {
+    perPage: number;
+    sortName: string;
+    sortType: string;
+    search: string;
+};
+
 const PerPage = ref([
     { value: 10, label: 10 },
     { value: 25, label: 25 },
@@ -51,12 +58,12 @@ const PerPage = ref([
     { value: 100, label: 100 },
 ]);
 const isLoading = ref(false);
-const props = defineProps({
-    shops: Object,
-    params: Object,
-    showForm: Boolean,
-    shop: { required: false, type: Object },
-});
+
+const props = defineProps<{
+    shops: { data: TShop[]; meta: TShopMeta };
+    params: TParams;
+    shop: TShop;
+}>();
 const search = ref(props.params?.search);
 const pageOptions = ref({
     sortName: props.params?.sortName,
@@ -339,12 +346,12 @@ watchDebounced(
             />
         </div>
         <ShopForm
-            :open="formState.open || !!shop?.data"
+            :open="formState.open || !!shop"
             :title="formState.title"
             @closed="closeForm"
             @saved="savedForm"
-            :shop="shop?.data"
-            :edit="!!shop?.data"
+            :shop="shop"
+            :edit="!!shop"
         />
 
         <ConfirmDialog
