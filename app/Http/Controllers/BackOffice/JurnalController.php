@@ -97,6 +97,7 @@ class JurnalController extends Controller
             ->groupBy('shops.id')
             ->get();
 
+        return $shops;
         return inertia('BackOffice/Jurnal/JurnalUnit', [
             'shops' => fn() => JurnalUnitResource::collection($shops),
             'params' => (object)$params,
