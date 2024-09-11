@@ -2,12 +2,14 @@
 
 namespace App\Http\Resources;
 
+use App\Traits\Whatsapp;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class EmployeeResource extends JsonResource
 {
+    use Whatsapp;
     /**
      * Transform the resource into an array.
      *
@@ -20,7 +22,7 @@ class EmployeeResource extends JsonResource
             'name' => $this->name,
             'shop' => empty($this->shop->name) ? '-' : $this->shop->name,
             'phone' => $this->phone,
-            'whatsapp' => $this->whatsapp,
+            'whatsapp' => $this->getWhatsapp($this->whatsapp),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
