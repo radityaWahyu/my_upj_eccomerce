@@ -8,7 +8,7 @@
         </section>
         <Footer />
         <div class="lg:hidden mb-[3rem]"></div>
-        <mobile-navigation class="lg:hidden" />
+        <MobileNavigation class="lg:hidden" />
     </div>
 </template>
 <script setup lang="ts">

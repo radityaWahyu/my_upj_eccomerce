@@ -23,7 +23,7 @@ const Settings = computed((): TSettings => settings as TSettings);
             class="lg:container py-3 space-y-4 border-t-[1px] border-t-nasplesyellow"
         >
             <div
-                class="flex items-start justify-center lg:justify-between flex-wrap px-2"
+                class="flex flex-col lg:flex-row items-start justify-center lg:justify-between flex-wrap px-4 lg:px-2"
             >
                 <div id="logo" class="flex items-center gap-1">
                     <svg

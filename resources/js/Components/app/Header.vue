@@ -66,7 +66,6 @@ watch(
             <div class="w-[calc(100vw/3.2)] lg:block hidden">
                 <div class="relative w-full items-center mx-auto">
                     <Input
-                        id="search"
                         type="text"
                         placeholder="cari produk / jasa.."
                         class="pl-10 rounded-none bg-white/90"
@@ -160,7 +159,7 @@ watch(
                     </button>
                     <div
                         v-if="isUserMenuOpen"
-                        class="absolute end-20 z-10 top-10 mt-2 w-56 rounded-md border border-gray-100 bg-white shadow-lg"
+                        class="absolute end-20 z-30 top-10 mt-2 w-56 rounded-md border border-gray-100 bg-white shadow-lg"
                     >
                         <div
                             class="w-full divide-y divide-gray-200"
@@ -249,7 +248,6 @@ watch(
     >
         <div class="relative w-full items-center mx-auto">
             <Input
-                id="search"
                 type="text"
                 placeholder="cari produk / jasa.."
                 class="pl-10 rounded-none bg-white/90"

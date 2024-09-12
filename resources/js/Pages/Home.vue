@@ -7,6 +7,7 @@ export default {
 </script>
 <script setup lang="ts">
 import { Head, Link } from "@inertiajs/vue3";
+import { OctagonAlert } from "lucide-vue-next";
 import Product from "@/Components/app/Product.vue";
 import Shop from "@/Components/app/Shop.vue";
 import Banner from "@/Components/home/Banner.vue";
@@ -61,7 +62,7 @@ const props = defineProps<{
                             lainnya...
                         </Link>
                     </div>
-                    <div class="w-full lg:text-center">
+                    <div class="w-full text-center">
                         <div
                             class="grid grid-cols-[10%_90%] items-center bg-blue-100 py-2 rounded text-blue-800"
                             v-if="products.data.length === 0"
@@ -88,7 +89,7 @@ const props = defineProps<{
                         <Link
                             v-if="products.data.length > 0"
                             :href="route('frontend.products')"
-                            class="w-full lg:w-1/4 text-gray-900 bg-white border-[2px] border-gray-300 focus:outline-none hover:bg-nasplesyellow hover:text-white hover:border-yellow-400 focus:ring-1 focus:ring-yellow-400 font-semibold rounded text-sm lg:text-lg px-5 py-2.5 mb-2"
+                            class="block lg:w-1/4 lg:mx-auto text-gray-900 bg-white border-[2px] border-gray-300 focus:outline-none hover:bg-nasplesyellow hover:text-white hover:border-yellow-400 focus:ring-1 focus:ring-yellow-400 font-semibold rounded text-sm lg:text-lg px-5 py-2.5 mb-2"
                             replace
                         >
                             Produk lainnya...
