@@ -148,8 +148,8 @@ const getProducts = (page: number) => {
                             <h2
                                 class="text-sm font-semibold text-tomato lg:text-lg"
                             >
-                                Hasil Pencarian "{{ params?.key }}" pada Produk
-                                dan jasa
+                                Pencarian "{{ params?.key }}" pada Produk dan
+                                jasa
                             </h2>
                             <select
                                 v-model="perPage"
@@ -166,26 +166,28 @@ const getProducts = (page: number) => {
                             </select>
                         </div>
                         <div
-                            class="flex items-center gap-4 bg-blue-100 rounded overflow-hidden"
+                            class="grid grid-cols-[20%_80%] gap-4 bg-blue-100 rounded overflow-hidden"
                             v-if="products.data.length === 0"
                         >
-                            <div class="bg-blue-200 p-3">
+                            <div
+                                class="bg-blue-200 p-3 h-full flex items-center justify-center"
+                            >
                                 <BadgeInfo class="w-8 h-8" />
                             </div>
                             <p class="text-sm p-1">
                                 <strong>Keterangan :</strong>
                                 Data yang anda cari dengan kata kunci
                                 <strong>"{{ params?.key }}"</strong> tidak
-                                ditemukan dalam produk dan jasa. Silahkan
-                                gunakan kata kunci yang lain yang sesuai dengan
-                                produk yang dicari.
+                                ditemukan dalam produk dan jasa.
                             </p>
                         </div>
                         <div v-else class="space-y-4">
                             <div
-                                class="flex items-center gap-4 bg-blue-100 rounded overflow-hidden"
+                                class="grid grid-cols-[20%_80%] gap-4 bg-blue-100 rounded overflow-hidden"
                             >
-                                <div class="bg-blue-200 p-3">
+                                <div
+                                    class="bg-blue-200 p-3 h-full flex items-center justify-center"
+                                >
                                     <BadgeInfo class="w-8 h-8" />
                                 </div>
                                 <p class="text-sm p-1">

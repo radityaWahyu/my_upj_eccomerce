@@ -251,6 +251,8 @@ watch(
                 type="text"
                 placeholder="cari produk / jasa.."
                 class="pl-10 rounded-none bg-white/90"
+                v-model="keyString"
+                @keyup.enter="search"
             />
             <span
                 class="absolute start-0 inset-y-0 flex items-center justify-center px-2"
