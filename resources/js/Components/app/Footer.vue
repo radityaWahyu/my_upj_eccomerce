@@ -23,7 +23,7 @@ const Settings = computed((): TSettings => settings as TSettings);
             class="lg:container py-3 space-y-4 border-t-[1px] border-t-nasplesyellow"
         >
             <div
-                class="flex flex-col lg:flex-row items-start justify-center lg:justify-between flex-wrap px-4 lg:px-2"
+                class="flex flex-col lg:flex-row lg:items-start items-center justify-center lg:justify-between flex-wrap px-4 lg:px-2"
             >
                 <div id="logo" class="flex items-center gap-1">
                     <svg
@@ -68,15 +68,17 @@ const Settings = computed((): TSettings => settings as TSettings);
                     </div>
                 </div>
                 <div
-                    id="info"
                     class="w-[300px] text-[12px] font-normal space-y-3 mt-5 lg:mt-0"
                 >
-                    <p>
+                    <p class="text-center lg:text-left">
                         <strong class="block">Alamat :</strong>
                         {{ Settings.alamat }}
                     </p>
 
-                    <div class="flex space-x-3" id="media sosial">
+                    <div
+                        class="flex space-x-3 justify-center lg:justify-start"
+                        id="media sosial"
+                    >
                         <a
                             :href="Settings.facebook"
                             target="_BLANK"
