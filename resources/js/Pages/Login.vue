@@ -122,146 +122,172 @@ const onSubmit = form.handleSubmit((formData) => {
             />
         </div>
         <div
-            class="px-6 lg:w-2/5 lg:bg-gray-50 lg:h-full flex flex-col justify-center gap-4 lg:shadow-inner lg:shadow-gray-200"
+            class="lg:w-2/5 bg-gray-50 h-full flex flex-col lg:justify-center gap-4 lg:shadow-inner lg:shadow-gray-200"
         >
-            <div id="logo" class="flex items-center gap-1">
+            <Link
+                :href="route('frontend.index')"
+                class="bg-tomato text-white hover:bg-tomato/80 hover:text-white text-sm font-medium inline-flex items-center px-4 py-5 lg:gap-2 group lg:hidden"
+            >
                 <svg
-                    class="text-tomato fill-current lg:w-20 lg:h-20"
                     xmlns="http://www.w3.org/2000/svg"
-                    width="38"
-                    height="38"
+                    width="32"
+                    height="32"
                     viewBox="0 0 24 24"
+                    class="fill-current w-6 h-6 o text-white"
                 >
                     <path
                         fill="currentColor"
-                        d="M5 21V7h3.5v-.5q0-1.458 1.021-2.479T12 3t2.479 1.021T15.5 6.5V7H19v14zm1-1h12V8h-2.5v3h-1V8h-5v3h-1V8H6zM9.5 7h5v-.5q0-1.056-.722-1.778T12 4t-1.778.722T9.5 6.5zM6 20V8z"
+                        d="m10 18l-6-6l6-6l1.4 1.45L7.85 11H20v2H7.85l3.55 3.55z"
                     />
                 </svg>
-                <div>
-                    <h4
-                        class="font-semibold text-xl lg:text-3xl text-tomato line"
+                <span> Kembali ke Beranda</span>
+            </Link>
+            <div class="px-5">
+                <div id="logo" class="flex items-center gap-1">
+                    <svg
+                        class="text-tomato fill-current lg:w-20 lg:h-20"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="38"
+                        height="38"
+                        viewBox="0 0 24 24"
                     >
-                        MYUPJ
-                    </h4>
-                    <p
-                        class="text-[10px] lg:text-sm font-normal text-tomato mt-[-5px]"
-                    >
-                        SMK Mandiri dan Berprestasi
-                    </p>
+                        <path
+                            fill="currentColor"
+                            d="M5 21V7h3.5v-.5q0-1.458 1.021-2.479T12 3t2.479 1.021T15.5 6.5V7H19v14zm1-1h12V8h-2.5v3h-1V8h-5v3h-1V8H6zM9.5 7h5v-.5q0-1.056-.722-1.778T12 4t-1.778.722T9.5 6.5zM6 20V8z"
+                        />
+                    </svg>
+                    <div>
+                        <h4
+                            class="font-semibold text-xl lg:text-3xl text-tomato line"
+                        >
+                            MYUPJ
+                        </h4>
+                        <p
+                            class="text-[10px] lg:text-sm font-normal text-tomato mt-[-5px]"
+                        >
+                            SMK Mandiri dan Berprestasi
+                        </p>
+                    </div>
                 </div>
-            </div>
-            <div
-                class="p-4 mb-4 text-[12px] text-blue-800 rounded-lg bg-blue-50"
-                role="alert"
-            >
-                <span class="font-semibold block">Login Akun User</span>
-                Silahkan mengisi username dan password yang sesuai dengan data
-                akun yang didaftarkan dalam sistem, apabila menemui kesulitan
-                silahkan untuk menghubungi adminstrator sistem.
-            </div>
-            <div>
-                <form
-                    @submit="onSubmit"
-                    class="max-w-md mx-auto space-y-3 mb-6"
+                <div
+                    class="p-4 mb-4 text-[12px] text-blue-800 rounded-lg bg-blue-50"
+                    role="alert"
                 >
-                    <div>
-                        <FormField v-slot="{ componentField }" name="username">
-                            <FormItem>
-                                <FormLabel
-                                    :class="{
-                                        'text-red-500':
-                                            loginForm.errors.username,
-                                    }"
-                                    >Username</FormLabel
-                                >
-                                <FormControl>
-                                    <input
-                                        type="text"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                                        placeholder="masukkan username"
-                                        v-model="loginForm.username"
-                                        v-bind="componentField"
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        </FormField>
-                    </div>
-                    <div>
-                        <FormField v-slot="{ componentField }" name="password">
-                            <FormItem>
-                                <FormLabel
-                                    :class="{
-                                        'text-red-500':
-                                            loginForm.errors.password,
-                                    }"
-                                >
-                                    Password
-                                </FormLabel>
-                                <FormControl>
-                                    <input
-                                        type="password"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                                        placeholder="masukkan password"
-                                        v-model="loginForm.password"
-                                        v-bind="componentField"
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        </FormField>
-                    </div>
-
-                    <div class="divide-y divide-gray-300 space-y-3">
+                    <span class="font-semibold block">Login Akun User</span>
+                    Silahkan mengisi username dan password yang sesuai dengan
+                    data akun yang didaftarkan dalam sistem, apabila menemui
+                    kesulitan silahkan untuk menghubungi adminstrator sistem.
+                </div>
+                <div>
+                    <form
+                        @submit="onSubmit"
+                        class="max-w-md mx-auto space-y-3 mb-6"
+                    >
                         <div>
-                            <button
-                                @click="onSubmit"
-                                type="submit"
-                                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded text-sm w-full px-5 py-2.5 text-center"
+                            <FormField
+                                v-slot="{ componentField }"
+                                name="username"
                             >
-                                <span
-                                    class="flex items-center gap-2 justify-center"
-                                    v-if="loginForm.processing"
-                                >
-                                    <svg
-                                        class="h-4 w-4 animate-spin"
-                                        viewBox="0 0 100 100"
+                                <FormItem>
+                                    <FormLabel
+                                        :class="{
+                                            'text-red-500':
+                                                loginForm.errors.username,
+                                        }"
+                                        >Username</FormLabel
                                     >
-                                        <circle
-                                            fill="none"
-                                            stroke-width="10"
-                                            class="stroke-current opacity-40"
-                                            cx="50"
-                                            cy="50"
-                                            r="40"
+                                    <FormControl>
+                                        <input
+                                            type="text"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                                            placeholder="masukkan username"
+                                            v-model="loginForm.username"
+                                            v-bind="componentField"
                                         />
-                                        <circle
-                                            fill="none"
-                                            stroke-width="10"
-                                            class="stroke-current"
-                                            stroke-dasharray="250"
-                                            stroke-dashoffset="210"
-                                            cx="50"
-                                            cy="50"
-                                            r="40"
-                                        />
-                                    </svg>
-                                    Autentikasi akun...
-                                </span>
-                                <span v-else>Log In</span>
-                            </button>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            </FormField>
                         </div>
-                        <div class="pt-3">
-                            <Link
-                                :href="route('frontend.register')"
-                                as="button"
-                                class="bg-gray-200 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded text-sm w-full px-5 py-2.5 text-center"
+                        <div>
+                            <FormField
+                                v-slot="{ componentField }"
+                                name="password"
                             >
-                                Daftar Akun Baru
-                            </Link>
+                                <FormItem>
+                                    <FormLabel
+                                        :class="{
+                                            'text-red-500':
+                                                loginForm.errors.password,
+                                        }"
+                                    >
+                                        Password
+                                    </FormLabel>
+                                    <FormControl>
+                                        <input
+                                            type="password"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                                            placeholder="masukkan password"
+                                            v-model="loginForm.password"
+                                            v-bind="componentField"
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            </FormField>
                         </div>
-                    </div>
-                </form>
+
+                        <div class="divide-y divide-gray-300 space-y-3">
+                            <div>
+                                <button
+                                    @click="onSubmit"
+                                    type="submit"
+                                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded text-sm w-full px-5 py-2.5 text-center"
+                                >
+                                    <span
+                                        class="flex items-center gap-2 justify-center"
+                                        v-if="loginForm.processing"
+                                    >
+                                        <svg
+                                            class="h-4 w-4 animate-spin"
+                                            viewBox="0 0 100 100"
+                                        >
+                                            <circle
+                                                fill="none"
+                                                stroke-width="10"
+                                                class="stroke-current opacity-40"
+                                                cx="50"
+                                                cy="50"
+                                                r="40"
+                                            />
+                                            <circle
+                                                fill="none"
+                                                stroke-width="10"
+                                                class="stroke-current"
+                                                stroke-dasharray="250"
+                                                stroke-dashoffset="210"
+                                                cx="50"
+                                                cy="50"
+                                                r="40"
+                                            />
+                                        </svg>
+                                        Autentikasi akun...
+                                    </span>
+                                    <span v-else>Log In</span>
+                                </button>
+                            </div>
+                            <div class="pt-3">
+                                <Link
+                                    :href="route('frontend.register')"
+                                    as="button"
+                                    class="bg-gray-200 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded text-sm w-full px-5 py-2.5 text-center"
+                                >
+                                    Daftar Akun Baru
+                                </Link>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
