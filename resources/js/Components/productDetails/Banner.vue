@@ -1,5 +1,5 @@
 <template>
-    <div class="container text-center">
+    <div class="container text-center py-4 lg:py-0">
         <div class="relative" v-if="images.length > 0">
             <swiper
                 :slides-per-view="1"
@@ -20,11 +20,13 @@
                     />
                 </swiper-slide>
             </swiper>
-            <div
-                class="absolute bottom-0 mb-5 z-10 mx-auto block bg-tomato text-white px-2 py-1 text-[12px] font-semibold rounded-full left-[40%]"
-            >
-                Gambar ke {{ swipperValue.activeIndex }} /
-                {{ swipperValue.total }}
+            <div class="absolute bottom-0 mb-5 z-10 text-center w-full">
+                <span
+                    class="bg-tomato text-white px-2 py-1 text-[12px] font-semibold rounded-full"
+                >
+                    Gambar ke {{ swipperValue.activeIndex }} /
+                    {{ swipperValue.total }}
+                </span>
             </div>
         </div>
         <div

@@ -8,7 +8,7 @@ export default {
 <script setup lang="ts">
 import { computed } from "vue";
 import { Head, Link, usePage, useForm } from "@inertiajs/vue3";
-import { BadgeInfo } from "lucide-vue-next";
+import { BadgeInfo, Plus, Minus } from "lucide-vue-next";
 import Banner from "@/Components/productDetails/Banner.vue";
 import Product from "@/Components/app/Product.vue";
 
@@ -112,7 +112,7 @@ const chatWhatsapp = (whatsapp: string) =>
                     </p>
                     <p class="text-[13px]" v-html="product.description" />
                 </div>
-                <div v-if="isCustomerLoggedIn">
+                <div v-if="isCustomerLoggedIn" class="hidden lg:block">
                     <form
                         @submit.prevent="addToCart"
                         class="flex items-center gap-2"
@@ -186,21 +186,22 @@ const chatWhatsapp = (whatsapp: string) =>
                 </div>
                 <div class="w-full py-2" v-else>
                     <div
-                        class="w-full flex items-center justify-between gap-4 bg-blue-100 rounded overflow-hidden"
+                        class="grid grid-cols-[20%_80%] mx-1 lg:mx-0 items-center gap-2 bg-blue-100 rounded"
                     >
-                        <div class="flex items-center gap-2">
-                            <div class="bg-blue-200 p-3">
-                                <BadgeInfo class="w-8 h-8 text-blue-400" />
-                            </div>
-                            <p class="text-xs">
-                                <strong class="block">Peringatan :</strong>
-                                Untuk fitur pemesanan silahkan login terlebih
-                                dahulu. Apabila belum punya akun silahkan klik
-                                tombol daftar sekarang
-                            </p>
+                        <div
+                            class="bg-blue-200 p-3 flex items-center justify-center h-full"
+                        >
+                            <BadgeInfo class="w-8 h-8 text-blue-400" />
                         </div>
+                        <p class="text-xs py-1">
+                            <strong class="block">Peringatan :</strong>
+                            Untuk fitur pemesanan silahkan login terlebih
+                            dahulu. Apabila belum punya akun silahkan klik
+                            tombol daftar sekarang
+                        </p>
                     </div>
-                    <div class="pt-3">
+
+                    <div class="pt-3 mx-1 lg:mx-0 hidden lg:block">
                         <Link
                             :href="route('frontend.register')"
                             as="button"
@@ -338,6 +339,70 @@ const chatWhatsapp = (whatsapp: string) =>
                         />
                     </div>
                 </div>
+            </div>
+        </div>
+        <div
+            id="bottom-navigation"
+            class="fixed bottom-0 left-0 z-10 w-full h-14 lg:hidden border-t-[1px] border-gray-200"
+            v-if="isCustomerLoggedIn"
+        >
+            <div class="grid h-full max-w-lg grid-cols-2 mx-auto font-medium">
+                <div
+                    class="grid grid-cols-[20%_60%_20%] items-center rounded border border-gray-200 bg-white"
+                >
+                    <button
+                        type="button"
+                        class="text-gray-600 bg-gray-100 transition hover:opacity-75 h-full"
+                        @click="decreaseQty"
+                        :disable="cartForm.processing"
+                    >
+                        <Minus class="h-5 w-5 m-auto" />
+                    </button>
+
+                    <input
+                        type="number"
+                        class="h-full bg-gray-50 border-transparent text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
+                        v-model="cartForm.qty"
+                    />
+
+                    <button
+                        type="button"
+                        class="text-gray-600 bg-gray-100 transition hover:opacity-75 h-full"
+                        @click="increaseQty"
+                        :disabled="cartForm.processing"
+                    >
+                        <Plus class="h-5 w-5 m-auto" />
+                    </button>
+                </div>
+                <button
+                    type="button"
+                    class="font-semibold bg-nasplesyellow"
+                    @click="addToCart"
+                >
+                    <span class="text-sm text-tomato">Tambah ke Keranjang</span>
+                </button>
+            </div>
+        </div>
+        <div
+            id="bottom-navigation"
+            class="fixed bottom-0 left-0 z-10 w-full h-14 bg-nasplesyellow lg:hidden"
+            v-else
+        >
+            <div class="grid h-full max-w-lg grid-cols-2 mx-auto font-medium">
+                <Link
+                    :href="route('frontend.register')"
+                    as="button"
+                    class="bg-yellow-500 font-semibold"
+                >
+                    <span class="text-sm text-tomato">Daftar Sekarang</span>
+                </Link>
+                <Link
+                    :href="route('frontend.login')"
+                    as="button"
+                    class="font-semibold"
+                >
+                    <span class="text-sm text-tomato">Login Akun</span>
+                </Link>
             </div>
         </div>
     </div>

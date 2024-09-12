@@ -122,7 +122,7 @@ const onSubmit = form.handleSubmit((formData) => {
             />
         </div>
         <div
-            class="px-6 lg:w-2/5 lg:bg-gray-50 lg:h-full flex flex-col justify-center gap-4 shadow-inner shadow-gray-200"
+            class="px-6 lg:w-2/5 lg:bg-gray-50 lg:h-full flex flex-col justify-center gap-4 lg:shadow-inner lg:shadow-gray-200"
         >
             <div id="logo" class="flex items-center gap-1">
                 <svg

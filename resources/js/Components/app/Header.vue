@@ -41,7 +41,12 @@ watch(
         <div
             class="sm:container px-2 h-[55px] flex items-center justify-between"
         >
-            <div id="logo" class="flex items-center gap-1">
+            <Link
+                :href="route('frontend.index')"
+                as="button"
+                id="logo"
+                class="flex items-center text-left gap-1"
+            >
                 <svg
                     class="text-tomato fill-current"
                     xmlns="http://www.w3.org/2000/svg"
@@ -62,7 +67,7 @@ watch(
                         SMK Mandiri dan Berprestasi
                     </p>
                 </div>
-            </div>
+            </Link>
             <div class="w-[calc(100vw/3.2)] lg:block hidden">
                 <div class="relative w-full items-center mx-auto">
                     <Input

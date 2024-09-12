@@ -86,27 +86,29 @@ const chatWhatsapp = (whatsapp: number) =>
     <Head :title="shop.name" />
     <div class="container py-4 space-y-8 min-h-screen">
         <div
-            class="flex items-center justify-between border-[1px] rounded-lg p-3 shadow-sm"
+            class="flex flex-col gap-3 lg:gap-0 lg:flex-row items-center justify-between border-[1px] rounded-lg py-3 shadow-sm"
         >
-            <div class="flex gap-4 items-center">
-                <button
-                    type="button"
-                    class="bg-gray-100 p-3 rounded-full border border-gray-200 hover:bg-gray-300"
-                    @click="backToShops"
-                >
-                    <ArrowLeft class="h-5 w-5" />
-                </button>
-                <div
-                    class="relative w-[100px] h-[100px] rounded-full overflow-hidden bg-gray-200 p-1"
-                >
-                    <img
-                        :src="shop.image"
-                        :alt="shop.slug"
-                        class="object-cover h-full rounded-full"
-                    />
+            <div class="flex flex-col lg:flex-row gap-4 items-center">
+                <div class="flex items-center gap-2 lg:px-2">
+                    <button
+                        type="button"
+                        class="bg-gray-100 p-3 rounded-full border border-gray-200 hover:bg-gray-300"
+                        @click="backToShops"
+                    >
+                        <ArrowLeft class="h-5 w-5" />
+                    </button>
+                    <div
+                        class="relative w-[100px] h-[100px] rounded-full overflow-hidden bg-gray-200 p-1"
+                    >
+                        <img
+                            :src="shop.image"
+                            :alt="shop.slug"
+                            class="object-cover h-full rounded-full"
+                        />
+                    </div>
                 </div>
                 <div class="space-y-4">
-                    <div>
+                    <div class="text-center lg:text-left">
                         <h2 class="font-semibold text-xl">
                             {{ shop.name }}
                         </h2>
@@ -117,7 +119,7 @@ const chatWhatsapp = (whatsapp: number) =>
                             {{ shop.address }}
                         </p>
                     </div>
-                    <div class="space-y-2 pb-2">
+                    <div class="space-y-2 pb-2 text-center lg:text-left">
                         <h4 class="text-xs font-medium">Kontak Unit Layanan</h4>
                         <div class="space-x-2">
                             <a
@@ -133,15 +135,15 @@ const chatWhatsapp = (whatsapp: number) =>
                 </div>
             </div>
             <div
-                class="grid grid-cols-3 divide-x-[1px] divide-gray-300 w-[500px]"
+                class="grid grid-cols-2 divide-x-[1px] divide-gray-300 lg:w-[500px] w-full"
             >
-                <div class="text-center px-2">
+                <div class="text-center lg:px-2">
                     <h4 class="font-semibold text-lg">
                         {{ shop.product_count }}
                     </h4>
                     <p class="font-normal text-xs">Produk dan Jasa</p>
                 </div>
-                <div class="text-center px-2">
+                <div class="text-center lg:px-2">
                     <h4 class="font-semibold text-lg">08.00 - 15.00</h4>
                     <p class="font-normal text-xs">Jam Operasional UPJ</p>
                 </div>

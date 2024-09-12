@@ -29,10 +29,9 @@ watch(
 );
 </script>
 <template>
-    <header-app />
+    <HeaderApp />
 
     <!-- <div
-        id="product-detail-navigation-top"
         class="h-[50px] p-2 bg-nasplesyellow drop-shadow-md sticky top-0 left-0 w-full flex items-center justify-between z-10 lg:hidden"
     >
         <button
@@ -153,22 +152,7 @@ watch(
         <section>
             <slot />
         </section>
-        <div
-            id="bottom-navigation"
-            class="fixed bottom-0 left-0 z-10 w-full h-14 bg-nasplesyellow lg:hidden"
-        >
-            <div class="grid h-full max-w-lg grid-cols-2 mx-auto font-medium">
-                <button type="button" class="px-4 gap-1 bg-yellow-500">
-                    <span class="text-sm text-tomato">Beli Sekarang</span>
-                </button>
-                <button
-                    type="button"
-                    class="inline-flex items-center justify-center px-4 gap-1"
-                >
-                    <span class="text-sm text-tomato">Tambah ke Keranjang</span>
-                </button>
-            </div>
-        </div>
+
         <footer-app class="hidden lg:block" />
     </div>
     <div class="lg:hidden mb-[2rem]"></div>
