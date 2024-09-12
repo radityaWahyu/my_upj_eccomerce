@@ -55,7 +55,7 @@ const props = defineProps<{
     active: string | null;
 }>();
 
-const category = ref(props.params?.category);
+const category = ref(props.active);
 const isLoading = ref<boolean>(false);
 const perPage = ref(props.products.meta.per_page);
 
@@ -64,8 +64,23 @@ const getProducts = (page: number) => {
     if (props.params?.category)
         Object.assign(url.value, { category: category.value });
 
-    console.log(page);
+    // console.log(page);
     if (page > 1) Object.assign(url.value, { page });
+
+    router.get(route("frontend.products"), url.value, {
+        preserveState: true,
+        onStart: () => (isLoading.value = true),
+        onError: (errors: any) => console.log(errors),
+        onFinish: () => (isLoading.value = false),
+    });
+};
+const onChange = () => {
+    const url = ref({ per_page: perPage.value });
+    Object.assign(url.value, { category: category.value });
+
+    // console.log(page);
+    if (props.products.meta.current_page > 1)
+        Object.assign(url.value, { page: props.products.meta.current_page });
 
     router.get(route("frontend.products"), url.value, {
         preserveState: true,
@@ -79,21 +94,26 @@ const getProducts = (page: number) => {
     <Head title="Daftar Produk dan Jasa" />
     <div class="lg:container">
         <div class="px-2 space-y-4 mt-4">
-            <select
-                id="countries"
-                class="bg-nasplesyellow border border-white text-sm rounded-none focus:ring-yellow-500 focus:border-yellow-500 block w-full p-2.5 lg:hidden"
-                v-model="category"
-            >
-                <option value="all">Semua Kategori</option>
-                <option
-                    :value="category.id"
-                    v-for="(category, index) in categories.data"
-                    :key="index"
+            <div class="lg:hidden w-full">
+                <h4 class="text-tomato font-semibold text-sm">
+                    Filter Kategori
+                </h4>
+                <select
+                    id="countries"
+                    class="bg-nasplesyellow border border-white text-sm rounded-none focus:ring-yellow-500 focus:border-yellow-500 w-full p-2.5"
+                    v-model="category"
+                    @change="onChange"
                 >
-                    {{ category.name }}
-                </option>
-            </select>
-
+                    <option value="all">Semua Kategori</option>
+                    <option
+                        :value="category.slug"
+                        v-for="(category, index) in categories.data"
+                        :key="index"
+                    >
+                        {{ category.name }}
+                    </option>
+                </select>
+            </div>
             <div
                 class="lg:flex lg:items-start lg:divide-x-[1px] lg:divide-nasplesyellow gap-2"
             >
