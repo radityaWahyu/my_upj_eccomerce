@@ -85,7 +85,7 @@ const chatWhatsapp = (whatsapp: string) =>
 </script>
 <template>
     <Head :title="product.name" />
-    <div class="min-h-lvh mb-20 lg:container lg:py-4">
+    <div class="min-h-screen pb-20 lg:container lg:py-4">
         <div class="lg:grid-cols-2 lg:grid gap-3 items-start">
             <Banner :images="product.images" />
             <div class="space-y-2">

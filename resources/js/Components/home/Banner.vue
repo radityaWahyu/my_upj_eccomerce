@@ -20,11 +20,11 @@ const modules = [Autoplay, Navigation, EffectFade];
 </script>
 <template>
     <div class="w-screen bg-gray-100 shadow-inner">
-        <div class="px-2 py-3 m-auto container text-center">
+        <div class="lg:px-2 lg:py-3 m-auto lg:container text-center">
             <swiper
                 :slides-per-view="1"
                 :space-between="50"
-                class="rounded-lg lg:h-72 h-24 w-full overflow-hidden"
+                class="lg:rounded-lg lg:h-72 h-24 w-full overflow-hidden"
                 :modules="modules"
                 autoplay
             >
