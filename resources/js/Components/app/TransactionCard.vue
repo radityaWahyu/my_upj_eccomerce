@@ -119,8 +119,10 @@ const cancelTransaction = () => {
                     Dipesan tanggal {{ transaction.created_at }}
                 </p>
             </div>
-            <div class="grid grid-cols-[60%_40%] items-center">
-                <div>
+            <div
+                class="grid grid-row-2 lg:grid-cols-[60%_40%] items-center gap-2 lg:gap-0"
+            >
+                <div class="text-center lg:text-left">
                     <p class="text-xs font-semibold">
                         Unit layanan {{ transaction.shop }}
                     </p>
@@ -129,7 +131,7 @@ const cancelTransaction = () => {
                     </h2>
                 </div>
                 <div class="divide-x divide-gray-200 w-full flex items-center">
-                    <div class="grow py-3 px-4 text-center">
+                    <div class="grow py-1 text-center">
                         <p class="text-xs font-medium text-muted-foreground">
                             Jumlah produk
                         </p>
@@ -137,7 +139,7 @@ const cancelTransaction = () => {
                             {{ transaction.product_count }} Item
                         </h3>
                     </div>
-                    <div class="grow py-3 px-4 text-center">
+                    <div class="grow py-1 text-center">
                         <p class="text-xs font-medium text-muted-foreground">
                             Total :
                         </p>
@@ -147,7 +149,9 @@ const cancelTransaction = () => {
                     </div>
                 </div>
             </div>
-            <div class="w-full py-2 flex items-center justify-between">
+            <div
+                class="w-full py-2 flex items-center justify-between flex-wrap gap-3 lg:gap-0"
+            >
                 <div
                     :class="{
                         'bg-gray-100 text-gray-900':
@@ -157,7 +161,7 @@ const cancelTransaction = () => {
                         'bg-green-300 text-green-900':
                             transaction.status === 'proses',
                     }"
-                    class="capitalize focus:outline-none font-medium rounded text-xs px-4 py-2"
+                    class="capitalize focus:outline-none font-medium rounded text-xs px-4 py-2 w-full lg:w-auto"
                 >
                     <span
                         v-if="transaction.status === 'pesan'"
@@ -177,13 +181,13 @@ const cancelTransaction = () => {
                         Pesanan sedang di proses
                     </span>
                 </div>
-                <div class="flex items-center justify-end gap-2">
+                <div class="flex items-center justify-end gap-2 flex-wrap">
                     <Link
                         :href="
                             route('frontend.transaction.detail', transaction.id)
                         "
                         as="button"
-                        class="flex items-center gap-2 py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100"
+                        class="flex items-center gap-2 py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 w-full lg:w-auto"
                     >
                         <ClipboardList class="w-5 h-5" />
                         Detail Transaksi
@@ -191,7 +195,7 @@ const cancelTransaction = () => {
                     <button
                         v-if="transaction.status === 'pesan'"
                         type="button"
-                        class="focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:focus:ring-yellow-900"
+                        class="focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:focus:ring-yellow-900 w-full lg:w-auto"
                         @click="cancelTransaction"
                         :disabled="isCancel"
                     >

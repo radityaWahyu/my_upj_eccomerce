@@ -344,7 +344,8 @@ class FrontendController extends Controller
     public function emptyProductCart(Request $request)
     {
         try {
-            Cart::where('user_id', $request->user('customer')->id)->delete();
+
+            Cart::where('customer_id', $request->user('customer')->id)->delete();
 
             return redirect()->back()->with('success', 'Item dihapus semua');
         } catch (\Illuminate\Database\QueryException $exception) {
@@ -453,8 +454,9 @@ class FrontendController extends Controller
     public function cancelTransaction(Transaction $transaction)
     {
         try {
-            $transaction->status = 'batal';
-            $transaction->save();
+            // $transaction->status = 'batal';
+            // $transaction->save();
+            $transaction->delete();
 
             return redirect()->back()->with('success', 'Transaksi dibatalkan');
         } catch (\Illuminate\Database\QueryException $exception) {
