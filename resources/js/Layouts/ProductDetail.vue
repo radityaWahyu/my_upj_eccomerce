@@ -97,20 +97,22 @@ watch(
             </a>
         </div>
     </div> -->
-    <div class="relative max-w-full bg-lemonchiffon/30 min-h-screen">
+    <div class="relative w-full bg-lemonchiffon/30 min-h-screen">
         <Transition>
             <div
-                class="absolute z-10 top-0 w-full py-2"
+                class="absolute z-10 top-0 w-full py-2 px-2 lg:px-0"
                 v-if="showSuccessAlert"
             >
                 <div
-                    class="flex items-center justify-between gap-4 bg-blue-100 w-1/2 mx-auto rounded overflow-hidden"
+                    class="flex items-center justify-between gap-4 bg-blue-100 lg:w-1/2 mx-auto rounded overflow-hidden"
                 >
-                    <div class="flex items-center gap-2">
-                        <div class="bg-blue-200 p-3">
+                    <div class="grid grid-cols-[20%_80%] items-center gap-2">
+                        <div
+                            class="bg-blue-200 p-3 h-full flex items-center justify-center"
+                        >
                             <BadgeInfo class="w-8 h-8 text-blue-400" />
                         </div>
-                        <p class="text-xs">
+                        <p class="text-xs py-2">
                             <strong class="block">Informasi :</strong>
                             {{ flash.success }}
                         </p>
@@ -126,15 +128,20 @@ watch(
             </div>
         </Transition>
         <Transition>
-            <div class="absolute z-10 top-0 w-full py-2" v-if="showErrorAlert">
+            <div
+                class="absolute z-10 top-0 w-full py-2 px-2 lg:px-0"
+                v-if="showErrorAlert"
+            >
                 <div
-                    class="flex items-center justify-between gap-4 bg-red-100 w-1/2 mx-auto rounded overflow-hidden"
+                    class="flex items-center justify-between gap-4 bg-red-100 lg:w-1/2 mx-auto rounded overflow-hidden"
                 >
-                    <div class="flex items-center gap-2">
-                        <div class="bg-red-200 p-3">
+                    <div class="grid grid-cols-[15%_75%] items-center gap-2">
+                        <div
+                            class="bg-blue-200 p-3 h-full flex items-center justify-center"
+                        >
                             <BadgeAlert class="w-8 h-8 text-red-400" />
                         </div>
-                        <p class="text-xs">
+                        <p class="text-xs py-2">
                             <strong class="block">Peringatan :</strong>
                             {{ flash.error }}
                         </p>

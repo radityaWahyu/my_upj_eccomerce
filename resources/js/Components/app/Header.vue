@@ -10,8 +10,10 @@ import {
     UserPen,
     LogOut,
     ClipboardList,
+    MoveLeft,
 } from "lucide-vue-next";
 import TopLink from "./TopLink.vue";
+import Backoffice from "@/Layouts/Backoffice.vue";
 
 const page = usePage<any>();
 
@@ -35,39 +37,52 @@ watch(
         if (url === "/") keyString.value = "";
     }
 );
+const goBack = () => window.history.back();
 </script>
 <template>
     <div class="min-w-max bg-nasplesyellow lg:sticky lg:z-20 lg:top-0">
         <div
             class="sm:container px-2 h-[55px] flex items-center justify-between"
         >
-            <Link
-                :href="route('frontend.index')"
-                as="button"
-                id="logo"
-                class="flex items-center text-left gap-1"
-            >
-                <svg
-                    class="text-tomato fill-current"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="38"
-                    height="38"
-                    viewBox="0 0 24 24"
+            <div class="flex items-center gap-1">
+                <button
+                    type="button"
+                    class="hover:bg-yellow-300 p-2 rounded text-yellow-800 lg:hidden"
+                    @click="goBack"
+                    v-if="$page.component === 'ProductDetails'"
                 >
-                    <path
-                        fill="currentColor"
-                        d="M5 21V7h3.5v-.5q0-1.458 1.021-2.479T12 3t2.479 1.021T15.5 6.5V7H19v14zm1-1h12V8h-2.5v3h-1V8h-5v3h-1V8H6zM9.5 7h5v-.5q0-1.056-.722-1.778T12 4t-1.778.722T9.5 6.5zM6 20V8z"
-                    />
-                </svg>
-                <div>
-                    <h4 class="font-semibold text-xl text-tomato line">
-                        MYUPJ
-                    </h4>
-                    <p class="text-[10px] font-normal text-tomato mt-[-5px]">
-                        SMK Mandiri dan Berprestasi
-                    </p>
-                </div>
-            </Link>
+                    <MoveLeft class="h-4 w-4" />
+                </button>
+                <Link
+                    :href="route('frontend.index')"
+                    as="button"
+                    id="logo"
+                    class="flex items-center text-left gap-1"
+                >
+                    <svg
+                        class="text-tomato fill-current"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="38"
+                        height="38"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            fill="currentColor"
+                            d="M5 21V7h3.5v-.5q0-1.458 1.021-2.479T12 3t2.479 1.021T15.5 6.5V7H19v14zm1-1h12V8h-2.5v3h-1V8h-5v3h-1V8H6zM9.5 7h5v-.5q0-1.056-.722-1.778T12 4t-1.778.722T9.5 6.5zM6 20V8z"
+                        />
+                    </svg>
+                    <div>
+                        <h4 class="font-semibold text-xl text-tomato line">
+                            MYUPJ
+                        </h4>
+                        <p
+                            class="text-[10px] font-normal text-tomato mt-[-5px]"
+                        >
+                            SMK Mandiri dan Berprestasi
+                        </p>
+                    </div>
+                </Link>
+            </div>
             <div class="w-[calc(100vw/3.2)] lg:block hidden">
                 <div class="relative w-full items-center mx-auto">
                     <Input

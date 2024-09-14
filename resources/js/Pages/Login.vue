@@ -72,12 +72,17 @@ const onSubmit = form.handleSubmit((formData) => {
         class="relative h-screen bg-nasplesyellow/10 flex items-center lg:items-center justify-center lg:justify-normal"
     >
         <Transition>
-            <div class="absolute z-10 top-0 w-full py-2" v-if="showErrorAlert">
+            <div
+                class="absolute z-10 top-0 w-full py-2 px-2 lg:px-0"
+                v-if="showErrorAlert"
+            >
                 <div
                     class="flex items-center justify-between gap-4 bg-red-100 w-1/2 mx-auto rounded overflow-hidden"
                 >
-                    <div class="flex items-center gap-2">
-                        <div class="bg-red-200 p-3">
+                    <div class="grid grid-cols-[20%_80%] items-center gap-2">
+                        <div
+                            class="bg-red-200 flex items-center justify-center"
+                        >
                             <BadgeAlert class="w-8 h-8 text-red-400" />
                         </div>
                         <p class="text-sm">

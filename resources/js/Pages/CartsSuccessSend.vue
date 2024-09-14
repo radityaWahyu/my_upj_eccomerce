@@ -23,17 +23,19 @@ import SendCartImage from "@/Assets/images/succes_cart_send.svg";
             >
                 Pesanan anda berhasil di kirimkan ke Unit Layanan.
             </h2>
-            <p class="text-center text-muted-foreground">
-                Apabila ingin mengecek status dari setiap transaksi pemesanan
-                silahkan mengklik tombol di bawah ini.
+            <div>
+                <p class="text-center text-muted-foreground">
+                    Apabila ingin mengecek status dari setiap transaksi
+                    pemesanan silahkan mengklik tombol di bawah ini.
+                </p>
                 <Link
                     :href="route('frontend.transaction.index')"
                     as="button"
-                    class="mt-4 bg-gray-200 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded text-sm px-5 py-2.5 text-center"
+                    class="mt-4 bg-gray-200 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded text-sm px-5 py-2.5 text-center mx-auto"
                 >
                     Transakasi Saya
                 </Link>
-            </p>
+            </div>
         </div>
     </div>
 </template>

@@ -90,13 +90,13 @@ const chatWhatsapp = (whatsapp: number) =>
         >
             <div class="flex flex-col lg:flex-row gap-4 items-center">
                 <div class="flex items-center gap-2 lg:px-2">
-                    <button
+                    <!-- <button
                         type="button"
                         class="bg-gray-100 p-3 rounded-full border border-gray-200 hover:bg-gray-300"
                         @click="backToShops"
                     >
                         <ArrowLeft class="h-5 w-5" />
-                    </button>
+                    </button> -->
                     <div
                         class="relative w-[100px] h-[100px] rounded-full overflow-hidden bg-gray-200 p-1"
                     >
