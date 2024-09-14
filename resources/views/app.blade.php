@@ -5,6 +5,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <meta http-equiv="expires" content="Day, 01 Mon 2014 00:00:00 GMT" />
+    <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate" />
+
     @if(isset($page['props']['event']))
     <meta name="og:author" content="{{ (isset($page['props']['event']['author'])) ? $page['props']['event']['author'] : '' }}" />
     <meta property="og:type" content="post">
