@@ -344,7 +344,7 @@ class FrontendController extends Controller
     public function emptyProductCart(Request $request)
     {
         try {
-            Cart::where('user_id', $request->user()->id)->delete();
+            Cart::where('user_id', $request->user('customer')->id)->delete();
 
             return redirect()->back()->with('success', 'Item dihapus semua');
         } catch (\Illuminate\Database\QueryException $exception) {
