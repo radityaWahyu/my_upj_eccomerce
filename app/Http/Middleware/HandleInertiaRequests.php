@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use Closure;
 use App\Models\Setting;
 use Inertia\Middleware;
 use Illuminate\Support\Str;
@@ -9,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\LoginResource;
 use App\Http\Resources\CustomerLoginResource;
+use Symfony\Component\HttpFoundation\Response;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -25,6 +27,17 @@ class HandleInertiaRequests extends Middleware
     public function version(Request $request): string|null
     {
         return parent::version($request);
+    }
+
+    public function handle(Request $request, Closure $next)
+    {
+        return tap(parent::handle($request, $next), function (Response $response) {
+            if ($response->headers->has('X-Inertia')) {
+                $response->setCache([
+                    'no_store' => true,
+                ]);
+            }
+        });
     }
 
     /**
