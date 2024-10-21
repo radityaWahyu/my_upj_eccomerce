@@ -83,32 +83,6 @@ class CustomerController extends Controller
 
     public function getCustomer(Request $request)
     {
-        $perPage = 10;
-        $params = [];
-
-        if ($request->has('sortName') && $request->has('sortType')) {
-            $params += ['sortName' => $request->sortName, 'sortType' => $request->sortType];
-        } else {
-            $params += ['sortName' => null, 'sortType' => null];
-        }
-
-        if ($request->has('search')) {
-            $params += ['search' => $request->search];
-        } else {
-            $params += ['search' => null];
-        }
-
-        if ($request->has('perPage')) $perPage = $request->perPage;
-
-        $customers = Customer::query()
-            ->when($request->has('sortName'), function ($query) use ($request) {
-                return $query->orderBy($request->sortName, $request->sortType);
-            })
-            ->when($request->has('search'), function ($query) use ($request) {
-                return $query->where('name', 'like', '%' . $request->search . '%');
-            })
-            ->latest()->paginate($perPage);
-
-        return ['customers' => $customers, 'params' => $params];
+       `
     }
 }

@@ -186,7 +186,7 @@ const getJurnalShops = () => {
                         />
                     </div>
                     <div class="inline-flex items-center gap-3">
-                        <Label class="text-sm">Tanggal Mulai</Label>
+                        <Label class="text-sm">Tanggal Akhir</Label>
                         <input
                             type="date"
                             name="tanggal_mulai"
