@@ -81,8 +81,5 @@ class CustomerController extends Controller
         //
     }
 
-    public function getCustomer(Request $request)
-    {
-       `
-    }
+    public function getCustomer(Request $request) {}
 }
