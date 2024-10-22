@@ -27,7 +27,7 @@ const Rupiah = (price: number) =>
 <template>
     <Link :href="route('frontend.product.details', product.slug)">
         <div
-            class="static w-full flex-shrink-0 bg-lemonchiffon/85 rounded-md drop-shadow-sm overflow-hidden group h-52"
+            class="static w-full flex-shrink-0 bg-lemonchiffon/85 rounded-md drop-shadow-sm overflow-hidden group h-[300px]"
         >
             <div class="relative overflow-hidden h-[200px]">
                 <div
