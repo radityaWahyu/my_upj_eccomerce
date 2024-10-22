@@ -77,7 +77,7 @@ const props = defineProps<{
                             </p>
                         </div>
                         <div
-                            class="w-full grid grid-cols-2 lg:grid-cols-6 gap-3 mb-10 items-stretch"
+                            class="w-full grid grid-cols-2 lg:grid-cols-6 gap-3 mb-10 items-stretch h-[200px]"
                             v-if="products.data.length > 0"
                         >
                             <Product
