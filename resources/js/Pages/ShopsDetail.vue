@@ -86,7 +86,7 @@ const chatWhatsapp = (whatsapp: number) =>
     <Head :title="shop.name" />
     <div class="container py-4 space-y-8 min-h-screen">
         <div
-            class="flex flex-col gap-3 lg:gap-0 lg:flex-row items-center justify-between border-[1px] rounded-lg py-3 shadow-sm"
+            class="flex flex-col gap-3 lg:gap-0 lg:flex-row items-center justify-between border-[1px] rounded-lg py-3 shadow-sm px-2 lg:px-0"
         >
             <div class="flex flex-col lg:flex-row gap-4 items-center">
                 <div class="flex items-center gap-2 lg:px-2">
