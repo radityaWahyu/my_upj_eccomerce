@@ -42,7 +42,7 @@ defineProps<{
                 </p>
             </div>
         </div>
-        <div class="w-full flex gap-4">
+        <div class="w-full flex flex-wrap gap-4">
             <Shop
                 :shop="shop"
                 v-for="(shop, index) in shops.data"
