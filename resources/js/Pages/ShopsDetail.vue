@@ -121,7 +121,9 @@ const chatWhatsapp = (whatsapp: number) =>
                     </div>
                     <div class="space-y-2 pb-2 text-center lg:text-left">
                         <h4 class="text-xs font-medium">Kontak Unit Layanan</h4>
-                        <div class="space-x-2">
+                        <div
+                            class="flex flex-wrap justify-center lg:justify-normal gap-2"
+                        >
                             <a
                                 :href="chatWhatsapp(employee.whatsapp)"
                                 class="text-white bg-yaleblue hover:bg-blue-950 focus:ring-2 focus:ring-yaleblue font-medium rounded-lg text-[12px] px-5 py-2"
