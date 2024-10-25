@@ -33,7 +33,7 @@ class FrontendController extends Controller
     public function index()
     {
         $banners = Banner::where('is_active', true)->get();
-        $products = Product::query();
+        $products = Product::query()->with(['shop', 'category', 'image']);
         $product_count = $products->count();
         $products = $products->inRandomOrder()->limit(6)->get();
         $shops = Shop::query();
