@@ -66,7 +66,7 @@ class FrontendController extends Controller
 
         $categories = Category::get();
 
-        $products = Product::query()->with(['category', 'shop'])
+        $products = Product::query()->with(['category', 'shop', 'image'])
             ->whereHas('category', function ($query) use ($request) {
                 if ($request->category !== 'all' && $request->has('category'))
                     return $query->where('slug', $request->category);
