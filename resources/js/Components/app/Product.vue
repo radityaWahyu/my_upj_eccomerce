@@ -9,7 +9,6 @@ type TProduct = {
     price: number;
     type: string;
     shop: string;
-    category: string;
     slug: string;
 };
 

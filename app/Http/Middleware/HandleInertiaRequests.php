@@ -48,7 +48,7 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         $settingData = [];
-        $settings = Setting::query()->get();
+        $settings = Setting::query()->get(['data']);
         foreach ($settings as $setting) {
             $name = Str::replace(' ', '_', Str::lower($setting->name));
             $settingData += [$name => $setting->data];

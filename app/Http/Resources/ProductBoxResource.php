@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ProductResource extends JsonResource
+class ProductBoxResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -20,14 +20,9 @@ class ProductResource extends JsonResource
             'name' => $this->name,
             'shop' => $this->shop->name,
             'slug' => $this->slug,
-            'category' => $this->whenLoaded('category', $this->category->name),
             'type' => $this->type,
             'image' => empty($this->image) ? null : "data:image/jpeg;base64," . base64_encode(Storage::get($this->image->image_url)),
-            'user' => $this->user->employee->name,
             'price' => $this->price,
-            'description' => $this->desrcription,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
         ];
     }
 }

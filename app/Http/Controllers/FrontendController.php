@@ -17,33 +17,37 @@ use App\Http\Resources\ShopResource;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\BannerResource;
 use App\Http\Resources\ProductResource;
+use App\Http\Resources\ShopBoxResource;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\EmployeeResource;
+use App\Http\Resources\ProductBoxResource;
 use App\Http\Requests\LoginFrontendRequest;
-use App\Http\Resources\ProductDetailResource;
-use App\Http\Requests\BackOffice\CustomerRequest;
-use App\Http\Requests\BackOffice\EditProfilCustomerRequest;
-use App\Http\Resources\CustomerProfilResource;
-use App\Http\Resources\TransactionDetailResource;
 use App\Http\Resources\TransactionResource;
+use App\Http\Resources\ProductDetailResource;
+use App\Http\Resources\CustomerProfilResource;
+use App\Http\Requests\BackOffice\CustomerRequest;
+use App\Http\Resources\TransactionDetailResource;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Http\Requests\BackOffice\EditProfilCustomerRequest;
 
 class FrontendController extends Controller
 {
     public function index()
     {
-        $banners = Banner::where('is_active', true)->get();
-        $products = Product::query()->with(['shop', 'category', 'image']);
+        $banners = Banner::where('is_active', true)->get(['title', 'image', 'is_active']);
+        $products = Product::query()
+            ->select('id', 'name', 'type', 'slug', 'shop_id', 'user_id')
+            ->with(['shop:id,name',  'image:image_url,product_id', 'user:id,employee_id' => ['employee:id,name']]);
         $product_count = $products->count();
         $products = $products->inRandomOrder()->limit(6)->get();
         $shops = Shop::query();
         $shop_count = $shops->count();
-        $shops = $shops->inRandomOrder()->limit(6)->get();
+        $shops = $shops->inRandomOrder()->limit(6)->get(['id', 'name', 'slug', 'image']);
 
         return inertia('Home', [
             'banners' => fn() => BannerResource::collection($banners),
-            'products' => fn() => ProductResource::collection($products),
-            'shops' => fn() => ShopResource::collection($shops),
+            'products' => fn() => ProductBoxResource::collection($products),
+            'shops' => fn() => ShopBoxResource::collection($shops),
             'product_count' => fn() => $product_count,
             'shop_count' => fn() => $shop_count,
             'event' => fn() => [
@@ -64,9 +68,11 @@ class FrontendController extends Controller
         if ($request->has('page')) $params += ['page' => $request->page];
 
 
-        $categories = Category::get();
+        $categories = Category::get(['id', 'name']);
 
-        $products = Product::query()->with(['category', 'shop', 'image'])
+        $products = Product::query()
+            ->select('id', 'name', 'type', 'slug', 'category_id', 'shop_id', 'user_id')
+            ->with(['shop:id,name', 'category:id,name', 'image:image_url,product_id', 'user:id,employee_id' => ['employee:id,name']])
             ->whereHas('category', function ($query) use ($request) {
                 if ($request->category !== 'all' && $request->has('category'))
                     return $query->where('slug', $request->category);
@@ -76,7 +82,7 @@ class FrontendController extends Controller
 
         return inertia('Products', [
             'categories' => fn() => CategoryResource::collection($categories),
-            'products' => fn() => ProductResource::collection($products),
+            'products' => fn() => ProductBoxResource::collection($products),
             'params' => fn() => empty($params) ? null : $params,
             'active' => fn() => ($request->has('category')) ? $request->category : 'all',
             'event' => fn() => [
@@ -180,7 +186,7 @@ class FrontendController extends Controller
             ->paginate($per_page);
 
         return inertia('Shops', [
-            'shops' => fn() => ShopResource::collection($shops),
+            'shops' => fn() => ShopBoxResource::collection($shops),
             'event' => fn() => [
                 'author' => 'SMKN 1 Purwosari Kab Pasuruan',
                 'title' => 'Daftar Unit Layanan',
