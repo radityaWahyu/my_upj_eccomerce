@@ -211,7 +211,9 @@ class FrontendController extends Controller
             $products =
                 Product::query()
                 ->select('id', 'name', 'type', 'slug', 'shop_id', 'user_id')
-                ->with(['shop:id,name',  'image:image_url,product_id'])->paginate($per_page);
+                ->with(['shop:id,name',  'image:image_url,product_id'])
+                ->where('shop_id', $shop->id)
+                ->paginate($per_page);
 
             return inertia('ShopsDetail', [
                 'shop' => fn() => new ShopResource($shop),
