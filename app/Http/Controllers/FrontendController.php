@@ -205,15 +205,15 @@ class FrontendController extends Controller
             if ($request->has('per_page')) $per_page = $request->per_page;
             if ($request->has('page')) $params += ['page' => $request->page];
 
-            $shop->load(['employees:id,name,shop_id', 'products'])
+            $shop->load(['employees:id,name,shop_id', 'products:id,name,price,type,slug,shop_id' => ['shop:id,name',  'image:image_url,product_id']])
                 ->loadCount('products');
 
-            $products =
-                Product::query()
-                ->select('id', 'name', 'type', 'slug', 'shop_id', 'user_id', 'price')
-                ->with(['shop:id,name',  'image:image_url,product_id'])
-                ->where('shop_id', $shop->id)
-                ->paginate($per_page);
+            $products = $shop->products()->paginate($per_page);
+            // Product::query()
+            // ->select('id', 'name', 'price', 'type', 'slug', 'shop_id', 'user_id')
+            // ->with(['shop:id,name',  'image:image_url,product_id'])
+            // ->where('shop_id', $shop->id)
+            // ->paginate($per_page);
 
             return inertia('ShopsDetail', [
                 'shop' => fn() => new ShopResource($shop),
