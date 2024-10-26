@@ -36,7 +36,7 @@ class FrontendController extends Controller
     {
         $banners = Banner::where('is_active', true)->get(['title', 'image', 'is_active']);
         $products = Product::query()
-            ->select('id', 'name', 'type', 'slug', 'shop_id', 'user_id')
+            ->select('id', 'name', 'type', 'slug', 'shop_id', 'user_id', 'price')
             ->with(['shop:id,name',  'image:image_url,product_id']);
         $product_count = $products->count();
         $products = $products->inRandomOrder()->limit(6)->get();
@@ -68,10 +68,10 @@ class FrontendController extends Controller
         if ($request->has('page')) $params += ['page' => $request->page];
 
 
-        $categories = Category::get(['id', 'name']);
+        $categories = Category::get(['id', 'name', 'slug']);
 
         $products = Product::query()
-            ->select('id', 'name', 'type', 'slug', 'category_id', 'shop_id', 'user_id')
+            ->select('id', 'name', 'type', 'slug', 'category_id', 'shop_id', 'user_id', 'price')
             ->with(['shop:id,name', 'category:id,name', 'image:image_url,product_id', 'user:id,employee_id' => ['employee:id,name']])
             ->whereHas('category', function ($query) use ($request) {
                 if ($request->category !== 'all' && $request->has('category'))
