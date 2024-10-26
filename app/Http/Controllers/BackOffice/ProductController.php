@@ -234,16 +234,15 @@ class ProductController extends Controller
 
         $products = Product::query()->with(
             [
-                'shop' => function ($query) use ($request) {
-                    if ($request->has('sortName') && $request->sortName == 'shop')
-                        return $query->orderBy('shops.name', $request->sortType);
-                },
+                'shop',
                 'category',
                 'image'
             ]
         )
             ->when($request->has('sortName'), function ($query) use ($request) {
-                if ($request->sortName !== 'shop') return $query->orderBy($request->sortName, $request->sortType);
+                if ($request->sortName == 'shop') return $query->orderBy('shop_id', $request->sortType);
+
+                return $query->orderBy($request->sortName, $request->sortType);
             })
             ->when($request->has('search'), function ($query) use ($request) {
                 return $query->where('name', 'like', '%' . $request->search . '%');
