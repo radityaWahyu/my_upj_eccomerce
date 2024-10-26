@@ -232,9 +232,18 @@ class ProductController extends Controller
         if ($request->has('page')) $params += ['page' => $request->page];
 
 
-        $products = Product::query()->with(['shop', 'category', 'image'])
+        $products = Product::query()->with(
+            [
+                'shop' => function ($query) use ($request) {
+                    if ($request->has('sortName') && $request->sortName == 'shop')
+                        return $query->orderBy('shops.name', $request->sortType);
+                },
+                'category',
+                'image'
+            ]
+        )
             ->when($request->has('sortName'), function ($query) use ($request) {
-                return $query->orderBy($request->sortName, $request->sortType);
+                if ($request->sortName !== 'shop') return $query->orderBy($request->sortName, $request->sortType);
             })
             ->when($request->has('search'), function ($query) use ($request) {
                 return $query->where('name', 'like', '%' . $request->search . '%');
