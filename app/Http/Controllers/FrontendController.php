@@ -205,7 +205,7 @@ class FrontendController extends Controller
             if ($request->has('per_page')) $per_page = $request->per_page;
             if ($request->has('page')) $params += ['page' => $request->page];
 
-            $shop->load(['employees:id,name', 'products'])
+            $shop->load(['employees:id,name,shop_id', 'products'])
                 ->loadCount('products');
 
             $products =
