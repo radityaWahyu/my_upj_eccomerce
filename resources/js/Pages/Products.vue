@@ -203,7 +203,7 @@ const onChange = () => {
                                 v-for="product in products.data"
                             />
 
-                            <div class="space-y-3" v-for="index in 5" v-else>
+                            <div class="space-y-3" v-for="index in 10" v-else>
                                 <Skeleton class="h-[200px] w-full rounded-xl" />
                                 <div class="space-y-2">
                                     <Skeleton class="h-4 w-full" />
