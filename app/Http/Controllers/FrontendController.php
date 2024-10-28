@@ -39,7 +39,7 @@ class FrontendController extends Controller
             ->select('id', 'name', 'type', 'slug', 'shop_id', 'user_id', 'price')
             ->with(['shop:id,name',  'image:image_url,product_id']);
         $product_count = $products->count();
-        $products = $products->inRandomOrder()->limit(6)->get();
+        $products = $products->inRandomOrder()->limit(12)->get();
         $shops = Shop::query();
         $shop_count = $shops->count();
         $shops = $shops->inRandomOrder()->limit(6)->get(['id', 'name', 'slug', 'image']);
@@ -209,11 +209,7 @@ class FrontendController extends Controller
                 ->loadCount('products');
 
             $products = $shop->products()->paginate($per_page);
-            // Product::query()
-            // ->select('id', 'name', 'price', 'type', 'slug', 'shop_id', 'user_id')
-            // ->with(['shop:id,name',  'image:image_url,product_id'])
-            // ->where('shop_id', $shop->id)
-            // ->paginate($per_page);
+
 
             return inertia('ShopsDetail', [
                 'shop' => fn() => new ShopResource($shop),
