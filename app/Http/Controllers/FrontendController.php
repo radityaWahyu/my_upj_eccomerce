@@ -97,8 +97,19 @@ class FrontendController extends Controller
     {
 
         try {
-            $products = Product::with(['images', 'shop' => ['employees'], 'category:id,name', 'images'])
-                ->whereNotIn('id', [$product->id])->limit(5)->get();
+            $products = Product::select('id', 'name', 'type', 'slug', 'category_id', 'shop_id', 'user_id', 'price')
+                ->with(
+                    [
+                        'shop:id,name',
+                        'category:id,name',
+                        'image:image_url,product_id',
+                        'user:id,employee_id' => ['employee:id,name']
+                    ]
+                )
+                ->whereNotIn('id', [$product->id])
+                ->inRandomOrder()
+                ->limit(5)
+                ->get();
 
             $description = strip_tags($product->description);
 

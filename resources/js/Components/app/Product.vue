@@ -50,7 +50,7 @@ const Rupiah = (price: number) =>
                     <p class="text-[10px] font-light truncate">
                         {{ product.shop }}
                     </p>
-                    <p class="text-[12px] font-normal text-ellipsis">
+                    <p class="text-[13px] font-medium text-ellipsis">
                         {{ product.name }}
                     </p>
                 </div>
