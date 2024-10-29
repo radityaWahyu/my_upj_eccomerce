@@ -45,12 +45,12 @@ const Rupiah = (price: number) =>
                     class="rounded-t-md h-full w-full object-cover object-top group-hover:scale-125 transition-all duration-300 ease-in-out transform bg-center"
                 />
             </div>
-            <div class="flex flex-col justify-between gap-2 text-left p-2">
+            <div class="flex flex-col justify-between text-left p-2">
                 <div>
                     <p class="text-[10px] font-light truncate">
                         {{ product.shop }}
                     </p>
-                    <p class="text-[13px] font-medium text-ellipsis">
+                    <p class="text-[12px] font-medium text-ellipsis">
                         {{ product.name }}
                     </p>
                 </div>
