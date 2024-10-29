@@ -130,7 +130,7 @@ class ProductController extends Controller
             if ($request->user()->hasRole('administrator')) {
                 $form_data += ['shop_id' => $request->shop];
             } else {
-                $form_data += ['shop_id' => $request->user()->userable->shop->id];
+                $form_data += ['shop_id' => $request->user()->employee->shop->id];
             }
 
             $product->update($form_data);
