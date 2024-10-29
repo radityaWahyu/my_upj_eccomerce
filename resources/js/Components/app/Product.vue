@@ -41,13 +41,20 @@ const Rupiah = (price: number) =>
                 <img
                     :src="product.image ? product.image : NoImage"
                     alt="product-one"
+                    loading="lazy"
                     class="rounded-t-md h-full w-full object-cover object-top group-hover:scale-125 transition-all duration-300 ease-in-out transform bg-center"
                 />
             </div>
-            <div class="flex flex-col text-left p-2">
-                <p class="text-[12px] font-normal">{{ product.name }}</p>
+            <div class="flex flex-col justify-between text-left p-2">
+                <div>
+                    <p class="text-[10px] font-light truncate">
+                        {{ product.shop }}
+                    </p>
+                    <p class="text-[12px] font-normal truncate">
+                        {{ product.name }}
+                    </p>
+                </div>
                 <p class="text-sm font-semibold">{{ Rupiah(product.price) }}</p>
-                <p class="text-[10px] font-light">{{ product.shop }}</p>
             </div>
         </div>
     </Link>
